@@ -1,11 +1,39 @@
+"use client"
+
+import { useState } from "react"
 import Image from "next/image"
 
-import fetchRandomMovie from "@/utils/tmdb"
+interface Movie {
+  id: number,
+  title: string,
+  backdrop_path: string
+}
 
-export default async function Game() {
-  const randomMovie = await fetchRandomMovie()
+interface GameProps {
+  movie: Movie
+}
+
+export default function Game({ movie }: GameProps) {
+  const [isGuessed, setIsGuessed] = useState(false)
 
   return (
-    <></>
+    <div className = "flex flex-col items-center justify-center">
+      <h2>Guess the movie!</h2>
+
+      <Image
+        src = {`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+        alt = "Movie Backdrop"
+        width = {1000}
+        height = {281}
+        className = {`rounded-lg shadow-lg mt-4 ${isGuessed ? "blur-sm" : ""} transition-blur duration-500`}
+      />
+
+      <button
+        onClick = {() => setIsGuessed(!isGuessed)}
+        className = "mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+      >
+        {isGuessed ? "Hide Answer" : "Reveal Answer"}
+      </button>
+    </div>
   )
 }
