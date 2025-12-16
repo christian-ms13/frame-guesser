@@ -1,14 +1,17 @@
-import fetchRandomPopularMovie from "@/utils/tmdb"
-import Game from "@/components/Game"
+import Image from "next/image"
 
 export default async function Home() {
-  const movie = await fetchRandomPopularMovie()
-
   return (
-    <main className = "flex min-h-screen flex-col items-center justify-between p-24 bg-black">
-      <h1 className = "text-4xl font-bold text-white">FrameGuesser</h1>
+    <main className = "flex min-h-screen flex-col items-center justify-center bg-gray-950 text-white">
+      <Image
+        src = "/logo.png"
+        alt = "FrameGuesser Logo"
+        width = {300}
+        height = {300}
+        priority
+      />
 
-      <Game movie = { movie } />
+      <h1 className = "text-5xl font-karnak-condensed-black ">FrameGuesser</h1>
     </main>
   )
 }

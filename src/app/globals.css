@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+@theme {
+  --font-karnak-light: var(--font-karnak-light);
+  --font-karnak-condensed-black: var(--font-karnak-condensed-black);
+}
