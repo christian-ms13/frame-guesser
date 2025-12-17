@@ -13,9 +13,11 @@ export default async function Home() {
         priority
       />
 
-      <h1 className = "text-6xl font-karnak-condensed-black">FrameGuesser</h1>
+      <h1 className = "text-7xl font-karnak-condensed-black">FrameGuesser</h1>
 
-      <PreferencesIndex />
+      <h3 className = "text-3xl mt-4 font-karnak-light tracking-wide">Guess the movie from a single frame!</h3>
+
+      <PreferencesIndex className = "absolute bottom-0 right-0 pe-10 pb-5" />
     </main>
   )
 }
