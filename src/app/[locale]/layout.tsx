@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import localFont from "next/font/local"
 
-import "./globals.css"
+import "../globals.css"
 
 export const metadata: Metadata = {
   title: "FrameGuesser | Test Your Movie Knowledge",
@@ -9,13 +9,13 @@ export const metadata: Metadata = {
 }
 
 const karnakLight = localFont({
-  src: "./fonts/karnak-light.woff2",
+  src: "../fonts/karnak-light.woff2",
   variable: "--font-karnak-light",
   display: "swap"
 })
 
 const karnakCondensedBlack = localFont({
-  src: "./fonts/karnak-condensed-black.woff2",
+  src: "../fonts/karnak-condensed-black.woff2",
   variable: "--font-karnak-condensed-black",
   display: "swap"
 })

@@ -1,3 +1,7 @@
+"use client"
+
+import { usePathname, useRouter } from "next/navigation"
+
 import { IconDark, IconLight } from "./ThemeIcons"
 import { IconUS, IconES } from "./LanguageIcons"
 
@@ -6,6 +10,21 @@ type PreferencesIndexProps = {
 }
 
 export default function PreferencesIndex({ className }: PreferencesIndexProps) {
+  const pathname = usePathname()
+  const router = useRouter()
+
+  const handleLanguageChange = (newLocale: string) => {
+    let newPath
+
+    if (pathname.startsWith("/en") || pathname.startsWith("/es")) {
+      newPath = pathname.replace(/^\/(en|es)/, `/${newLocale}`)
+    } else {
+      newPath = `/${newLocale}${pathname}`
+    }
+
+    router.push(newPath)
+  }
+
   return (
     <div className = {`flex gap-5 justify-between items-center ${className}`}>
       <div className = "flex gap-3">
@@ -16,8 +35,13 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
       <span>|</span>
 
       <div className = "flex gap-3">
-        <IconUS className = "w-7 h-7 cursor-pointer" />
-        <IconES className = "w-7 h-7 cursor-pointer" />
+        <button onClick = {() => handleLanguageChange("en")}>
+          <IconUS className = "w-7 h-7 cursor-pointer" />
+        </button>
+
+        <button onClick = {() => handleLanguageChange("es")}>
+          <IconES className = "w-7 h-7 cursor-pointer" />
+        </button>
       </div>
     </div>
   )
