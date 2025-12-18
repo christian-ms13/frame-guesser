@@ -4,6 +4,8 @@ import { useTranslations } from "next-intl"
 import PreferencesIndex from "@/components/preferences"
 
 export default function Home() {
+  // test comment
+
   const t = useTranslations("HomePage")
 
   return (
