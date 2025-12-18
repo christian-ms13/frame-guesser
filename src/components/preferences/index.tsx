@@ -17,6 +17,10 @@ type ThemeMode = "light" | "dark" | "system" | "routine"
 
 type IconComponent = React.ComponentType<{ className?: string }>
 
+const setLanguageCookie = (locale: string) => {
+  document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`
+}
+
 export default function PreferencesIndex({ className }: PreferencesIndexProps) {
   const { setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
@@ -31,7 +35,7 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
     setMode(selectedMode)
 
     if (selectedMode === "light") setTheme("light")
-      if (selectedMode === "dark") setTheme("dark")
+    if (selectedMode === "dark") setTheme("dark")
     if (selectedMode === "system") setTheme("system")
 
     if (selectedMode === "routine") {
@@ -84,7 +88,7 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
   const languageDropdownRef = useClickOutside(() => setIsLanguageDropdownOpen(false))
 
   const handleLanguageChange = (newLocale: string) => {
-    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`
+    setLanguageCookie(newLocale)
 
     let newPath
 
