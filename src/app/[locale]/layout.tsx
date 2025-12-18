@@ -1,10 +1,12 @@
 import type { Metadata } from "next"
 import localFont from "next/font/local"
 
+import { ThemeProvider } from "@/components/ThemeProvider"
+
 import "../globals.css"
 
 export const metadata: Metadata = {
-  title: "FrameGuesser | Test Your Movie Knowledge",
+  title: "FrameGuesser • Test Your Movie Knowledge",
   description: "A cinematographic puzzle game where users guess movies from obscured frames. Built with Next.js, Tailwind CSS, and the TMDB API."
 }
 
@@ -26,9 +28,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang = "en">
+    <html lang = "en" suppressHydrationWarning>
       <body className = {`${karnakLight.variable} ${karnakCondensedBlack.variable} antialiased`}>
-        {children}
+        <ThemeProvider
+          attribute = "class"
+          defaultTheme = "system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
