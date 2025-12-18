@@ -78,6 +78,8 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
   const ActiveIcon = options.find(opt => opt.id === mode)?.Icon || IconSystemSettings
 
   const handleLanguageChange = (newLocale: string) => {
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`
+
     let newPath
 
     if (pathname.startsWith("/en") || pathname.startsWith("/es")) {
