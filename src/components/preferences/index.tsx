@@ -18,16 +18,13 @@ type ThemeMode = "light" | "dark" | "system" | "routine"
 type IconComponent = React.ComponentType<{ className?: string }>
 
 export default function PreferencesIndex({ className }: PreferencesIndexProps) {
-  const pathname = usePathname()
-  const router = useRouter()
-
   const { setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
   const [mode, setMode] = useState<ThemeMode>("system")
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isThemeDropdownOpen, setIsThemeDropdownOpen] = useState(false)
 
-  const dropdownRef = useClickOutside(() => setIsDropdownOpen(false))
+  const themeDropdownRef = useClickOutside(() => setIsThemeDropdownOpen(false))
 
   const applyThemeLogic = useCallback((selectedMode: ThemeMode) => {
     localStorage.setItem("frameguesser-theme-mode", selectedMode)
@@ -68,14 +65,23 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
     return () => clearInterval(interval)
   }, [mode, applyThemeLogic])
 
-  const options: { id: ThemeMode; label: string; Icon: IconComponent }[] = [
+  const themeOptions: { id: ThemeMode; label: string; Icon: IconComponent }[] = [
     { id: "light", label: "Light", Icon: IconLight },
     { id: "dark", label: "Dark", Icon: IconDark },
     { id: "system", label: "System", Icon: IconSystemSettings },
     { id: "routine", label: "Routine", Icon: IconRoutine }
   ]
 
-  const ActiveIcon = options.find(opt => opt.id === mode)?.Icon || IconSystemSettings
+  const ActiveThemeIcon = themeOptions.find(opt => opt.id === mode)?.Icon || IconSystemSettings
+
+  // ---
+
+  const pathname = usePathname()
+  const router = useRouter()
+
+  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false)
+
+  const languageDropdownRef = useClickOutside(() => setIsLanguageDropdownOpen(false))
 
   const handleLanguageChange = (newLocale: string) => {
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`
@@ -91,18 +97,26 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
     router.push(newPath)
   }
 
+  const languageOptions = [
+    { id: "en", label: "English", Icon: IconUS },
+    { id: "es", label: "Español", Icon: IconES }
+  ]
+
+  const ActiveLanguageIcon = pathname.startsWith("/es") ? IconES : IconUS
+  const currentLang = pathname.startsWith("/es") ? "es" : "en"
+
   if (!mounted) return null
 
   return (
-    <div ref = {dropdownRef} className = {`flex gap-5 justify-between items-center ${className}`}>
-      {isDropdownOpen && (
-        <div className = "absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-gray-800 border border-gray-700 rounded-xl p-2 shadow-xl flex flex-col gap-1 w-40 z-50 animate-in fade-in zoom-in-95 duration-200">
-          {options.filter((option) => option.id !== mode).map((option) => (
+    <div className = {`flex gap-5 justify-center items-center ${className}`}>
+      {isThemeDropdownOpen && (
+        <div ref = {themeDropdownRef} className = "absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-gray-800 border border-gray-700 rounded-xl p-2 shadow-xl flex flex-col gap-1 w-40 z-50 animate-in fade-in zoom-in-95 duration-200">
+          {themeOptions.filter((option) => option.id !== mode).map((option) => (
             <button
               key = {option.id}
               onClick = {() => {
                 applyThemeLogic(option.id)
-                setIsDropdownOpen(false)
+                setIsThemeDropdownOpen(false)
               }}
               className = "flex items-center gap-3 px-3 py-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-300 hover:text-white text-sm cursor-pointer"
             >
@@ -115,22 +129,39 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
 
       <div className = "flex gap-3">
         <button
-          onClick = {() => setIsDropdownOpen(!isDropdownOpen)}
+          onClick = {() => setIsThemeDropdownOpen(!isThemeDropdownOpen)}
           className = "hover:bg-gray-800 p-1 rounded-full transition-colors"
         >
-          <ActiveIcon className = "w-6 h-6 cursor-pointer" />
+          <ActiveThemeIcon className = "w-6 h-6 cursor-pointer" />
         </button>
       </div>
 
       <span>|</span>
 
-      <div className = "flex gap-3">
-        <button onClick = {() => handleLanguageChange("en")}>
-          <IconUS className = "w-8 h-8 cursor-pointer" />
-        </button>
+      {isLanguageDropdownOpen && (
+        <div ref = {languageDropdownRef} className = "absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-gray-800 border border-gray-700 rounded-xl p-2 shadow-xl flex flex-col gap-1 w-40 z-50 animate-in fade-in zoom-in-95 duration-200">
+          {languageOptions.filter((option) => option.id !== currentLang).map((option) => (
+            <button
+              key = {option.id}
+              onClick = {() => {
+                handleLanguageChange(option.id)
+                setIsLanguageDropdownOpen(false)
+              }}
+              className = "flex items-center gap-3 px-3 py-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-300 hover:text-white text-sm cursor-pointer"
+            >
+              <option.Icon className = "w-6 h-6" />
+              <span>{option.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
-        <button onClick = {() => handleLanguageChange("es")}>
-          <IconES className = "w-8 h-8 cursor-pointer" />
+      <div className = "flex gap-3">
+        <button
+          onClick = {() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
+          className = "hover:bg-gray-800 p-1 rounded-full transition-colors"
+        >
+          <ActiveLanguageIcon className = "w-8 h-8 cursor-pointer" />
         </button>
       </div>
     </div>
