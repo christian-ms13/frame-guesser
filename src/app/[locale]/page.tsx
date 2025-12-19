@@ -18,7 +18,7 @@ export default function Home() {
 
       <h1 className = "text-7xl font-karnak-condensed-black">FrameGuesser</h1>
 
-      <h3 className = "text-3xl mt-5 font-karnak-light tracking-wide min-h-500">{t("subtitle")}</h3>
+      <h3 className = "text-3xl mt-5 font-karnak-light tracking-wide">{t("subtitle")}</h3>
 
       <PreferencesIndex className = "fixed bottom-0 w-full pb-5 z-40" />
     </main>
