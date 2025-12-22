@@ -7,7 +7,7 @@ export default function Home() {
   const translations = useTranslations("HomePage")
 
   return (
-    <main className = "flex min-h-screen flex-col items-center justify-start pt-25 cursor-default select-none bg-[#E3E3E1] text-[#121212] dark:bg-[#121212] dark:text-[#E3E3E1]">
+    <main className = "flex min-h-screen flex-col items-center justify-start pt-25 cursor-default select-none bg-[#e3e3e1] text-[#121212] dark:bg-[#121212] dark:text-[#e3e3e1]">
       <Image
         src = "/logo.png"
         alt = "FrameGuesser Logo"
