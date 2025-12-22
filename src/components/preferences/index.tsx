@@ -28,7 +28,12 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
   const [mode, setMode] = useState<ThemeMode>("system")
   const [isThemeDropdownOpen, setIsThemeDropdownOpen] = useState(false)
 
-  const themeDropdownRef = useClickOutside(() => setIsThemeDropdownOpen(false))
+  const [isDropdownOpen, setIsDropdownOpen] = useState(true)
+
+  const themeDropdownRef = useClickOutside(() => {
+    setIsThemeDropdownOpen(false)
+    setIsDropdownOpen(false)
+  })
 
   const applyThemeLogic = useCallback((selectedMode: ThemeMode) => {
     localStorage.setItem("frameguesser-theme-mode", selectedMode)
@@ -111,10 +116,17 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
 
   if (!mounted) return null
 
+  const floatingDropdownClassName = `absolute ${isDropdownOpen ? "bottom-full opacity-100" : "bottom-0 opacity-0"} mb-4 left-1/2 -translate-x-1/2 bg-[#B0B0B0] dark:bg-[#363636] rounded-xl p-2 flex flex-col gap-1 w-40 z-50 transition-all duration-150`
+
+  const dropdownOptionClassName = "flex items-center gap-3 px-2 py-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-300 hover:text-white cursor-pointer font-karnak-light"
+
   return (
     <div className = {`flex gap-5 justify-center items-center ${className}`}>
       {isThemeDropdownOpen && (
-        <div ref = {themeDropdownRef} className = "absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-gray-800 border border-gray-700 rounded-xl p-2 shadow-xl flex flex-col gap-1 w-40 z-50 animate-in fade-in zoom-in-95 duration-200">
+        <div
+          ref = {themeDropdownRef}
+          className = {floatingDropdownClassName}
+        >
           {themeOptions.filter((option) => option.id !== mode).map((option) => (
             <button
               key = {option.id}
@@ -122,7 +134,7 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
                 applyThemeLogic(option.id)
                 setIsThemeDropdownOpen(false)
               }}
-              className = "flex items-center gap-3 px-3 py-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-300 hover:text-white text-sm cursor-pointer"
+              className = {dropdownOptionClassName}
             >
               <option.Icon className = "w-5 h-5" />
               <span>{option.label}</span>
@@ -133,7 +145,13 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
 
       <div className = "flex gap-3">
         <button
-          onClick = {() => setIsThemeDropdownOpen(!isThemeDropdownOpen)}
+          onClick = {() => {
+            if (!isThemeDropdownOpen) {
+              setIsDropdownOpen(false)
+              setTimeout(() => setIsDropdownOpen(true), 10)
+            }
+            setIsThemeDropdownOpen(!isThemeDropdownOpen)
+          }}
           className = "hover:bg-gray-800 p-1 rounded-full transition-colors"
         >
           <ActiveThemeIcon className = "w-6 h-6 cursor-pointer" />
@@ -143,7 +161,10 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
       <span>|</span>
 
       {isLanguageDropdownOpen && (
-        <div ref = {languageDropdownRef} className = "absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-gray-800 border border-gray-700 rounded-xl p-2 shadow-xl flex flex-col gap-1 w-40 z-50 animate-in fade-in zoom-in-95 duration-200">
+        <div
+          ref = {languageDropdownRef}
+          className = {floatingDropdownClassName}
+        >
           {languageOptions.filter((option) => option.id !== currentLang).map((option) => (
             <button
               key = {option.id}
@@ -151,7 +172,7 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
                 handleLanguageChange(option.id)
                 setIsLanguageDropdownOpen(false)
               }}
-              className = "flex items-center gap-3 px-3 py-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-300 hover:text-white text-sm cursor-pointer"
+              className = {dropdownOptionClassName}
             >
               <option.Icon className = "w-6 h-6" />
               <span>{option.label}</span>
@@ -162,7 +183,13 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
 
       <div className = "flex gap-3">
         <button
-          onClick = {() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
+          onClick = {() => {
+            if (!isLanguageDropdownOpen) {
+              setIsDropdownOpen(false)
+              setTimeout(() => setIsDropdownOpen(true), 10)
+            }
+            setIsLanguageDropdownOpen(!isLanguageDropdownOpen)
+          }}
           className = "hover:bg-gray-800 p-1 rounded-full transition-colors"
         >
           <ActiveLanguageIcon className = "w-8 h-8 cursor-pointer" />
