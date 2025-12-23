@@ -116,11 +116,11 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
 
   if (!mounted) return null
 
-  const floatingDropdownClassName = `absolute ${isDropdownOpen ? "bottom-full opacity-100" : "bottom-0 opacity-0"} mb-4 left-1/2 -translate-x-1/2 rounded-xl p-2 flex flex-col gap-1 w-40 z-50 transition-all duration-150 bg-[#cccccc] dark:bg-[#181717] ring-3 ring-black/10 shadow backdrop-blur-sm dark:ring-[#333232]/10`
+  const floatingDropdownClassName = `absolute ${isDropdownOpen ? "bottom-full opacity-100" : "bottom-0 opacity-0"} mb-4 left-1/2 -translate-x-1/2 rounded-xl p-2 flex flex-col gap-1 w-40 z-50 transition-all duration-150 bg-[#cccccc] dark:bg-[#181717] ring-3 ring-black/10 shadow backdrop-blur-sm dark:ring-[#3a3838]/10`
 
-  const dropdownOptionClassName = "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-120 text-gray-700 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-neutral-700 cursor-pointer font-medium text-sm"
+  const dropdownOptionClassName = "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-120 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:text-white dark:hover:bg-neutral-700 cursor-pointer font-medium text-sm"
 
-  const floatingButtonClassName = "bg-[#ddddda] dark:bg-[#1b1b1b] hover:bg-[#333232d5] dark:hover:bg-[#a19f9fd5] hover:text-white dark:hover:text-black ring-1 shadow-xs ring-[#ccccc9] dark:ring-[#202020] rounded-full duration-200 transition-colors"
+  const floatingButtonClassName = "bg-[#ddddda] dark:bg-[#1b1b1b] hover:bg-[#333232d5] dark:hover:bg-[#a19f9fd5] hover:text-white dark:hover:text-black ring-1 shadow-xs ring-[#ccccc9] dark:ring-[#202020] rounded-full duration-200 transition-colors shadow-black dark:shadow-white"
 
   return (
     <div className = {`flex gap-5 justify-center items-center ${className}`}>
@@ -160,7 +160,7 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
         </button>
       </div>
 
-      <span>|</span>
+      <span className = "font-black">|</span>
 
       {isLanguageDropdownOpen && (
         <div
