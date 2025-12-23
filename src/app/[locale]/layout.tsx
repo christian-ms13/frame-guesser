@@ -1,6 +1,8 @@
-import { Analytics } from "@vercel/analytics/next"
 import type { Metadata } from "next"
 import localFont from "next/font/local"
+import { getMessages } from "next-intl/server"
+import { NextIntlClientProvider } from "next-intl"
+import { Analytics } from "@vercel/analytics/next"
 
 import { ThemeProvider } from "@/components/ThemeProvider"
 
@@ -23,23 +25,30 @@ const karnakCondensedBlack = localFont({
   display: "swap"
 })
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode
+  params: Promise<{ locale: string }>
 }>) {
+  const { locale } = await params
+  const messages = await getMessages()
+
   return (
-    <html lang = "en" suppressHydrationWarning>
+    <html lang = {locale} suppressHydrationWarning>
       <body className = {`${karnakLight.variable} ${karnakCondensedBlack.variable} antialiased`}>
-        <ThemeProvider
-          attribute = "class"
-          defaultTheme = "system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Analytics />
-        </ThemeProvider>
+        <NextIntlClientProvider messages = {messages}>
+          <ThemeProvider
+            attribute = "class"
+            defaultTheme = "system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Analytics />
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

@@ -1,5 +1,7 @@
 "use client"
 
+import { useTranslations } from "next-intl"
+
 import { usePathname, useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import React, { useState, useEffect, useCallback } from "react"
@@ -23,6 +25,8 @@ const setLanguageCookie = (locale: string) => {
 }
 
 export default function PreferencesIndex({ className }: PreferencesIndexProps) {
+  const translations = useTranslations("homePage")
+
   const { setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
@@ -76,10 +80,10 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
   }, [mode, applyThemeLogic])
 
   const themeOptions: { id: ThemeMode; label: string; Icon: IconComponent }[] = [
-    { id: "light", label: "Light", Icon: IconLight },
-    { id: "dark", label: "Dark", Icon: IconDark },
-    { id: "system", label: "System", Icon: IconSystemSettings },
-    { id: "routine", label: "Routine", Icon: IconRoutine }
+    { id: "light", label: translations("themeDropdown.light"), Icon: IconLight },
+    { id: "dark", label: translations("themeDropdown.dark"), Icon: IconDark },
+    { id: "system", label: translations("themeDropdown.system"), Icon: IconSystemSettings },
+    { id: "routine", label: translations("themeDropdown.routine"), Icon: IconRoutine }
   ]
 
   const ActiveThemeIcon = themeOptions.find(opt => opt.id === mode)?.Icon || IconSystemSettings
@@ -147,7 +151,7 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
       )}
 
       <div className = "flex gap-3">
-        <Tootltip text = "Change Theme" active = {!isThemeDropdownOpen}>
+        <Tootltip text = {translations("tooltips.theme")} active = {!isThemeDropdownOpen}>
           <button
             onClick = {() => {
               if (!isThemeDropdownOpen) {
@@ -187,7 +191,7 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
       )}
 
       <div className = "flex gap-3">
-        <Tootltip text = "Change Language" active = {!isLanguageDropdownOpen}>
+        <Tootltip text = {translations("tooltips.language")} active = {!isLanguageDropdownOpen}>
           <button
             onClick = {() => {
               if (!isLanguageDropdownOpen) {

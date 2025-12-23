@@ -1,5 +1,15 @@
 {
-  "HomePage": {
-    "subtitle": "Adivina la película con una sola imagen."
+  "homePage": {
+    "subtitle": "Adivina la película con una sola imagen.",
+    "tooltips": {
+      "theme": "Cambiar tema",
+      "language": "Cambiar idioma"
+    },
+    "themeDropdown": {
+      "light": "Claro",
+      "dark": "Oscuro",
+      "system": "Sistema",
+      "routine": "Rutina"
+    }
   }
 }

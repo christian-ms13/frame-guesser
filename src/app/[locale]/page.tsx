@@ -1,10 +1,10 @@
+import { getTranslations } from "next-intl/server"
 import Image from "next/image"
-import { useTranslations } from "next-intl"
 
 import PreferencesIndex from "../../components/preferences"
 
-export default function Home() {
-  const translations = useTranslations("HomePage")
+export default async function Home() {
+  const translations = await getTranslations("homePage")
 
   return (
     <main className = "flex min-h-screen flex-col items-center justify-start pt-25 cursor-default select-none bg-[#e3e3e1] text-[#121212] dark:bg-[#121212] dark:text-[#e3e3e1]">
@@ -18,7 +18,9 @@ export default function Home() {
 
       <h1 className = "text-7xl font-karnak-condensed-black">FrameGuesser</h1>
 
-      <h3 className = "text-3xl mt-5 font-karnak-light tracking-wide">{translations("subtitle")}</h3>
+      <h3 className = "text-3xl mt-5 font-karnak-light tracking-wide">
+        {translations("subtitle")}
+      </h3>
 
       <PreferencesIndex className = "fixed bottom-0 w-full pb-5 z-40" />
     </main>

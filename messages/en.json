@@ -1,5 +1,15 @@
 {
-  "HomePage": {
-    "subtitle": "Guess the movie from a single frame."
+  "homePage": {
+    "subtitle": "Guess the movie from a single frame.",
+    "tooltips": {
+      "theme": "Change Theme",
+      "language": "Change Language"
+    },
+    "themeDropdown": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "routine": "Routine"
+    }
   }
 }
