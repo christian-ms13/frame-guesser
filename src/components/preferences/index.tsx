@@ -5,6 +5,7 @@ import { useTheme } from "next-themes"
 import React, { useState, useEffect, useCallback } from "react"
 
 import { useClickOutside } from "../../hooks/useClickOutside"
+import Tootltip from "../ui/Tooltip"
 
 import { IconDark, IconLight, IconSystemSettings, IconRoutine } from "./ThemeIcons"
 import { IconUS, IconES } from "./LanguageIcons"
@@ -146,18 +147,20 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
       )}
 
       <div className = "flex gap-3">
-        <button
-          onClick = {() => {
-            if (!isThemeDropdownOpen) {
-              setIsDropdownOpen(false)
-              setTimeout(() => setIsDropdownOpen(true), 10)
-            }
-            setIsThemeDropdownOpen(!isThemeDropdownOpen)
-          }}
-          className = {`${floatingButtonClassName} p-1`}
-        >
-          <ActiveThemeIcon className = "w-6 h-6 cursor-pointer" />
-        </button>
+        <Tootltip text = "Change Theme" active = {!isThemeDropdownOpen}>
+          <button
+            onClick = {() => {
+              if (!isThemeDropdownOpen) {
+                setIsDropdownOpen(false)
+                setTimeout(() => setIsDropdownOpen(true), 10)
+              }
+              setIsThemeDropdownOpen(!isThemeDropdownOpen)
+            }}
+            className = {`${floatingButtonClassName} p-1`}
+          >
+            <ActiveThemeIcon className = "w-6 h-6 cursor-pointer" />
+          </button>
+        </Tootltip>
       </div>
 
       <span className = "font-black">|</span>
@@ -184,18 +187,20 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
       )}
 
       <div className = "flex gap-3">
-        <button
-          onClick = {() => {
-            if (!isLanguageDropdownOpen) {
-              setIsDropdownOpen(false)
-              setTimeout(() => setIsDropdownOpen(true), 10)
-            }
-            setIsLanguageDropdownOpen(!isLanguageDropdownOpen)
-          }}
-          className = {`${floatingButtonClassName} p-.5`}
-        >
-          <ActiveLanguageIcon className = "w-8 h-8 cursor-pointer" />
-        </button>
+        <Tootltip text = "Change Language" active = {!isLanguageDropdownOpen}>
+          <button
+            onClick = {() => {
+              if (!isLanguageDropdownOpen) {
+                setIsDropdownOpen(false)
+                setTimeout(() => setIsDropdownOpen(true), 10)
+              }
+              setIsLanguageDropdownOpen(!isLanguageDropdownOpen)
+            }}
+            className = {`${floatingButtonClassName} p-.5`}
+          >
+            <ActiveLanguageIcon className = "w-8 h-8 cursor-pointer" />
+          </button>
+        </Tootltip>
       </div>
     </div>
   )
