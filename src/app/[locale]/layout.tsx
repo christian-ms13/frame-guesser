@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
 import localFont from "next/font/local"
 
-import { ThemeProvider } from "@/components/ThemeProvider"
+import { ThemeProvider } from "../../components/preferences/ThemeProvider"
 
 import "../globals.css"
 
