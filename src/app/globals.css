@@ -5,4 +5,6 @@
 @theme {
   --font-karnak-light: var(--font-karnak-light);
   --font-karnak-condensed-black: var(--font-karnak-condensed-black);
+  --font-googlesanscode-light: var(--font-googlesanscode-light);
+  --font-play-bold: var(--font-play-bold);
 }

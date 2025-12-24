@@ -1,6 +1,7 @@
 {
   "homePage": {
     "subtitle": "Guess the movie from a single frame.",
+    "play": "Play",
     "tooltips": {
       "theme": "Change Theme",
       "language": "Change Language"

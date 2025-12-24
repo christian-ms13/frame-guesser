@@ -25,6 +25,25 @@ const karnakCondensedBlack = localFont({
   display: "swap"
 })
 
+const googleSansCodeLight = localFont({
+  src: "../fonts/googlesanscode-light.woff2",
+  variable: "--font-googlesanscode-light",
+  display: "swap"
+})
+
+const playBold = localFont({
+  src: "../fonts/play-bold.woff2",
+  variable: "--font-play-bold",
+  display: "swap"
+})
+
+const fontsToPreload = [
+  karnakLight,
+  karnakCondensedBlack,
+  googleSansCodeLight,
+  playBold
+]
+
 export default async function RootLayout({
   children,
   params,
@@ -37,7 +56,7 @@ export default async function RootLayout({
 
   return (
     <html lang = {locale} suppressHydrationWarning>
-      <body className = {`${karnakLight.variable} ${karnakCondensedBlack.variable} antialiased`}>
+      <body className = {`${fontsToPreload.map(font => font.variable).join(" ")} antialiased`}>
         <NextIntlClientProvider messages = {messages}>
           <ThemeProvider
             attribute = "class"

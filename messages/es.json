@@ -1,6 +1,7 @@
 {
   "homePage": {
     "subtitle": "Adivina la película con una sola imagen.",
+    "play": "Jugar",
     "tooltips": {
       "theme": "Cambiar tema",
       "language": "Cambiar idioma"
