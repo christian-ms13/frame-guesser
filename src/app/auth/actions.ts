@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
-import { createClient } from "../../utils/supabase/server"
 import { loginSchema, signupSchema } from "../../lib/schemas"
+import { createClient } from "../../utils/supabase/server"
 
 type AuthResponse = {
   error?: string

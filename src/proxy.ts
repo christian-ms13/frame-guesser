@@ -1,6 +1,6 @@
-import { type NextRequest } from "next/server"
-import createMiddleware from "next-intl/middleware"
 import { createServerClient } from "@supabase/ssr"
+import createMiddleware from "next-intl/middleware"
+import { type NextRequest } from "next/server"
 
 export default async function proxy(request: NextRequest) {
   const handleI18n = createMiddleware({

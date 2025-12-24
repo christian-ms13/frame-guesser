@@ -1,8 +1,8 @@
-import type { Metadata } from "next"
-import localFont from "next/font/local"
-import { getMessages } from "next-intl/server"
-import { NextIntlClientProvider } from "next-intl"
 import { Analytics } from "@vercel/analytics/next"
+import type { Metadata } from "next"
+import { NextIntlClientProvider } from "next-intl"
+import { getMessages } from "next-intl/server"
+import localFont from "next/font/local"
 
 import { ThemeProvider } from "@/components/ThemeProvider"
 

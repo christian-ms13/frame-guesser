@@ -2,15 +2,15 @@
 
 import { useTranslations } from "next-intl"
 
-import { usePathname, useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
-import React, { useState, useEffect, useCallback } from "react"
+import { usePathname, useRouter } from "next/navigation"
+import React, { useCallback, useEffect, useState } from "react"
 
 import { useClickOutside } from "../../hooks/useClickOutside"
 import Tootltip from "../ui/Tooltip"
 
-import { IconDark, IconLight, IconSystemSettings, IconRoutine } from "./ThemeIcons"
-import { IconUS, IconES } from "./LanguageIcons"
+import { IconES, IconUS } from "./LanguageIcons"
+import { IconDark, IconLight, IconRoutine, IconSystemSettings } from "./ThemeIcons"
 
 type PreferencesIndexProps = {
   className?: string
@@ -157,6 +157,7 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
               if (!isThemeDropdownOpen) {
                 setIsDropdownOpen(false)
                 setTimeout(() => setIsDropdownOpen(true), 10)
+                if (isLanguageDropdownOpen) setIsLanguageDropdownOpen(false)
               }
               setIsThemeDropdownOpen(!isThemeDropdownOpen)
             }}
@@ -197,6 +198,7 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
               if (!isLanguageDropdownOpen) {
                 setIsDropdownOpen(false)
                 setTimeout(() => setIsDropdownOpen(true), 10)
+                if (isThemeDropdownOpen) setIsThemeDropdownOpen(false)
               }
               setIsLanguageDropdownOpen(!isLanguageDropdownOpen)
             }}
