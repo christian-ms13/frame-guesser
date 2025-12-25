@@ -37,9 +37,21 @@ const playBold = localFont({
   display: "swap"
 })
 
+const askanDemibold = localFont({
+  src: "../fonts/askan-demibold.woff2",
+  variable: "--font-askan-demibold",
+  display: "swap"
+})
+
 const karnakProBold = localFont({
   src: "../fonts/karnak-pro-bold.woff2",
   variable: "--font-karnak-pro-bold",
+  display: "swap"
+})
+
+const bignoodletitlingRegular = localFont({
+  src: "../fonts/bignoodletitling-regular.woff2",
+  variable: "--font-bignoodletitling-regular",
   display: "swap"
 })
 
@@ -48,7 +60,9 @@ const fontsToPreload = [
   karnakCondensedBlack,
   googleSansCodeLight,
   playBold,
-  karnakProBold
+  karnakProBold,
+  askanDemibold,
+  bignoodletitlingRegular
 ]
 
 export default async function RootLayout({

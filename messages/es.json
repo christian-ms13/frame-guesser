@@ -14,6 +14,7 @@
     }
   },
   "loginPage": {
+    "backHome": "Volver al Inicio",
     "login": {
       "welcome": "¡Bienvenid@ de nuevo!",
       "prompt": "Por favor ingresa tus datos para iniciar sesión."
@@ -25,6 +26,9 @@
     "tabs": {
       "login": "Iniciar sesión",
       "signup": "Registrarse"
+    },
+    "form": {
+      "alternative": "o continuar con"
     }
   }
 }

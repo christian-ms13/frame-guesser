@@ -14,6 +14,7 @@
     }
   },
   "loginPage": {
+    "backHome": "Back to Home",
     "login": {
       "welcome": "Welcome back!",
       "prompt": "Please enter your details to sign in."
@@ -25,6 +26,9 @@
     "tabs": {
       "login": "Login",
       "signup": "Signup"
+    },
+    "form": {
+      "alternative": "or continue with"
     }
   }
 }

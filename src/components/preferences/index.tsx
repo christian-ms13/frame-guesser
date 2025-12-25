@@ -201,7 +201,7 @@ export default function PreferencesIndex() {
               }
               setIsLanguageDropdownOpen(!isLanguageDropdownOpen)
             }}
-            className = {`${floatingButtonClassName} relative overflow-hidden group p-.5`}
+            className = {`${floatingButtonClassName} relative overflow-hidden group p-0`}
           >
             <div className = {`absolute inset-0 ${langBgClass} bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity duration-350 z-0`} />
             <div className = "absolute inset-0 bg-black/47 opacity-0 group-hover:opacity-100 transition-opacity duration-350 z-0" />
