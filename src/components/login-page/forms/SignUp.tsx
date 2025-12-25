@@ -1,4 +1,4 @@
-export default function SignUpForm() {
+export default function SignupForm() {
   return (
     <form>
       <input

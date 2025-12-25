@@ -12,10 +12,6 @@ import Tootltip from "../ui/Tooltip"
 import { IconES, IconUS } from "./LanguageIcons"
 import { IconDark, IconLight, IconRoutine, IconSystemSettings } from "./ThemeIcons"
 
-type PreferencesIndexProps = {
-  className?: string
-}
-
 type ThemeMode = "light" | "dark" | "system" | "routine"
 
 type IconComponent = React.ComponentType<{ className?: string }>
@@ -24,7 +20,7 @@ const setLanguageCookie = (locale: string) => {
   document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`
 }
 
-export default function PreferencesIndex({ className }: PreferencesIndexProps) {
+export default function PreferencesIndex() {
   const translations = useTranslations("homePage")
 
   const { setTheme } = useTheme()
@@ -128,7 +124,7 @@ export default function PreferencesIndex({ className }: PreferencesIndexProps) {
   const floatingButtonClassName = "bg-[#ddddda] dark:bg-[#1b1b1b] hover:bg-[#333232d5] dark:hover:bg-[#a19f9fd5] hover:text-white dark:hover:text-black ring-1 shadow-xs ring-[#ccccc9] dark:ring-[#202020] rounded-full duration-200 transition-colors shadow-black dark:shadow-white"
 
   return (
-    <div className = {`flex gap-5 justify-center items-center ${className}`}>
+    <div className = {`flex gap-5 justify-center items-center fixed bottom-0 w-full pb-5 z-40`}>
       {isThemeDropdownOpen && (
         <div
           ref = {themeDropdownRef}

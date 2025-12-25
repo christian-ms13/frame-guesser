@@ -12,5 +12,19 @@
       "system": "Sistema",
       "routine": "Rutina"
     }
+  },
+  "loginPage": {
+    "login": {
+      "welcome": "¡Bienvenid@ de nuevo!",
+      "prompt": "Por favor ingresa tus datos para iniciar sesión."
+    },
+    "signup": {
+      "welcome": "Crear una cuenta",
+      "prompt": "Por favor ingresa los datos para tu nueva cuenta."
+    },
+    "tabs": {
+      "login": "Iniciar sesión",
+      "signup": "Registrarse"
+    }
   }
 }

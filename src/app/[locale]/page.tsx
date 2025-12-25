@@ -1,10 +1,10 @@
-import Link from "next/link"
 import { getTranslations } from "next-intl/server"
 import Image from "next/image"
+import Link from "next/link"
 
+import { IconCode, IconPlay } from "../../components/home-page/actions/LinkIcons"
 import PreferencesIndex from "../../components/preferences"
 import { createClient } from "../../utils/supabase/server"
-import { IconCode, IconPlay } from "../../components/home-page/actions/LinkIcons"
 
 export default async function Home() {
   const translations = await getTranslations("homePage")
@@ -14,10 +14,10 @@ export default async function Home() {
   const { data: { user } } = await supabase.auth.getUser()
   const isLoggedIn = !!user
 
-  const linkStyle = "text-xl flex gap-2 items-center justify-center px-5 py-3 rounded-full cursor-pointer transition-transform duration-70 ease-out hover:scale-115 active:scale-100"
+  const linkStyle = "text-xl flex gap-2 items-center justify-center px-5 py-3 rounded-full cursor-pointer transition-transform duration-70 ease-out hover:scale-115 active:scale-100 hover:shadow-lg shadow-black/50 dark:shadow-white/20 relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600"
 
   return (
-    <main className = "pb-20 flex min-h-screen flex-col items-center justify-start pt-25 cursor-default select-none bg-[#e3e3e1] text-[#121212] dark:bg-[#121212] dark:text-[#e3e3e1]">
+    <main className = "pb-20 flex min-h-screen flex-col items-center justify-start pt-5">
       <Image
         src = "/logo.png"
         alt = "FrameGuesser Logo"
@@ -53,7 +53,7 @@ export default async function Home() {
         </Link>
       </div>
 
-      <PreferencesIndex className = "fixed bottom-0 w-full pb-5 z-40" />
+      <PreferencesIndex />
     </main>
   )
 }

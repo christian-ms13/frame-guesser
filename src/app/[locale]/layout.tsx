@@ -56,7 +56,7 @@ export default async function RootLayout({
 
   return (
     <html lang = {locale} suppressHydrationWarning>
-      <body className = {`${fontsToPreload.map(font => font.variable).join(" ")} antialiased`}>
+      <body className = {`${fontsToPreload.map(font => font.variable).join(" ")} antialiased cursor-default select-none bg-[#e3e3e1] text-[#121212] dark:bg-[#121212] dark:text-[#e3e3e1]`}>
         <NextIntlClientProvider messages = {messages}>
           <ThemeProvider
             attribute = "class"
