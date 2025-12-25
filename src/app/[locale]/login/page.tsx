@@ -33,7 +33,7 @@ export default function FormsPage() {
   }
 
   return (
-    <main className = "flex flex-col items-center justify-start min-h-screen pt-5 pb-20">
+    <main className = "flex flex-col items-center justify-start min-h-screen pt-5 pb-20 gap-5">
       <Link href = "/">
         <Image
           src = "/logo.png"
@@ -44,10 +44,14 @@ export default function FormsPage() {
         />
       </Link>
 
-      <section className = "flex flex-col items-center justify-start">
+      <section className = "flex flex-col items-center justify-start gap-4">
         <div>
-          <h1 className = "text-4xl font-bold text-center">{translations(`${isLoginOrSignup ? "login" : "signup"}.welcome`)}</h1>
-          <p className = "text-lg text-center">{translations(`${isLoginOrSignup ? "login" : "signup"}.prompt`)}</p>
+          <h1 className = "text-4xl font-karnak-pro-bold mb-1 text-center">
+            {translations(`${isLoginOrSignup ? "login" : "signup"}.welcome`)}
+          </h1>
+          <p className = "text-lg text-center font-system-ui">
+            {translations(`${isLoginOrSignup ? "login" : "signup"}.prompt`)}
+          </p>
         </div>
 
         <div className = "flex flex-col items-center justify-center">

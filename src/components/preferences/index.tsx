@@ -114,14 +114,17 @@ export default function PreferencesIndex() {
 
   const ActiveLanguageIcon = pathname.startsWith("/es") ? IconES : IconUS
   const currentLang = pathname.startsWith("/es") ? "es" : "en"
+  const langBgClass = currentLang === "es"
+    ? "bg-[url('/preferences-index/spain.png')]"
+    : "bg-[url('/preferences-index/usa.png')]"
 
   if (!mounted) return null
 
   const floatingDropdownClassName = `absolute ${isDropdownOpen ? "bottom-full opacity-100" : "bottom-0 opacity-0"} mb-4 left-1/2 -translate-x-1/2 rounded-xl p-2 flex flex-col gap-1 w-40 z-50 transition-all duration-150 bg-[#cccccc] dark:bg-[#181717] ring-3 ring-black/10 shadow backdrop-blur-sm dark:ring-[#3a3838]/10`
 
-  const dropdownOptionClassName = "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-120 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:text-white dark:hover:bg-neutral-700 cursor-pointer font-medium text-sm"
+  const dropdownOptionClassName = "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-120 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:text-white dark:hover:bg-neutral-700 cursor-pointer font-system-ui font-medium text-sm"
 
-  const floatingButtonClassName = "bg-[#ddddda] dark:bg-[#1b1b1b] hover:bg-[#333232d5] dark:hover:bg-[#a19f9fd5] hover:text-white dark:hover:text-black ring-1 shadow-xs ring-[#ccccc9] dark:ring-[#202020] rounded-full duration-200 transition-colors shadow-black dark:shadow-white"
+  const floatingButtonClassName = "bg-[#ddddda] dark:bg-[#1b1b1b] hover:bg-[#333232d5] dark:hover:bg-[#a19f9fd5] hover:text-white ring-1 shadow-xs ring-[#ccccc9] dark:ring-[#202020] rounded-full duration-200 transition-colors shadow-black dark:shadow-white"
 
   return (
     <div className = {`flex gap-5 justify-center items-center fixed bottom-0 w-full pb-5 z-40`}>
@@ -157,9 +160,9 @@ export default function PreferencesIndex() {
               }
               setIsThemeDropdownOpen(!isThemeDropdownOpen)
             }}
-            className = {`${floatingButtonClassName} p-1`}
+            className = {`${floatingButtonClassName} group p-1`}
           >
-            <ActiveThemeIcon className = "w-6 h-6 cursor-pointer" />
+            <ActiveThemeIcon className = "w-6 h-6 cursor-pointer transition-colors duration-150 dark:group-hover:text-black" />
           </button>
         </Tootltip>
       </div>
@@ -198,9 +201,11 @@ export default function PreferencesIndex() {
               }
               setIsLanguageDropdownOpen(!isLanguageDropdownOpen)
             }}
-            className = {`${floatingButtonClassName} p-.5`}
+            className = {`${floatingButtonClassName} relative overflow-hidden group p-.5`}
           >
-            <ActiveLanguageIcon className = "w-8 h-8 cursor-pointer" />
+            <div className = {`absolute inset-0 ${langBgClass} bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity duration-350 z-0`} />
+            <div className = "absolute inset-0 bg-black/47 opacity-0 group-hover:opacity-100 transition-opacity duration-350 z-0" />
+            <ActiveLanguageIcon className = "w-8 h-8 cursor-pointer relative z-10" />
           </button>
         </Tootltip>
       </div>

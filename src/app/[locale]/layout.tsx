@@ -37,11 +37,18 @@ const playBold = localFont({
   display: "swap"
 })
 
+const karnakProBold = localFont({
+  src: "../fonts/karnak-pro-bold.woff2",
+  variable: "--font-karnak-pro-bold",
+  display: "swap"
+})
+
 const fontsToPreload = [
   karnakLight,
   karnakCondensedBlack,
   googleSansCodeLight,
-  playBold
+  playBold,
+  karnakProBold
 ]
 
 export default async function RootLayout({
