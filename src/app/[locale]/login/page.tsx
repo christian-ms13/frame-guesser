@@ -1,6 +1,7 @@
 "use client"
 
 import { useTranslations } from "next-intl"
+import { useTheme } from "next-themes"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -9,13 +10,16 @@ import { useEffect, useState } from "react"
 import LoginForm from "../../../components/login-page/forms/LogIn"
 import SignupForm from "../../../components/login-page/forms/SignUp"
 import IconGoBack from "../../../components/login-page/GoBackIcon"
-import { IconApple, IconGitHub, IconGoogle, IconMicrosoft } from "../../../components/login-page/SocialIcons"
+import { IconAppleDark, IconAppleLight, IconGitHubDark, IconGitHubLight, IconGoogle, IconMicrosoft } from "../../../components/login-page/SocialIcons"
 import PreferencesIndex from "../../../components/preferences"
 import { useAuth } from "../../../hooks/useAuth"
 
 export default function FormsPage() {
   const { isLoggedIn, loading } = useAuth()
   const router = useRouter()
+
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
   const translations = useTranslations("loginPage")
   const [isLoginOrSignup, setIsLoginOrSignup] = useState(true) // true for login, false for signup. deafult to login
@@ -26,6 +30,12 @@ export default function FormsPage() {
     }
   }, [isLoggedIn, loading, router])
 
+  useEffect(() => {
+    const timeout = setTimeout(() => setMounted(true), 0)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
   if (loading) {
     return (
       <main className = "flex flex-col items-center justify-center min-h-screen">
@@ -33,6 +43,18 @@ export default function FormsPage() {
       </main>
     )
   }
+
+  const socialIconsSize = "w-7 h-7"
+
+  const GitHubIcon = mounted && resolvedTheme === "light" ? IconGitHubLight : IconGitHubDark
+  const AppleIcon = mounted && resolvedTheme === "light" ? IconAppleLight : IconAppleDark
+
+  const socialIcons = [
+    <IconGoogle key = "google" className = {socialIconsSize} />,
+    <GitHubIcon key = "github" className = {socialIconsSize} />,
+    <AppleIcon key = "apple" className = {socialIconsSize} />,
+    <IconMicrosoft key = "microsoft" className = {socialIconsSize} />
+  ]
 
   const tabButtonsClassName = `flex justify-center items-center w-full py-4 px-30 cursor-pointer max-w-1/2 group`
   const tabTitleClassName = "text-xl whitespace-nowrap font-karnak-pro-bold tracking-wide"
@@ -42,7 +64,7 @@ export default function FormsPage() {
       <div className = "self-start ml-5">
         <Link 
           href = "/" 
-          className = "flex items-center justify-start gap-2 font-medium text-white bg-red-500 px-6 py-3 rounded-full text-lg hover:scale-110 transition-transform duration-70 active:scale-100" // two or more transitions with different durations: {animation-itself} {animation2-itself} transition-[animation,animation2] duration-[duration+metric,duration2-metric]
+          className = "flex items-center justify-start gap-2 font-medium text-white bg-red-500 px-6 py-3 rounded-full text-lg hover:scale-110 transition-transform duration-70 active:scale-100" // two or more transitions with different durations: {animation-itself} {animation2-itself} transition-[animation,animation2] duration-[duration+metric,duration2+metric]
         >
           <IconGoBack />
           <span>{translations("backHome")}</span>
@@ -86,16 +108,20 @@ export default function FormsPage() {
             </button>
           </div>
 
-          <div className = {`w-1/2 h-0.75 bg-red-500 transition-transform duration-300 self-start ${isLoginOrSignup ? "translate-x-0" : "translate-x-full"}`} />
+          <div className = {`w-1/2 h-0.75 bg-red-500 shadow-[0_0_10px_#ef4444] transition-transform duration-300 self-start ${isLoginOrSignup ? "translate-x-0" : "translate-x-full"}`} />
 
           <div className = "w-full h-px bg-[#d3d5da] dark:bg-neutral-700 mb-7" />
 
           <div className = "flex flex-col items-center justify-center gap-6 w-85/100">
-            <div className = "grid grid-cols-2 gap-8">
-              <IconGoogle className = "w-10 h-10" />
-              <IconGitHub className = "w-10 h-10" />
-              <IconApple className = "w-10 h-10" />
-              <IconMicrosoft className = "w-10 h-10" />
+            <div className = "grid grid-cols-4 justify-items-center items-center w-full gap-6">
+              {socialIcons.map((IconComponent, index) => (
+                <button
+                  key = {index}
+                  className = "inline-flex items-center justify-center cursor-pointer p-4 rounded-xl bg-neutral-100 ring-2 ring-neutral-200 hover:bg-neutral-200 dark:bg-neutral-700 dark:ring-neutral-600 dark:hover:bg-neutral-600 transition-colors duration-150"
+                >
+                  {IconComponent}
+                </button>
+              ))}
             </div>
 
             <div className = "flex items-center w-full gap-4 text-neutral-600 dark:text-neutral-300 font-bignoodletitling-regular tracking-widest">
