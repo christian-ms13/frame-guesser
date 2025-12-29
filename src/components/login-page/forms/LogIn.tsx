@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { IconEmail, IconPassword, IconShowPassword, IconHidePassword } from "../InputIcons"
 
-const labelClassName = "flex gap-2 items-center w-full px-4 py-2 border bg-neutral-100 ring-neutral-200 ring-1 border-none hover:bg-neutral-200 rounded-xl transition-colors duration-150 font-robotoslab-medium text-black placeholder:font-robotoslab-bold group"
+const labelClassName = "flex gap-2 items-center w-full px-4 py-2 border bg-neutral-100 ring-neutral-200 ring-1 border-none hover:bg-neutral-200 rounded-xl transition-colors duration-150 font-robotoslab-medium text-black placeholder:font-robotoslab-bold group dark:bg-neutral-700 dark:ring-neutral-600 dark:hover:bg-neutral-600 dark:text-white"
 const inputClassName = "w-full focus:outline-none flex-1"
 
 export default function LoginForm() {
@@ -68,7 +68,7 @@ export default function LoginForm() {
 
       <button
         type = "submit"
-        className = "w-full px-4 py-2 bg-red-400 hover:bg-red-500 text-white rounded-xl transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:bg-red-200"
+        className = "w-full px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:bg-neutral-300 dark:disabled:bg-neutral-900 dark:bg-neutral-300 dark:text-black dark:disabled:text-white dark:hover:bg-neutral-100 font-robotoslab-bold text-lg"
         disabled = {!areAllFieldsFilled}
       >
         {translations("loginButton")}
