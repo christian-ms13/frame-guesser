@@ -20,6 +20,11 @@ export function useUsernameAvailability() {
       return
     }
 
+    if (!/^[A-Za-z0-9_]+$/.test(username) || username.includes(" ")) {
+      setStatus("taken")
+      return
+    }
+
     debounceTimerRef.current = setTimeout(async () => {
       setStatus("checking")
 

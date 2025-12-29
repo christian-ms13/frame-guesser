@@ -12,7 +12,10 @@ export const loginSchema = z.object({
 })
 
 export const signupSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters long"),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters long")
+    .regex(/^[A-Za-z0-9_]+$/, "Only letters, numbers, and underscores are allowed"),
   email: z.string().email("Invalid email address"),
   password: passwordValidation,
   confirmPassword: z.string()

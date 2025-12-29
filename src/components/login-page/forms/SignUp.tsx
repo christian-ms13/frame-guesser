@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 
 import { useEmailAvailability } from "../../../hooks/useEmailAvailability"
 import { useUsernameAvailability } from "../../../hooks/useUsernameAvailability"
-import { IconCheckmark, IconConfirmPasswordBefore, IconEmail, IconLoading, IconPassword, IconUsername } from "../InputIcons"
+import { IconCheckmark, IconConfirmPasswordBefore, IconEmail, IconLoading, IconPassword, IconUnavailableUsername, IconUsername } from "../InputIcons"
 
 const labelClassName = "flex gap-2 items-center w-full px-4 py-2 border bg-neutral-100 ring-neutral-200 ring-1 border-none hover:bg-neutral-200 rounded-xl transition-colors duration-150 font-robotoslab-medium text-black placeholder:font-robotoslab-bold group"
 const inputClassName = "w-full focus:outline-none flex-1"
@@ -34,7 +34,7 @@ export default function SignupForm() {
   }, [])
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const username = event.target.value.trim()
+    const username = event.target.value
     checkUsername(username)
   }
 
@@ -45,7 +45,7 @@ export default function SignupForm() {
       case "available":
         return <IconCheckmark className = "w-5 h-5 text-green-500" />
       case "taken":
-        return <IconCheckmark className = "w-5 h-5 text-red-500" />
+        return <IconUnavailableUsername className = "w-5 h-5 text-red-500" />
       case "idle":
       default:
         return <IconCheckmark className = "w-5 h-5 text-neutral-300" />
@@ -53,7 +53,7 @@ export default function SignupForm() {
   }
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const email = event.target.value.trim()
+    const email = event.target.value
     checkEmail(email)
   }
 
@@ -112,6 +112,7 @@ export default function SignupForm() {
           autoComplete = "username"
           minLength = {3}
           maxLength = {20}
+          pattern = "^[A-Za-z0-9_]+$"
           onChange = {(e) => {
             handleInputChange(e)
             handleUsernameChange(e)
@@ -132,6 +133,7 @@ export default function SignupForm() {
           required
           minLength = {5}
           onChange = {handleEmailChange}
+          autoComplete = "email"
         />
 
         {emailAvailabilityAndCharacterCounter}

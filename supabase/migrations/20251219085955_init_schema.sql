@@ -10,6 +10,10 @@ create table public.profiles (
 
 alter table public.profiles enable row level security;
 
+alter table public.profiles
+  add constraint profiles_username_allowed_chars
+  check (username ~ '^[A-Za-z0-9_\-]+$' and username !~ ' ');
+
 create policy "Public profiles are viewable by everyone." on public.profiles for select using (true);
 
 create function public.handle_new_user()

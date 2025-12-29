@@ -7,6 +7,10 @@ export async function checkUsernameAvailability(username: string): Promise<boole
     return false
   }
 
+  if (!/^[A-Za-z0-9_]+$/.test(username) || username.includes(" ")) {
+    return false
+  }
+
   const supabase = await createClient()
 
   const { data, error } = await supabase
