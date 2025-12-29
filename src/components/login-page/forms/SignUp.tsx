@@ -221,8 +221,12 @@ export default function SignupForm() {
           placeholder = {translations("emailPlaceholder")}
           className = {inputClassName}
           required
-          minLength = {5}
-          onChange = {handleEmailChange}
+          minLength = {3}
+          maxLength = {254}
+          onChange = {(e) => {
+            handleInputChange(e)
+            handleEmailChange(e)
+          }}
         />
 
         {emailAvailabilityAndCharacterCounter}

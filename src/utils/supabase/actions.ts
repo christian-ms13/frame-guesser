@@ -28,7 +28,8 @@ export async function checkUsernameAvailability(username: string): Promise<boole
 }
 
 export async function checkEmailAvailability(email: string): Promise<boolean> {
-  if (email.length < 5 || !email.includes("@")) {
+  // Modern flexible email validation: min 3 chars (a@b), max 254 (RFC 5321)
+  if (email.length < 3 || email.length > 254 || !email.includes("@")) {
     return false
   }
 

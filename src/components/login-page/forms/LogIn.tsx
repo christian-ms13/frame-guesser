@@ -2,13 +2,16 @@
 
 import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
+import { IconEmail, IconPassword, IconShowPassword, IconHidePassword } from "../InputIcons"
 
-const inputClassName = "w-full px-4 py-2 border bg-neutral-100 ring-neutral-200 ring-1 border-none hover:bg-neutral-200 rounded-xl transition-colors duration-150 font-robotoslab-medium focus:outline-none"
+const labelClassName = "flex gap-2 items-center w-full px-4 py-2 border bg-neutral-100 ring-neutral-200 ring-1 border-none hover:bg-neutral-200 rounded-xl transition-colors duration-150 font-robotoslab-medium text-black placeholder:font-robotoslab-bold group"
+const inputClassName = "w-full focus:outline-none flex-1"
 
 export default function LoginForm() {
   const translations = useTranslations("loginForm")
 
   const [areAllFieldsFilled, setAreAllFieldsFilled] = useState(false)
+  const [isPasswordShown, setIsPasswordShown] = useState(false)
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const form = event.currentTarget.form
@@ -26,24 +29,42 @@ export default function LoginForm() {
 
   return (
     <form className = "flex flex-col gap-4 w-full">
-      <input
-        type = "email"
-        placeholder = {translations("emailPlaceholder")}
-        className = {inputClassName}
-        autoComplete = "email"
-        required
-        onChange = {handleInputChange}
-        autoFocus
-      />
+      <label className = {labelClassName}>
+        <IconEmail className = "w-5 h-5" />
 
-      <input
-        type = "password"
-        placeholder = {translations("passwordPlaceholder")}
-        className = {inputClassName}
-        required
-        onChange = {handleInputChange}
-        pattern = "^\\S+$"
-      />
+        <input
+          type = "email"
+          placeholder = {translations("emailPlaceholder")}
+          className = {inputClassName}
+          autoComplete = "email"
+          required
+          minLength = {3}
+          maxLength = {254}
+          onChange = {handleInputChange}
+          autoFocus
+        />
+      </label>
+
+      <label className = {labelClassName}>
+        <IconPassword className = "w-5 h-5" />
+
+        <input
+          type = {isPasswordShown ? "text" : "password"}
+          placeholder = {translations("passwordPlaceholder")}
+          className = {inputClassName}
+          required
+          onChange = {handleInputChange}
+          pattern = "^\\S+$"
+        />
+
+        <button
+          type = "button"
+          className = "cursor-pointer flex-none"
+          onClick = {() => setIsPasswordShown(!isPasswordShown)}
+        >
+          {isPasswordShown ? <IconHidePassword className = "w-5 h-5" /> : <IconShowPassword className = "w-5 h-5" />}
+        </button>
+      </label>
 
       <button
         type = "submit"
