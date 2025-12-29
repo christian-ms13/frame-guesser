@@ -42,6 +42,7 @@ export default function LoginForm() {
         className = {inputClassName}
         required
         onChange = {handleInputChange}
+        pattern = "^\\S+$"
       />
 
       <button

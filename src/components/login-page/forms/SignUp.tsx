@@ -4,8 +4,9 @@ import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 
 import { useEmailAvailability } from "../../../hooks/useEmailAvailability"
+import { usePasswordValidation } from "../../../hooks/usePasswordValidation"
 import { useUsernameAvailability } from "../../../hooks/useUsernameAvailability"
-import { IconCheckmark, IconConfirmPasswordBefore, IconEmail, IconLoading, IconPassword, IconUnavailableUsername, IconUsername } from "../InputIcons"
+import { IconCheckmark, IconConfirmPassword, IconConfirmPasswordBefore, IconConfirmPasswordCorrect, IconConfirmPasswordNotMatching, IconEmail, IconEmailUnavailable, IconHidePassword, IconLoading, IconNotValidField, IconPassword, IconShowPassword, IconUnavailableUsername, IconUsername } from "../InputIcons"
 
 const labelClassName = "flex gap-2 items-center w-full px-4 py-2 border bg-neutral-100 ring-neutral-200 ring-1 border-none hover:bg-neutral-200 rounded-xl transition-colors duration-150 font-robotoslab-medium text-black placeholder:font-robotoslab-bold group"
 const inputClassName = "w-full focus:outline-none flex-1"
@@ -16,8 +17,15 @@ export default function SignupForm() {
   const [areAllFieldsFilled, setAreAllFieldsFilled] = useState(false)
   const { status: usernameStatus, checkUsername } = useUsernameAvailability()
   const { status: emailStatus, checkEmail } = useEmailAvailability()
+  const { status: passwordStatus, validatePassword } = usePasswordValidation()
 
-  const [characterCount, setCharacterCount] = useState(0)
+  const [usernameFieldCharacterCount, setUsernameFieldCharacterCount] = useState(0)
+
+  const [isPasswordShown, setIsPasswordShown] = useState(false)
+  const [isConfirmPasswordShown, setIsConfirmPasswordShown] = useState(false)
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [confirmPasswordStatus, setConfirmPasswordStatus] = useState<"idle" | "matching" | "notmatching">("idle")
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const form = event.currentTarget.form
@@ -64,38 +72,121 @@ export default function SignupForm() {
       case "available":
         return <IconCheckmark className = "w-5 h-5 text-green-500" />
       case "taken":
-        return <IconCheckmark className = "w-5 h-5 text-red-500" />
+        return <IconEmailUnavailable className = "w-5 h-5 text-red-500" />
       case "idle":
       default:
         return <IconCheckmark className = "w-5 h-5 text-neutral-300" />
     }
   }
 
-  const getLiveCharacterCount = (event: Event) => {
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = event.target.value
+    setPassword(newPassword)
+    validatePassword(newPassword)
+    if (confirmPassword) {
+      updateConfirmPasswordStatus(newPassword, confirmPassword)
+    }
+  }
+
+  const getPasswordStatusIcon = () => {
+    switch (passwordStatus) {
+      case "valid":
+        return <IconCheckmark className = "w-5 h-5 text-green-500" />
+      case "invalid":
+        return <IconNotValidField className = "w-5 h-5 text-red-500" />
+      case "checking":
+        return <IconLoading className = "w-5 h-5 text-neutral-300 animate-[spin_1s_linear_infinite_reverse]" />
+      case "idle":
+      default:
+        return <IconCheckmark className = "w-5 h-5 text-neutral-300" />
+    }
+  }
+
+    const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newConfirmPassword = event.target.value
+    setConfirmPassword(newConfirmPassword)
+    if (newConfirmPassword) {
+      updateConfirmPasswordStatus(password, newConfirmPassword)
+    } else {
+      setConfirmPasswordStatus("idle")
+    }
+  }
+
+  const updateConfirmPasswordStatus = (pwd: string, confirmPwd: string) => {
+    if (pwd === confirmPwd && confirmPwd !== "") {
+      setConfirmPasswordStatus("matching")
+    } else if (confirmPwd !== "" && pwd !== confirmPwd) {
+      setConfirmPasswordStatus("notmatching")
+    } else {
+      setConfirmPasswordStatus("idle")
+    }
+  }
+
+  const getConfirmPasswordStatusIcon = () => {
+    switch (confirmPasswordStatus) {
+      case "matching":
+        return <IconConfirmPasswordCorrect className = "w-5 h-5 text-green-500" />
+      case "notmatching":
+        return <IconConfirmPasswordNotMatching className = "w-5 h-5 text-red-500" />
+      case "idle":
+      default:
+        return <IconConfirmPasswordBefore className = "w-5 h-5 text-neutral-300" />
+    }
+  }
+
+  const getUsernameLiveCharacterCount = (event: Event) => {
     const input = event.target as HTMLInputElement
-    setCharacterCount(input.value.length)
+    setUsernameFieldCharacterCount(input.value.length)
   }
 
   useEffect(() => {
-    const input = document.querySelector('input[type="text"]') as HTMLInputElement | null
-    if (!input) return
-    input.addEventListener("input", getLiveCharacterCount)
+    const usernameField = document.querySelector('input[type="text"]') as HTMLInputElement | null
+    if (!usernameField) return
+    usernameField.addEventListener("input", getUsernameLiveCharacterCount)
 
     return () => {
-      input.removeEventListener("input", getLiveCharacterCount)
+      usernameField.removeEventListener("input", getUsernameLiveCharacterCount)
     }
   }, [])
 
   const usernameAvailabilityAndCharacterCounter = (
     <div className = "flex flex-none gap-2 items-center">
       {getUsernameStatusIcon()}
-      <span>{characterCount}/20</span>
+      <span>{usernameFieldCharacterCount}/20</span>
     </div>
   )
 
   const emailAvailabilityAndCharacterCounter = (
     <div className = "flex flex-none items-center">
       {getEmailStatusIcon()}
+    </div>
+  )
+
+  const passwordAvailabilityAndVisibilityToggle = (
+    <div className = "flex flex-none gap-2 items-center">
+      {getPasswordStatusIcon()}
+
+      <button
+        type = "button"
+        className = "cursor-pointer"
+        onClick = {() => setIsPasswordShown(!isPasswordShown)}
+      >
+        {isPasswordShown ? <IconHidePassword className = "w-5 h-5" /> : <IconShowPassword className = "w-5 h-5" />}
+      </button>
+    </div>
+  )
+
+  const confirmPasswordStatusAndVisibilityToggle = (
+    <div className = "flex flex-none gap-2 items-center">
+      {getConfirmPasswordStatusIcon()}
+
+      <button
+        type = "button"
+        className = "cursor-pointer"
+        onClick = {() => setIsConfirmPasswordShown(!isConfirmPasswordShown)}
+      >
+        {isConfirmPasswordShown ? <IconHidePassword className = "w-5 h-5" /> : <IconShowPassword className = "w-5 h-5" />}
+      </button>
     </div>
   )
 
@@ -109,7 +200,6 @@ export default function SignupForm() {
           placeholder = {translations("usernamePlaceholder")}
           className = {inputClassName}
           required
-          autoComplete = "username"
           minLength = {3}
           maxLength = {20}
           pattern = "^[A-Za-z0-9_]+$"
@@ -133,7 +223,6 @@ export default function SignupForm() {
           required
           minLength = {5}
           onChange = {handleEmailChange}
-          autoComplete = "email"
         />
 
         {emailAvailabilityAndCharacterCounter}
@@ -143,24 +232,37 @@ export default function SignupForm() {
         <IconPassword className = "w-5 h-5" />
 
         <input
-          type = "password"
+          type = {isPasswordShown ? "text" : "password"}
           placeholder = {translations("passwordPlaceholder")}
           className = {inputClassName}
           required
-          onChange = {handleInputChange}
+          onChange = {(e) => {
+            handleInputChange(e)
+            handlePasswordChange(e)
+          }}
+          minLength = {8}
+          pattern = "^\\S+$"
         />
+
+        {passwordAvailabilityAndVisibilityToggle}
       </label>
 
       <label className = {labelClassName}>
-        <IconConfirmPasswordBefore className = "w-5 h-5" />
+        <IconConfirmPassword className = "w-5 h-5" />
 
         <input
-          type = "password"
+          type = {isConfirmPasswordShown ? "text" : "password"}
           placeholder = {translations("confirmPasswordPlaceholder")}
           className = {inputClassName}
           required
-          onChange = {handleInputChange}
+          onChange = {(e) => {
+            handleInputChange(e)
+            handleConfirmPasswordChange(e)
+          }}
+          pattern = "^\\S+$"
         />
+
+        {confirmPasswordStatusAndVisibilityToggle}
       </label>
 
       <button

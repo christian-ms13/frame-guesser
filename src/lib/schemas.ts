@@ -2,13 +2,16 @@ import { z } from 'zod'
 
 const passwordValidation = z.string()
   .min(8, "Password must be at least 8 characters long")
+  .regex(/^\S+$/, "Password must not contain spaces")
   .regex(/[a-z]/, "Password must contain at least one lowercase letter")
   .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
   .regex(/\d/, "Password must contain at least one number")
 
 export const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters long")
+  password: z.string()
+    .min(8, "Password must be at least 8 characters long")
+    .regex(/^\S+$/, "Password must not contain spaces")
 })
 
 export const signupSchema = z.object({
