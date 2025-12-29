@@ -37,7 +37,7 @@
     "loginButton": "Log In"
   },
   "signUpForm": {
-    "usernamePlaceholder": "your.username",
+    "usernamePlaceholder": "your_username",
     "emailPlaceholder": "your.email@example.com",
     "passwordPlaceholder": "Enter your password",
     "confirmPasswordPlaceholder": "Confirm your password",
