@@ -49,9 +49,21 @@ const karnakProBold = localFont({
   display: "swap"
 })
 
-const bignoodletitlingRegular = localFont({
-  src: "../fonts/bignoodletitling-regular.woff2",
-  variable: "--font-bignoodletitling-regular",
+const corporateSProMedium = localFont({
+  src: "../fonts/corporatespro-medium.woff2",
+  variable: "--font-corporatespro-medium",
+  display: "swap"
+})
+
+const robotoSlabMedium = localFont({
+  src: "../fonts/robotoslab-medium.woff2",
+  variable: "--font-robotoslab-medium",
+  display: "swap"
+})
+
+const robotoSlabBold = localFont({
+  src: "../fonts/robotoslab-bold.woff2",
+  variable: "--font-robotoslab-bold",
   display: "swap"
 })
 
@@ -62,7 +74,9 @@ const fontsToPreload = [
   playBold,
   karnakProBold,
   askanDemibold,
-  bignoodletitlingRegular
+  corporateSProMedium,
+  robotoSlabMedium,
+  robotoSlabBold
 ]
 
 export default async function RootLayout({
@@ -77,7 +91,7 @@ export default async function RootLayout({
 
   return (
     <html lang = {locale} suppressHydrationWarning>
-      <body className = {`${fontsToPreload.map(font => font.variable).join(" ")} antialiased cursor-default select-none bg-[#e3e3e1] text-[#121212] dark:bg-[#121212] dark:text-[#e3e3e1]`}>
+      <body className = {`${fontsToPreload.map(font => font.variable).join(" ")} antialiased cursor-default select-none selection:bg-[#121212] selection:text-[#e3e3e1] bg-[#e3e3e1] text-[#121212] dark:bg-[#121212] dark:text-[#e3e3e1]`}>
         <NextIntlClientProvider messages = {messages}>
           <ThemeProvider
             attribute = "class"

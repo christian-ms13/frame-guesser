@@ -1,14 +1,12 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-
 import { useTheme } from "next-themes"
 import { usePathname, useRouter } from "next/navigation"
 import React, { useCallback, useEffect, useState } from "react"
 
 import { useClickOutside } from "../../hooks/useClickOutside"
 import Tootltip from "../ui/Tooltip"
-
 import { IconES, IconUS } from "./LanguageIcons"
 import { IconDark, IconLight, IconRoutine, IconSystemSettings } from "./ThemeIcons"
 

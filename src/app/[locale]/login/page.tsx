@@ -91,7 +91,7 @@ export default function FormsPage() {
           </p>
         </div>
 
-        <div className = "relative flex flex-col items-center justify-center bg-white dark:bg-neutral-800 rounded-3xl border-[#d3d5da] dark:border-neutral-700 border-2 overflow-hidden">
+        <div className = "relative flex flex-col items-center justify-center bg-white dark:bg-neutral-800 rounded-3xl border-[#d3d5da] dark:border-neutral-700 border-2 overflow-hidden pb-10">
           <div className = "flex w-full">
             <button
               onClick = {() => setIsLoginOrSignup(true)}
@@ -124,7 +124,7 @@ export default function FormsPage() {
               ))}
             </div>
 
-            <div className = "flex items-center w-full gap-4 text-neutral-600 dark:text-neutral-300 font-bignoodletitling-regular tracking-widest">
+            <div className = "flex items-center w-full gap-4 text-neutral-600 dark:text-neutral-300 font-corporatespro-medium uppercase tracking-wide">
               <hr className = "w-full h-0.5 translate-y-0.5" />
               <h5 className = "min-w-max">{translations("form.alternative")}</h5>
               <hr className = "w-full h-0.5 translate-y-0.5" />

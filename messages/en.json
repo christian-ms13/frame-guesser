@@ -30,5 +30,17 @@
     "form": {
       "alternative": "or continue with"
     }
+  },
+  "loginForm": {
+    "emailPlaceholder": "your.email@example.com",
+    "passwordPlaceholder": "Enter your password",
+    "loginButton": "Log In"
+  },
+  "signUpForm": {
+    "usernamePlaceholder": "your.username",
+    "emailPlaceholder": "your.email@example.com",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "signUpButton": "Sign Up"
   }
 }
