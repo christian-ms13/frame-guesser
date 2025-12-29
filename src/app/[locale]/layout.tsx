@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { Metadata } from "next"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
@@ -101,6 +102,7 @@ export default async function RootLayout({
           >
             {children}
             <Analytics />
+            <SpeedInsights />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

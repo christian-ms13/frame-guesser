@@ -3,8 +3,8 @@
 import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 
-import { useUsernameAvailability } from "../../../hooks/useUsernameAvailability"
 import { useEmailAvailability } from "../../../hooks/useEmailAvailability"
+import { useUsernameAvailability } from "../../../hooks/useUsernameAvailability"
 import { IconCheckmark, IconConfirmPasswordBefore, IconEmail, IconLoading, IconPassword, IconUsername } from "../InputIcons"
 
 const labelClassName = "flex gap-2 items-center w-full px-4 py-2 border bg-neutral-100 ring-neutral-200 ring-1 border-none hover:bg-neutral-200 rounded-xl transition-colors duration-150 font-robotoslab-medium text-black placeholder:font-robotoslab-bold group"
