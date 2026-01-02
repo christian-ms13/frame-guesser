@@ -26,15 +26,13 @@
     "tabs": {
       "login": "Login",
       "signup": "Signup"
-    },
-    "form": {
-      "alternative": "or continue with"
     }
   },
   "loginForm": {
     "emailPlaceholder": "your.email@example.com",
     "passwordPlaceholder": "Enter your password",
-    "loginButton": "Log In"
+    "loginButton": "Log In",
+    "alternative": "or continue with"
   },
   "signUpForm": {
     "usernamePlaceholder": "your_username",
@@ -42,6 +40,7 @@
     "passwordPlaceholder": "Enter your password",
     "confirmPasswordPlaceholder": "Confirm your password",
     "signUpButton": "Sign Up",
-    "signingUp": "Signing Up..."
+    "signingUp": "Signing Up...",
+    "alternative": "or continue with"
   }
 }
