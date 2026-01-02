@@ -96,3 +96,22 @@ export async function signUpUser(
 
   return { success: true }
 }
+
+export async function signInUser(
+  email: string,
+  password: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient()
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+
+  if (error) {
+    console.error("Sign in error:", error)
+    return { success: false, error: error.message }
+  }
+
+  return { success: true }
+}
