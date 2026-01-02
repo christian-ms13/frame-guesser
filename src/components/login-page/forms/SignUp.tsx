@@ -1,20 +1,26 @@
 "use client"
 
 import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import { useEmailAvailability } from "../../../hooks/useEmailAvailability"
 import { usePasswordValidation } from "../../../hooks/usePasswordValidation"
 import { useUsernameAvailability } from "../../../hooks/useUsernameAvailability"
+import { signUpUser } from "../../../utils/supabase/actions"
 import { IconCheckmark, IconConfirmPassword, IconConfirmPasswordBefore, IconConfirmPasswordCorrect, IconConfirmPasswordNotMatching, IconEmail, IconEmailUnavailable, IconHidePassword, IconLoading, IconNotValidField, IconPassword, IconShowPassword, IconUnavailableUsername, IconUsername } from "../InputIcons"
 
 const labelClassName = "flex gap-2 items-center w-full px-4 py-2 border bg-neutral-100 ring-neutral-200 ring-1 border-none hover:bg-neutral-200 rounded-xl transition-colors duration-150 font-robotoslab-medium text-black placeholder:font-robotoslab-bold group dark:bg-neutral-700 dark:ring-neutral-600 dark:hover:bg-neutral-600 dark:text-white"
 const inputClassName = "w-full focus:outline-none flex-1"
 
 export default function SignupForm() {
+  const router = useRouter()
   const translations = useTranslations("signUpForm")
 
   const [areAllFieldsFilled, setAreAllFieldsFilled] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const { status: usernameStatus, checkUsername } = useUsernameAvailability()
   const { status: emailStatus, checkEmail } = useEmailAvailability()
   const { status: passwordStatus, validatePassword } = usePasswordValidation()
@@ -141,6 +147,26 @@ export default function SignupForm() {
     setUsernameFieldCharacterCount(input.value.length)
   }
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    
+    if (!areAllFieldsFilled || usernameStatus !== "available" || emailStatus !== "available" || passwordStatus !== "valid" || confirmPasswordStatus !== "matching") {
+      return
+    }
+
+    setIsSubmitting(true)
+
+    const result = await signUpUser(email, password, username)
+
+    setIsSubmitting(false)
+
+    if (result.success) {
+      router.push("/play")
+    } else {
+      alert(`Sign up failed: ${result.error}`)
+    }
+  }
+
   useEffect(() => {
     const usernameField = document.querySelector('input[type="text"]') as HTMLInputElement | null
     if (!usernameField) return
@@ -193,7 +219,7 @@ export default function SignupForm() {
   )
 
   return (
-    <form className = "flex flex-col gap-4 w-full" noValidate>
+    <form className = "flex flex-col gap-4 w-full" noValidate onSubmit={handleSubmit}>
       <label className = {labelClassName}>
         <IconUsername className = "w-5 h-5" />
 
@@ -206,6 +232,7 @@ export default function SignupForm() {
           maxLength = {20}
           pattern = "^[A-Za-z0-9_]+$"
           onChange = {(e) => {
+            setUsername(e.target.value)
             handleInputChange(e)
             handleUsernameChange(e)
           }}
@@ -226,6 +253,7 @@ export default function SignupForm() {
           minLength = {3}
           maxLength = {254}
           onChange = {(e) => {
+            setEmail(e.target.value)
             handleInputChange(e)
             handleEmailChange(e)
           }}
@@ -274,9 +302,9 @@ export default function SignupForm() {
       <button
         type = "submit"
         className = "w-full px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:bg-neutral-300 dark:disabled:bg-neutral-900 dark:bg-neutral-300 dark:text-black dark:disabled:text-white dark:hover:bg-neutral-100 font-robotoslab-bold text-lg"
-        disabled = {!areAllFieldsFilled || usernameStatus !== "available" || emailStatus !== "available" || passwordStatus !== "valid" || confirmPasswordStatus !== "matching"}
+        disabled = {!areAllFieldsFilled || usernameStatus !== "available" || emailStatus !== "available" || passwordStatus !== "valid" || confirmPasswordStatus !== "matching" || isSubmitting}
       >
-        {translations("signUpButton")}
+        {isSubmitting ? translations("signingUp") : translations("signUpButton")}
       </button>
     </form>
   )

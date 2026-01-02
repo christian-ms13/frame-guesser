@@ -41,6 +41,7 @@
     "emailPlaceholder": "your.email@example.com",
     "passwordPlaceholder": "Enter your password",
     "confirmPasswordPlaceholder": "Confirm your password",
-    "signUpButton": "Sign Up"
+    "signUpButton": "Sign Up",
+    "signingUp": "Signing Up..."
   }
 }

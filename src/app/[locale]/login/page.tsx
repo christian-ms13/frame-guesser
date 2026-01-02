@@ -26,7 +26,7 @@ export default function FormsPage() {
 
   useEffect(() => {
     if (!loading && isLoggedIn) {
-      router.push("/game")
+      router.push("/play")
     }
   }, [isLoggedIn, loading, router])
 

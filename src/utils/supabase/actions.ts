@@ -16,7 +16,7 @@ export async function checkUsernameAvailability(username: string): Promise<boole
   const { data, error } = await supabase
     .from("profiles")
     .select("id")
-    .eq("username", username)
+    .ilike("username", username)
     .maybeSingle()
 
   if (error) {
@@ -37,7 +37,7 @@ export async function checkEmailAvailability(email: string): Promise<boolean> {
   const { data, error } = await supabase
     .from("profiles")
     .select("id")
-    .eq("email", email)
+    .ilike("email", email)
     .maybeSingle()
 
   if (error) {
@@ -70,4 +70,29 @@ export async function checkPasswordValidation(password: string): Promise<boolean
   }
 
   return true
+}
+
+export async function signUpUser(
+  email: string,
+  password: string,
+  username: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient()
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        username
+      }
+    }
+  })
+
+  if (error) {
+    console.error("Sign up error:", error)
+    return { success: false, error: error.message }
+  }
+
+  return { success: true }
 }
