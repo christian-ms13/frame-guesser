@@ -4,7 +4,16 @@ import { useCallback, useEffect, useRef, useState } from "react"
 
 import { checkEmailAvailability } from "../utils/supabase/actions"
 
-type EmailStatus = "idle" | "checking" | "available" | "taken"
+type EmailStatus = "idle" | "checking" | "available" | "taken" | "invalid"
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+function isValidEmailFormat(email: string): boolean {
+  if (email.length < 3 || email.length > 254) {
+    return false
+  }
+  return EMAIL_REGEX.test(email)
+}
 
 export function useEmailAvailability() {
   const [status, setStatus] = useState<EmailStatus>("idle")
@@ -15,8 +24,13 @@ export function useEmailAvailability() {
       clearTimeout(debounceTimerRef.current)
     }
 
-    if (email.length < 3 || email.length > 254 || !email.includes("@")) {
+    if (!email) {
       setStatus("idle")
+      return
+    }
+
+    if (!isValidEmailFormat(email)) {
+      setStatus("invalid")
       return
     }
 

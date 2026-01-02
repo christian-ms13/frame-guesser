@@ -73,6 +73,8 @@ export default function SignupForm() {
         return <IconCheckmark className = "w-5 h-5 text-green-500" />
       case "taken":
         return <IconEmailUnavailable className = "w-5 h-5 text-red-500" />
+      case "invalid":
+        return <IconEmailUnavailable className = "w-5 h-5 text-red-500" />
       case "idle":
       default:
         return <IconCheckmark className = "w-5 h-5 text-neutral-300" />
@@ -272,7 +274,7 @@ export default function SignupForm() {
       <button
         type = "submit"
         className = "w-full px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:bg-neutral-300 dark:disabled:bg-neutral-900 dark:bg-neutral-300 dark:text-black dark:disabled:text-white dark:hover:bg-neutral-100 font-robotoslab-bold text-lg"
-        disabled = {!areAllFieldsFilled || usernameStatus !== "available"}
+        disabled = {!areAllFieldsFilled || usernameStatus !== "available" || emailStatus !== "available" || passwordStatus !== "valid" || confirmPasswordStatus !== "matching"}
       >
         {translations("signUpButton")}
       </button>
