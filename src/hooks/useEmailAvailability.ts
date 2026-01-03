@@ -6,7 +6,7 @@ import { checkEmailAvailability } from "../utils/supabase/actions"
 
 type EmailStatus = "idle" | "checking" | "available" | "taken" | "invalid"
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+export const EMAIL_REGEX = /^[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,24}$/
 
 function isValidEmailFormat(email: string): boolean {
   if (email.length < 3 || email.length > 254) {

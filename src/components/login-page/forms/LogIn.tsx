@@ -5,6 +5,8 @@ import { useTheme } from "next-themes"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
+import { EMAIL_REGEX } from "../../../hooks/useEmailAvailability"
+import { PASSWORD_REGEX } from "../../../hooks/usePasswordValidation"
 import { signInUser } from "../../../utils/supabase/actions"
 import { IconEmail, IconHidePassword, IconPassword, IconShowPassword } from "../InputIcons"
 import { IconAppleDark, IconAppleLight, IconGitHubDark, IconGitHubLight, IconGoogle, IconMicrosoft } from "../SocialIcons"
@@ -18,25 +20,12 @@ export default function LoginForm() {
   const { resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  const [areAllFieldsFilled, setAreAllFieldsFilled] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [isEmailValid, setIsEmailValid] = useState(false)
+  const [isPasswordValid, setIsPasswordValid] = useState(false)
   const [isPasswordShown, setIsPasswordShown] = useState(false)
-
-  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const form = event.currentTarget.form
-    if (!form) return
-    const inputs = Array.from(form.elements).filter(element => element.tagName === "INPUT") as HTMLInputElement[]
-    const allFilled = inputs.every(input => input.value.trim() !== "")
-    setAreAllFieldsFilled(allFilled)
-  }
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setAreAllFieldsFilled(false), 0)
-
-    return () => clearTimeout(timeout)
-  }, [])
 
   useEffect(() => {
     const timeout = setTimeout(() => setMounted(true), 0)
@@ -56,10 +45,26 @@ export default function LoginForm() {
     <IconMicrosoft key = "microsoft" className = {socialIconsSize} />
   ]
 
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const nextEmail = event.target.value.trim()
+    setEmail(nextEmail)
+    const emailIsValid = nextEmail.length >= 3 && nextEmail.length <= 254 && EMAIL_REGEX.test(nextEmail)
+    setIsEmailValid(emailIsValid)
+  }
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const nextPassword = event.target.value
+    setPassword(nextPassword)
+    const passwordIsValid = PASSWORD_REGEX.test(nextPassword)
+    setIsPasswordValid(passwordIsValid)
+  }
+
+  const isFormValid = isEmailValid && isPasswordValid
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!areAllFieldsFilled || isSubmitting) return
+    if (!isFormValid || isSubmitting) return
 
     setIsSubmitting(true)
 
@@ -97,59 +102,55 @@ export default function LoginForm() {
       </div>
 
       <form className = "flex flex-col gap-4 w-full" onSubmit = {handleSubmit}>
-      <label className = {labelClassName}>
-        <IconEmail className = "w-5 h-5" />
+        <label className = {labelClassName}>
+          <IconEmail className = "w-5 h-5" />
 
-        <input
-          type = "email"
-          placeholder = {translations("emailPlaceholder")}
-          className = {inputClassName}
-          autoComplete = "email"
-          required
-          minLength = {3}
-          maxLength = {254}
-          value = {email}
-          onChange = {(e) => {
-            setEmail(e.target.value)
-            handleInputChange(e)
-          }}
-          autoFocus
-        />
-      </label>
+          <input
+            type = "email"
+            placeholder = {translations("emailPlaceholder")}
+            className = {inputClassName}
+            required
+            minLength = {3}
+            maxLength = {254}
+            value = {email}
+            pattern = {EMAIL_REGEX.source}
+            title = "Enter a valid email like name@domain.com"
+            onChange = {handleEmailChange}
+            autoFocus
+          />
+        </label>
 
-      <label className = {labelClassName}>
-        <IconPassword className = "w-5 h-5" />
+        <label className = {labelClassName}>
+          <IconPassword className = "w-5 h-5" />
 
-        <input
-          type = {isPasswordShown ? "text" : "password"}
-          placeholder = {translations("passwordPlaceholder")}
-          className = {inputClassName}
-          autoComplete = "current-password"
-          required
-          value = {password}
-          onChange = {(e) => {
-            setPassword(e.target.value)
-            handleInputChange(e)
-          }}
-          pattern = "^\\S+$"
-        />
+          <input
+            type = {isPasswordShown ? "text" : "password"}
+            placeholder = {translations("passwordPlaceholder")}
+            className = {inputClassName}
+            required
+            minLength = {8}
+            value = {password}
+            onChange = {handlePasswordChange}
+            pattern = {PASSWORD_REGEX.source}
+            title = "Use 8+ chars with upper, lower, number, no spaces"
+          />
+
+          <button
+            type = "button"
+            className = "cursor-pointer flex-none"
+            onClick = {() => setIsPasswordShown(!isPasswordShown)}
+          >
+            {isPasswordShown ? <IconHidePassword className = "w-5 h-5" /> : <IconShowPassword className = "w-5 h-5" />}
+          </button>
+        </label>
 
         <button
-          type = "button"
-          className = "cursor-pointer flex-none"
-          onClick = {() => setIsPasswordShown(!isPasswordShown)}
+          type = "submit"
+          className = "w-full px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:bg-neutral-300 dark:disabled:bg-neutral-900 dark:bg-neutral-300 dark:text-black dark:disabled:text-white dark:hover:bg-neutral-100 font-robotoslab-bold text-lg"
+          disabled = {!isFormValid || isSubmitting}
         >
-          {isPasswordShown ? <IconHidePassword className = "w-5 h-5" /> : <IconShowPassword className = "w-5 h-5" />}
+          {isSubmitting ? `${translations("loginButton")}...` : translations("loginButton")}
         </button>
-      </label>
-
-      <button
-        type = "submit"
-        className = "w-full px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:bg-neutral-300 dark:disabled:bg-neutral-900 dark:bg-neutral-300 dark:text-black dark:disabled:text-white dark:hover:bg-neutral-100 font-robotoslab-bold text-lg"
-        disabled = {!areAllFieldsFilled || isSubmitting}
-      >
-        {isSubmitting ? `${translations("loginButton")}...` : translations("loginButton")}
-      </button>
       </form>
     </>
   )

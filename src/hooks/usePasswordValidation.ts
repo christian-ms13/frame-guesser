@@ -6,6 +6,8 @@ import { checkPasswordValidation } from "../utils/supabase/actions"
 
 type PasswordStatus = "idle" | "checking" | "valid" | "invalid"
 
+export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S{8,}$/
+
 export function usePasswordValidation() {
   const [status, setStatus] = useState<PasswordStatus>("idle")
   const debounceTimerRef = useRef<NodeJS.Timeout | undefined>(undefined)

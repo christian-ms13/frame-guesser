@@ -11,18 +11,21 @@ import { useUsernameAvailability } from "../../../hooks/useUsernameAvailability"
 import { signUpUser } from "../../../utils/supabase/actions"
 import { IconCheckmark, IconConfirmPassword, IconConfirmPasswordBefore, IconConfirmPasswordCorrect, IconConfirmPasswordNotMatching, IconEmail, IconEmailUnavailable, IconHidePassword, IconLoading, IconNotValidField, IconPassword, IconShowPassword, IconUnavailableUsername, IconUsername } from "../InputIcons"
 import { IconAppleDark, IconAppleLight, IconGitHubDark, IconGitHubLight, IconGoogle, IconMicrosoft } from "../SocialIcons"
+// import AwaitingEmailVerification from "../status/AwaitingEmailVerification"
 
 const labelClassName = "flex gap-2 items-center w-full px-4 py-2 border bg-neutral-100 ring-neutral-200 ring-1 border-none hover:bg-neutral-200 rounded-xl transition-colors duration-150 font-robotoslab-medium text-black placeholder:font-robotoslab-bold group dark:bg-neutral-700 dark:ring-neutral-600 dark:hover:bg-neutral-600 dark:text-white"
 const inputClassName = "w-full focus:outline-none flex-1"
 
 export default function SignupForm() {
-  const router = useRouter()
   const translations = useTranslations("signUpForm")
   const { resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
   const [areAllFieldsFilled, setAreAllFieldsFilled] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  // const [isAwaitingVerification, setIsAwaitingVerification] = useState(false)
+  const router = useRouter()
+
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const { status: usernameStatus, checkUsername } = useUsernameAvailability()
@@ -51,6 +54,8 @@ export default function SignupForm() {
     setIsSubmitting(false)
 
     if (result.success) {
+      // todo: implement email verification
+      // setIsAwaitingVerification(true)
       router.push("/play")
     } else {
       alert(`Sign up failed: ${result.error}`)
@@ -240,6 +245,10 @@ export default function SignupForm() {
     </div>
   )
 
+  /* if (isAwaitingVerification) {
+    return <AwaitingEmailVerification />
+  } */
+
   return (
     <>
       <div className = "grid grid-cols-4 justify-items-center items-center w-full gap-6">
@@ -260,93 +269,94 @@ export default function SignupForm() {
         <hr className = "w-full h-0.5 translate-y-0.5" />
       </div>
 
-      <form className = "flex flex-col gap-4 w-full" noValidate onSubmit={handleSubmit}>
-      <label className = {labelClassName}>
-        <IconUsername className = "w-5 h-5" />
+      <form className = "flex flex-col gap-4 w-full" noValidate onSubmit = {handleSubmit}>
+        <label className = {labelClassName}>
+          <IconUsername className = "w-5 h-5" />
 
-        <input
-          type = "text"
-          placeholder = {translations("usernamePlaceholder")}
-          className = {inputClassName}
-          required
-          minLength = {3}
-          maxLength = {20}
-          pattern = "^[A-Za-z0-9_]+$"
-          onChange = {(e) => {
-            setUsername(e.target.value)
-            handleInputChange(e)
-            handleUsernameChange(e)
-          }}
-          autoFocus
-        />
+          <input
+            type = "text"
+            placeholder = {translations("usernamePlaceholder")}
+            className = {inputClassName}
+            required
+            minLength = {3}
+            maxLength = {20}
+            pattern = "^[A-Za-z0-9_]+$"
+            onChange = {(e) => {
+              setUsername(e.target.value)
+              handleInputChange(e)
+              handleUsernameChange(e)
+            }}
+            autoFocus
+          />
 
-        {usernameAvailabilityAndCharacterCounter}
-      </label>
+          {usernameAvailabilityAndCharacterCounter}
+        </label>
 
-      <label className = {labelClassName}>
-        <IconEmail className = "w-5 h-5" />
+        <label className = {labelClassName}>
+          <IconEmail className = "w-5 h-5" />
 
-        <input
-          type = "email"
-          placeholder = {translations("emailPlaceholder")}
-          className = {inputClassName}
-          required
-          minLength = {3}
-          maxLength = {254}
-          onChange = {(e) => {
-            setEmail(e.target.value)
-            handleInputChange(e)
-            handleEmailChange(e)
-          }}
-        />
+          <input
+            type = "email"
+            placeholder = {translations("emailPlaceholder")}
+            className = {inputClassName}
+            required
+            minLength = {3}
+            maxLength = {254}
+            onChange = {(e) => {
+              setEmail(e.target.value)
+              handleInputChange(e)
+              handleEmailChange(e)
+            }}
+          />
 
-        {emailAvailabilityAndCharacterCounter}
-      </label>
+          {emailAvailabilityAndCharacterCounter}
+        </label>
 
-      <label className = {labelClassName}>
-        <IconPassword className = "w-5 h-5" />
+        <label className = {labelClassName}>
+          <IconPassword className = "w-5 h-5" />
 
-        <input
-          type = {isPasswordShown ? "text" : "password"}
-          placeholder = {translations("passwordPlaceholder")}
-          className = {inputClassName}
-          required
-          onChange = {(e) => {
-            handleInputChange(e)
-            handlePasswordChange(e)
-          }}
-          minLength = {8}
-          pattern = "^\\S+$"
-        />
+          <input
+            type = {isPasswordShown ? "text" : "password"}
+            placeholder = {translations("passwordPlaceholder")}
+            className = {inputClassName}
+            required
+            onChange = {(e) => {
+              handleInputChange(e)
+              handlePasswordChange(e)
+            }}
+            minLength = {8}
+            pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)\\S{8,}$"
+          />
 
-        {passwordAvailabilityAndVisibilityToggle}
-      </label>
+          {passwordAvailabilityAndVisibilityToggle}
+        </label>
 
-      <label className = {labelClassName}>
-        <IconConfirmPassword className = "w-5 h-5" />
+        <label className = {labelClassName}>
+          <IconConfirmPassword className = "w-5 h-5" />
 
-        <input
-          type = {isConfirmPasswordShown ? "text" : "password"}
-          placeholder = {translations("confirmPasswordPlaceholder")}
-          className = {inputClassName}
-          required
-          onChange = {(e) => {
-            handleInputChange(e)
-            handleConfirmPasswordChange(e)
-          }}
-          pattern = "^\\S+$"
-        />
+          <input
+            type = {isConfirmPasswordShown ? "text" : "password"}
+            placeholder = {translations("confirmPasswordPlaceholder")}
+            className = {inputClassName}
+            required
+            onChange = {(e) => {
+              handleInputChange(e)
+              handleConfirmPasswordChange(e)
+            }}
+            minLength = {8}
+            pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)\\S{8,}$"
+          />
 
-        {confirmPasswordStatusAndVisibilityToggle}
-      </label>
+          {confirmPasswordStatusAndVisibilityToggle}
+        </label>
 
-      <button
-        type = "submit"
-        className = "w-full px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:bg-neutral-300 dark:disabled:bg-neutral-900 dark:bg-neutral-300 dark:text-black dark:disabled:text-white dark:hover:bg-neutral-100 font-robotoslab-bold text-lg"
-        disabled = {!areAllFieldsFilled || usernameStatus !== "available" || emailStatus !== "available" || passwordStatus !== "valid" || confirmPasswordStatus !== "matching" || isSubmitting}
-      >
-        {isSubmitting ? translations("signingUp") : translations("signUpButton")}
-      </button>
+        <button
+          type = "submit"
+          className = "w-full px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:bg-neutral-300 dark:disabled:bg-neutral-900 dark:bg-neutral-300 dark:text-black dark:disabled:text-white dark:hover:bg-neutral-100 font-robotoslab-bold text-lg"
+          disabled = {!areAllFieldsFilled || usernameStatus !== "available" || emailStatus !== "available" || passwordStatus !== "valid" || confirmPasswordStatus !== "matching" || isSubmitting}
+        >
+          {isSubmitting ? translations("signingUp") : translations("signUpButton")}
+        </button>
       </form>
     </>
   )
