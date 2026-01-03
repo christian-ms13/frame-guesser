@@ -30,7 +30,7 @@ export default function Game({ movie }: GameProps) {
 
       <button
         onClick = {() => setIsGuessed(!isGuessed)}
-        className = "mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-300"
+        className = "mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-300 cursor"
       >
         {isGuessed ? "Hide Answer" : "Reveal Answer"}
       </button>

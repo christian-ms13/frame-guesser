@@ -1,5 +1,8 @@
 import { redirect } from "next/navigation"
+
+import Game from "../../../components/game/Game"
 import { createClient } from "../../../utils/supabase/server"
+import fetchRandomMovie from "../../../utils/tmdb"
 
 export default async function GamePage({
   params,
@@ -8,12 +11,16 @@ export default async function GamePage({
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  
+
   const { locale } = await params
 
   if (!user) {
     redirect(`/${locale}/login`)
   }
 
-  return <div>test</div>
+  const randomMovie = await fetchRandomMovie()
+
+  return (
+    <Game movie = {randomMovie} />
+  )
 }
