@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation"
 
 import Game from "../../../components/game/Game"
+import PreferencesIndex from "../../../components/preferences"
+import BackHomeButton from "../../../components/ui/BackHomeButton"
 import ProfileDropdown from "../../../components/user/ProfileDropdown"
 import GetCurrentUserProfile from "../../../utils/GetCurrentUserProfile"
 import fetchRandomMovie from "../../../utils/tmdb"
@@ -22,8 +24,10 @@ export default async function GamePage({
 
   return (
     <>
+      <BackHomeButton />
       <ProfileDropdown user = {userProfile} />
       <Game movie = {randomMovie} />
+      <PreferencesIndex />
     </>
   )
 }

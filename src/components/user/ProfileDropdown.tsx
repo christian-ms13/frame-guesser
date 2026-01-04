@@ -1,10 +1,11 @@
 "use client"
 
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useTheme } from "next-themes"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
+import { logout } from "../../app/auth/actions"
 import { useClickOutside } from "../../hooks/useClickOutside"
 import { Database } from "../../types/supabase"
 import GetCurrentTheme from "../../utils/GetCurrentTheme"
@@ -19,6 +20,8 @@ export default function ProfileDropdown({ user }: { user: UserProfile | null }) 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [memberSince, setMemberSince] = useState<string>("")
   const dropdownRef = useClickOutside<HTMLUListElement>(() => setIsDropdownOpen(false))
+
+  const translations = useTranslations("profileDropdown")
 
   useEffect(() => {
     if (user?.avatar_url) {
@@ -43,8 +46,12 @@ export default function ProfileDropdown({ user }: { user: UserProfile | null }) 
     setIsDropdownOpen(!isDropdownOpen)
   }
 
+  const handleLogout = async () => {
+    await logout()
+  }
+
   return (
-    <div className = "absolute top-0 right-0 mr-7 mt-7 flex items-end gap-2 z-50 flex-col">
+    <div className = "absolute top-0 right-0 mr-7 mt-7 flex items-end gap-3 z-50 flex-col">
       <div className = {`w-15 h-15 rounded-full border-3 border-neutral-600 flex items-center justify-center p-0.5 hover:border-red-500 transition-colors duration-300 ${isDropdownOpen ? "border-red-500" : ""}`}>
         <div className = "relative w-full h-full rounded-full overflow-hidden">
           {pfpSrc && (
@@ -67,7 +74,14 @@ export default function ProfileDropdown({ user }: { user: UserProfile | null }) 
         <hr className = "border-neutral-600 my-1" />
 
         <li className = "text-xs text-center text-neutral-400">
-          {user ? `Member since ${memberSince}` : "Not logged in"}
+          {user ? `${translations("memberSince")} ${memberSince}` : "Not logged in"}
+        </li>
+
+        <li>
+          <button
+            onClick = {handleLogout}
+            className = "w-full text-sm px-2 py-1 rounded-md hover:bg-red-500 hover:text-white transition-colors duration-300 cursor-pointer text-center"
+          >Log out</button>
         </li>
       </ul>
     </div>

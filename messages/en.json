@@ -13,6 +13,9 @@
       "routine": "Routine"
     }
   },
+  "profileDropdown": {
+    "memberSince": "Member since"
+  },
   "loginPage": {
     "backHome": "Back to Home",
     "login": {
