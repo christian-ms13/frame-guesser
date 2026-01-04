@@ -651,7 +651,7 @@ export default function Game({ movies }: GameProps) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="max-w-2xl w-full">
-          <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold text-center mb-8 bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             {t("selectDifficulty")}
           </h1>
 
@@ -724,7 +724,7 @@ export default function Game({ movies }: GameProps) {
             <h1 className="text-4xl font-bold mb-2">
               {gameState.gameWon ? t("results.victory") : t("results.gameOver")}
             </h1>
-            <div className="text-6xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <div className="text-6xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               {gameState.score}
             </div>
             <p className="text-gray-600">{t("results.finalScore")}</p>
@@ -766,7 +766,7 @@ export default function Game({ movies }: GameProps) {
 
           <button
             onClick={restartGame}
-            className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity"
+            className="w-full py-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity"
           >
             {t("playAgain")}
           </button>
@@ -817,7 +817,7 @@ export default function Game({ movies }: GameProps) {
 
           <button
             onClick={handleNextRound}
-            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity inline-flex items-center gap-2"
+            className="px-8 py-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity inline-flex items-center gap-2"
           >
             {gameState.currentRound < GAME_CONFIG.totalRounds && gameState.lives > 0
               ? t("nextRound")
@@ -886,7 +886,7 @@ export default function Game({ movies }: GameProps) {
           </div>
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300"
+              className="h-full bg-linear-to-r from-purple-600 to-pink-600 transition-all duration-300"
               style={{ width: `${(gameState.blurLevel / 4) * 100}%` }}
             />
           </div>
@@ -907,7 +907,7 @@ export default function Game({ movies }: GameProps) {
           <button
             onClick={handleSubmitGuess}
             disabled={!gameState.guess.trim()}
-            className="w-full mt-3 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-3 py-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {t("submitGuess")}
           </button>
@@ -1438,7 +1438,7 @@ export default function Leaderboard() {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+      <h1 className="text-4xl font-bold text-center mb-8 bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
         Leaderboard
       </h1>
 
@@ -1465,7 +1465,7 @@ export default function Leaderboard() {
       ) : (
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+            <thead className="bg-linear-to-r from-purple-600 to-pink-600 text-white">
               <tr>
                 <th className="px-6 py-3 text-left">Rank</th>
                 <th className="px-6 py-3 text-left">Player</th>

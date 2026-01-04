@@ -8,8 +8,8 @@ import { useEffect, useState } from "react"
 
 import LoginForm from "../../../components/login-page/forms/LogIn"
 import SignupForm from "../../../components/login-page/forms/SignUp"
-import IconGoBack from "../../../components/login-page/GoBackIcon"
 import PreferencesIndex from "../../../components/preferences"
+import BackHomeButton from "../../../components/ui/BackHomeButton"
 import { useAuth } from "../../../hooks/useAuth"
 
 export default function FormsPage() {
@@ -38,15 +38,7 @@ export default function FormsPage() {
 
   return (
     <main className = "flex flex-col items-center justify-start min-h-screen pt-5 pb-20 gap-5">
-      <div className = "self-start ml-5">
-        <Link 
-          href = "/" 
-          className = "flex items-center justify-start gap-2 font-medium text-white bg-red-500 px-6 py-3 rounded-full text-lg hover:scale-110 transition-all duration-100 active:scale-100 hover:shadow-lg shadow-red-500/50" // two or more transitions with different durations: {animation-itself} {animation2-itself} transition-[animation,animation2] duration-[duration+metric,duration2+metric]
-        >
-          <IconGoBack />
-          <span>{translations("backHome")}</span>
-        </Link>
-      </div>
+      <BackHomeButton />
 
       <Link href = "/">
         <Image
