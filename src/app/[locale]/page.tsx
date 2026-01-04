@@ -5,26 +5,12 @@ import Link from "next/link"
 import { IconCode, IconPlay } from "../../components/home-page/actions/LinkIcons"
 import PreferencesIndex from "../../components/preferences"
 import ProfileDropdown from "../../components/user/ProfileDropdown"
-import { Database } from "../../types/supabase"
-import { createClient } from "../../utils/supabase/server"
+import GetCurrentUserProfile from "../../utils/GetCurrentUserProfile"
 
 export default async function Home() {
   const translations = await getTranslations("homePage")
 
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  const isLoggedIn = !!user
-
-  let userProfile: Database['public']['Tables']['profiles']['Row'] | null = null
-  if (user) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single()
-    userProfile = data
-  }
+  const { userProfile, isLoggedIn } = await GetCurrentUserProfile()
 
   const linkStyle = "text-xl flex gap-2 items-center justify-center px-5 py-3 rounded-full transition-all duration-100 ease-out hover:scale-115 active:scale-100 hover:shadow-lg shadow-black/50 dark:shadow-white/20 relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600"
 
