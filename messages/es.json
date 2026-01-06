@@ -14,10 +14,12 @@
     }
   },
   "profileDropdown": {
-    "memberSince": "Miembro desde el"
+    "memberSince": "Miembro desde",
+    "logout": "Cerrar sesión",
+    "guest": "Usuario Invitado"
   },
   "loginPage": {
-    "backHome": "Volver al Inicio",
+    "backHome": "Volver al inicio",
     "login": {
       "welcome": "¡Bienvenid@ de nuevo!",
       "prompt": "Por favor ingresa tus datos para iniciar sesión."

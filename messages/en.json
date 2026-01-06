@@ -14,10 +14,12 @@
     }
   },
   "profileDropdown": {
-    "memberSince": "Member since"
+    "memberSince": "Member since",
+    "logout": "Log out",
+    "guest": "Guest User"
   },
   "loginPage": {
-    "backHome": "Back to Home",
+    "backHome": "Back to home",
     "login": {
       "welcome": "Welcome back!",
       "prompt": "Please enter your details to sign in."
@@ -34,7 +36,7 @@
   "loginForm": {
     "emailPlaceholder": "your.email@example.com",
     "passwordPlaceholder": "Enter your password",
-    "loginButton": "Log In",
+    "loginButton": "Log in",
     "alternative": "or continue with"
   },
   "signUpForm": {
@@ -42,8 +44,8 @@
     "emailPlaceholder": "your.email@example.com",
     "passwordPlaceholder": "Enter your password",
     "confirmPasswordPlaceholder": "Confirm your password",
-    "signUpButton": "Sign Up",
-    "signingUp": "Signing Up...",
+    "signUpButton": "Sign up",
+    "signingUp": "Signing up...",
     "alternative": "or continue with"
   }
 }
