@@ -14,7 +14,7 @@ interface EmailValidation {
 
 export const EMAIL_REGEX = /^[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,24}$/
 
-function isValidEmailFormat(email: string): string | null {
+function isValidEmailFormat(email: string): EmailError {
   if (email.length < 3) {
     return "too_short"
   }
