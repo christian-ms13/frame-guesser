@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "./server"
+import { Database } from "../../types/supabase"
 
 export async function checkUsernameAvailability(username: string): Promise<boolean> {
   if (username.length < 3) {
@@ -114,4 +115,86 @@ export async function signInUser(
   }
 
   return { success: true }
+}
+
+export async function checkUsernameAvailabilityForUpdate(
+  username: string,
+  currentUserId: string
+): Promise<boolean> {
+  if (username.length < 3) {
+    return false
+  }
+
+  if (!/^[A-Za-z0-9_]+$/.test(username) || username.includes(" ")) {
+    return false
+  }
+
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id")
+    .ilike("username", username)
+    .neq("id", currentUserId)
+    .maybeSingle()
+
+  if (error) {
+    console.error("Error checking username:", error)
+    return false
+  }
+
+  return data === null
+}
+
+export async function checkEmailAvailabilityForUpdate(
+  email: string,
+  currentUserId: string
+): Promise<boolean> {
+  if (email.length < 3 || email.length > 254 || !email.includes("@")) {
+    return false
+  }
+
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id")
+    .ilike("email", email)
+    .neq("id", currentUserId)
+    .maybeSingle()
+
+  if (error) {
+    console.error("Error checking email:", error)
+    return false
+  }
+
+  return data === null
+}
+
+interface ProfileUpdateData {
+  display_name?: string | null
+  username?: string
+  email?: string
+  avatar_url?: string | null
+}
+
+export async function updateUserProfile(
+  userId: string,
+  updateData: ProfileUpdateData
+): Promise<{ success: boolean; data?: Database['public']['Tables']['profiles']['Row']; error?: string }> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .update(updateData)
+    .eq("id", userId)
+    .select("*")
+    .single()
+
+  if (error) {
+    console.error("Error updating profile:", error)
+    return { success: false, error: error.message }
+  }
+
+  return { success: true, data }
 }

@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "image.tmdb.org",
         pathname: "/**"
+      },
+      {
+        protocol: "https",
+        hostname: "ivgbhmokmfhbnacdgxie.supabase.co",
+        pathname: "/storage/v1/object/public/**"
       }
     ]
   }

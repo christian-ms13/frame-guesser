@@ -37,7 +37,7 @@ export default function FormsPage() {
   const tabTitleClassName = "text-xl whitespace-nowrap font-karnak-pro-bold tracking-wide"
 
   return (
-    <main className = "flex flex-col items-center justify-start min-h-screen pt-5 pb-20 gap-5">
+    <>
       <BackHomeButton />
 
       <Link href = "/">
@@ -88,6 +88,6 @@ export default function FormsPage() {
       </section>
 
       <PreferencesIndex />
-    </main>
+    </>
   )
 }

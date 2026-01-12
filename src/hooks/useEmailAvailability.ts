@@ -5,18 +5,30 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { checkEmailAvailability } from "../utils/supabase/actions"
 
 type EmailStatus = "idle" | "checking" | "available" | "taken" | "invalid"
+type EmailError = "too_short" | "too_long" | "invalid_format" | "taken" | null
+
+interface EmailValidation {
+  status: EmailStatus
+  error: EmailError
+}
 
 export const EMAIL_REGEX = /^[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,24}$/
 
-function isValidEmailFormat(email: string): boolean {
-  if (email.length < 3 || email.length > 254) {
-    return false
+function isValidEmailFormat(email: string): string | null {
+  if (email.length < 3) {
+    return "too_short"
   }
-  return EMAIL_REGEX.test(email)
+  if (email.length > 254) {
+    return "too_long"
+  }
+  if (!EMAIL_REGEX.test(email)) {
+    return "invalid_format"
+  }
+  return null
 }
 
 export function useEmailAvailability() {
-  const [status, setStatus] = useState<EmailStatus>("idle")
+  const [validation, setValidation] = useState<EmailValidation>({ status: "idle", error: null })
   const debounceTimerRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   const checkEmail = useCallback(async (email: string) => {
@@ -25,19 +37,24 @@ export function useEmailAvailability() {
     }
 
     if (!email) {
-      setStatus("idle")
+      setValidation({ status: "idle", error: null })
       return
     }
 
-    if (!isValidEmailFormat(email)) {
-      setStatus("invalid")
+    const formatError = isValidEmailFormat(email)
+    if (formatError) {
+      setValidation({ status: "invalid", error: formatError })
       return
     }
 
-    setStatus("checking")
+    setValidation({ status: "checking", error: null })
     debounceTimerRef.current = setTimeout(async () => {
       const isAvailable = await checkEmailAvailability(email)
-      setStatus(isAvailable ? "available" : "taken")
+      if (isAvailable) {
+        setValidation({ status: "available", error: null })
+      } else {
+        setValidation({ status: "taken", error: "taken" })
+      }
     }, 500)
   }, [])
 
@@ -49,5 +66,5 @@ export function useEmailAvailability() {
     }
   }, [])
 
-  return { status, checkEmail }
+  return { status: validation.status, error: validation.error, checkEmail }
 }

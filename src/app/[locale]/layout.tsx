@@ -68,6 +68,18 @@ const robotoSlabBold = localFont({
   display: "swap"
 })
 
+const courierPrimeBold = localFont({
+  src: "../fonts/courierprime-bold.woff2",
+  variable: "--font-courierprime-bold",
+  display: "swap"
+})
+
+const cascadiaCodeMedium = localFont({
+  src: "../fonts/cascadiacode-medium.woff2",
+  variable: "--font-cascadiacode-medium",
+  display: "swap"
+})
+
 const fontsToPreload = [
   karnakLight,
   karnakCondensedBlack,
@@ -77,7 +89,9 @@ const fontsToPreload = [
   askanDemibold,
   corporateSProMedium,
   robotoSlabMedium,
-  robotoSlabBold
+  robotoSlabBold,
+  courierPrimeBold,
+  cascadiaCodeMedium
 ]
 
 export default async function RootLayout({
@@ -92,19 +106,22 @@ export default async function RootLayout({
 
   return (
     <html lang = {locale} suppressHydrationWarning>
-      <body className = {`${fontsToPreload.map(font => font.variable).join(" ")} antialiased cursor-default select-none selection:bg-[#121212] selection:text-[#e3e3e1] bg-[#e3e3e1] text-[#121212] dark:bg-[#121212] dark:text-[#e3e3e1]`}>
-        <NextIntlClientProvider messages = {messages}>
-          <ThemeProvider
-            attribute = "class"
-            defaultTheme = "system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Analytics />
-            <SpeedInsights />
-          </ThemeProvider>
-        </NextIntlClientProvider>
+      <body className = {`${fontsToPreload.map(font => font.variable).join(" ")} antialiased cursor-default select-none selection:bg-[#121212] selection:text-[#e3e3e1] bg-[#e3e3e1] text-[#121212] dark:bg-[#121212] dark:text-[#e3e3e1]`}
+      >
+        <main className = "flex flex-col items-center justify-start min-h-screen pt-5 pb-20 gap-5">
+          <NextIntlClientProvider messages = {messages}>
+            <ThemeProvider
+              attribute = "class"
+              defaultTheme = "system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <Analytics />
+              <SpeedInsights />
+            </ThemeProvider>
+          </NextIntlClientProvider>
+        </main>
       </body>
     </html>
   )

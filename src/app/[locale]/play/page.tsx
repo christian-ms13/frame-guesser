@@ -23,11 +23,11 @@ export default async function GamePage({
   const randomMovie = await fetchRandomMovie()
 
   return (
-    <>
+    <main className = "pb-20 flex min-h-screen flex-col items-center justify-start pt-5">
       <BackHomeButton />
-      <ProfileDropdown user = {userProfile} />
+      {isLoggedIn && <ProfileDropdown user = {userProfile} />}
       <Game movie = {randomMovie} />
       <PreferencesIndex />
-    </>
+    </main>
   )
 }

@@ -28,9 +28,9 @@ export default function SignupForm() {
 
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
-  const { status: usernameStatus, checkUsername } = useUsernameAvailability()
-  const { status: emailStatus, checkEmail } = useEmailAvailability()
-  const { status: passwordStatus, validatePassword } = usePasswordValidation()
+  const { status: usernameStatus, error: usernameError, checkUsername } = useUsernameAvailability()
+  const { status: emailStatus, error: emailError, checkEmail } = useEmailAvailability()
+  const { status: passwordStatus, error: passwordError, validatePassword } = usePasswordValidation()
 
   const [usernameFieldCharacterCount, setUsernameFieldCharacterCount] = useState(0)
 
@@ -195,7 +195,7 @@ export default function SignupForm() {
   }
 
   useEffect(() => {
-    const usernameField = document.querySelector('input[type="text"]') as HTMLInputElement | null
+    const usernameField = document.querySelector('input[type = "text"]') as HTMLInputElement | null
     if (!usernameField) return
     usernameField.addEventListener("input", getUsernameLiveCharacterCount)
 
@@ -270,85 +270,138 @@ export default function SignupForm() {
       </div>
 
       <form className = "flex flex-col gap-4 w-full" noValidate onSubmit = {handleSubmit}>
-        <label className = {labelClassName}>
-          <IconUsername className = "w-5 h-5" />
+        <div>
+          <label className = {labelClassName}>
+            <IconUsername className = "w-5 h-5" />
 
-          <input
-            type = "text"
-            placeholder = {translations("usernamePlaceholder")}
-            className = {inputClassName}
-            required
-            minLength = {3}
-            maxLength = {20}
-            pattern = "^[A-Za-z0-9_]+$"
-            onChange = {(e) => {
-              setUsername(e.target.value)
-              handleInputChange(e)
-              handleUsernameChange(e)
-            }}
-            autoFocus
-          />
+            <input
+              type = "text"
+              placeholder = {translations("usernamePlaceholder")}
+              className = {inputClassName}
+              required
+              minLength = {3}
+              maxLength = {20}
+              pattern = "^[A-Za-z0-9_]+$"
+              onChange = {(e) => {
+                setUsername(e.target.value)
+                handleInputChange(e)
+                handleUsernameChange(e)
+              }}
+              autoFocus
+            />
 
-          {usernameAvailabilityAndCharacterCounter}
-        </label>
+            {usernameAvailabilityAndCharacterCounter}
+          </label>
 
-        <label className = {labelClassName}>
-          <IconEmail className = "w-5 h-5" />
+          {username && usernameStatus === "taken" && (
+            <p className = "text-xs text-red-600 dark:text-red-400 font-corporatespro-medium px-2 pt-1">
+              {translations("usernameTaken")}
+            </p>
+          )}
+          {username && usernameStatus === "invalid" && usernameError === "too_short" && (
+            <p className = "text-xs text-red-600 dark:text-red-400 font-corporatespro-medium px-2 pt-1">
+              {translations("usernameTooShort")}
+            </p>
+          )}
+          {username && usernameStatus === "invalid" && usernameError === "invalid_characters" && (
+            <p className = "text-xs text-red-600 dark:text-red-400 font-corporatespro-medium px-2 pt-1">
+              {translations("usernameInvalid")}
+            </p>
+          )}
+        </div>
 
-          <input
-            type = "email"
-            placeholder = {translations("emailPlaceholder")}
-            className = {inputClassName}
-            required
-            minLength = {3}
-            maxLength = {254}
-            onChange = {(e) => {
-              setEmail(e.target.value)
-              handleInputChange(e)
-              handleEmailChange(e)
-            }}
-          />
+        <div>
+          <label className = {labelClassName}>
+            <IconEmail className = "w-5 h-5" />
 
-          {emailAvailabilityAndCharacterCounter}
-        </label>
+            <input
+              type = "email"
+              placeholder = {translations("emailPlaceholder")}
+              className = {inputClassName}
+              required
+              minLength = {3}
+              maxLength = {254}
+              onChange = {(e) => {
+                setEmail(e.target.value)
+                handleInputChange(e)
+                handleEmailChange(e)
+              }}
+            />
 
-        <label className = {labelClassName}>
-          <IconPassword className = "w-5 h-5" />
+            {emailAvailabilityAndCharacterCounter}
+          </label>
 
-          <input
-            type = {isPasswordShown ? "text" : "password"}
-            placeholder = {translations("passwordPlaceholder")}
-            className = {inputClassName}
-            required
-            onChange = {(e) => {
-              handleInputChange(e)
-              handlePasswordChange(e)
-            }}
-            minLength = {8}
-            pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)\\S{8,}$"
-          />
+          {email && emailStatus === "invalid" && (
+            <p className = "text-xs text-red-600 dark:text-red-400 font-corporatespro-medium px-2 pt-1">
+              {emailError === "too_short" && translations("emailTooShort")}
+              {emailError === "too_long" && translations("emailTooLong")}
+              {emailError === "invalid_format" && translations("emailInvalid")}
+            </p>
+          )}
+          {email && emailStatus === "taken" && (
+            <p className = "text-xs text-red-600 dark:text-red-400 font-corporatespro-medium px-2 pt-1">
+              {translations("emailTaken")}
+            </p>
+          )}
+        </div>
 
-          {passwordAvailabilityAndVisibilityToggle}
-        </label>
+        <div>
+          <label className = {labelClassName}>
+            <IconPassword className = "w-5 h-5" />
 
-        <label className = {labelClassName}>
-          <IconConfirmPassword className = "w-5 h-5" />
+            <input
+              type = {isPasswordShown ? "text" : "password"}
+              placeholder = {translations("passwordPlaceholder")}
+              className = {inputClassName}
+              required
+              onChange = {(e) => {
+                handleInputChange(e)
+                handlePasswordChange(e)
+              }}
+              minLength = {8}
+              pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)\\S{8,}$"
+            />
 
-          <input
-            type = {isConfirmPasswordShown ? "text" : "password"}
-            placeholder = {translations("confirmPasswordPlaceholder")}
-            className = {inputClassName}
-            required
-            onChange = {(e) => {
-              handleInputChange(e)
-              handleConfirmPasswordChange(e)
-            }}
-            minLength = {8}
-            pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)\\S{8,}$"
-          />
+            {passwordAvailabilityAndVisibilityToggle}
+          </label>
 
-          {confirmPasswordStatusAndVisibilityToggle}
-        </label>
+          {password && passwordStatus === "invalid" && (
+            <p className = "text-xs text-red-600 dark:text-red-400 font-corporatespro-medium px-2 pt-1">
+              {passwordError === "too_short" && translations("passwordTooShort")}
+              {passwordError === "no_lowercase" && translations("passwordNoLowercase")}
+              {passwordError === "no_uppercase" && translations("passwordNoUppercase")}
+              {passwordError === "no_number" && translations("passwordNoNumber")}
+              {passwordError === "has_spaces" && translations("passwordHasSpaces")}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className = {labelClassName}>
+            <IconConfirmPassword className = "w-5 h-5" />
+
+            <input
+              type = {isConfirmPasswordShown ? "text" : "password"}
+              placeholder = {translations("confirmPasswordPlaceholder")}
+              className = {inputClassName}
+              required
+              onChange = {(e) => {
+                handleInputChange(e)
+                handleConfirmPasswordChange(e)
+              }}
+              minLength = {8}
+              pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)\\S{8,}$"
+            />
+
+            {confirmPasswordStatusAndVisibilityToggle}
+          </label>
+
+          {confirmPassword && confirmPasswordStatus === "notmatching" && (
+            <p className = "text-xs text-red-600 dark:text-red-400 font-corporatespro-medium px-2 pt-1">
+              {translations("passwordNotMatching")}
+            </p>
+          )}
+        </div>
 
         <button
           type = "submit"

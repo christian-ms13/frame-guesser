@@ -18,6 +18,41 @@
     "logout": "Cerrar sesión",
     "guest": "Usuario Invitado"
   },
+  "userPage": {
+    "displayName": "Nombre",
+    "username": "Usuario",
+    "email": "Correo electrónico",
+    "memberSince": "Miembro desde",
+    "logout": "Cerrar sesión",
+    "editProfile": "Editar perfil",
+    "tooltips": {
+      "play": "Jugar"
+    }
+  },
+  "userSettings": {
+    "title": "Editar perfil",
+    "subtitle": "Actualiza la información de tu perfil",
+    "avatarTitle": "Foto de perfil",
+    "avatarUpload": "Subir foto",
+    "avatarRemove": "Quitar foto",
+    "avatarHint": "Usa PNG, JPG o WebP de hasta 2 MB.",
+    "avatarTooLarge": "La imagen debe pesar menos de 2 MB",
+    "avatarInvalidType": "Solo se permiten imágenes PNG, JPG o WebP",
+    "avatarUploadFailed": "No se pudo subir la imagen. Intenta de nuevo.",
+    "avatarRemoveFailed": "No se pudo eliminar la imagen. Intenta de nuevo.",
+    "displayNamePlaceholder": "Ingresa tu nombre",
+    "usernamePlaceholder": "Ingresa tu nombre de usuario",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "cancel": "Cancelar",
+    "saveChanges": "Guardar cambios",
+    "saving": "Guardando...",
+    "successMessage": "¡Perfil actualizado exitosamente!",
+    "errorMessage": "Por favor corrige los errores de validación antes de guardar",
+    "usernameInvalid": "El nombre de usuario debe tener 3+ caracteres, solo letras, números y guiones bajos",
+    "usernameTaken": "El nombre de usuario ya está en uso",
+    "emailInvalid": "Formato de correo electrónico inválido",
+    "emailTaken": "El correo electrónico ya está en uso"
+  },
   "loginPage": {
     "backHome": "Volver al inicio",
     "login": {
@@ -36,6 +71,8 @@
   "loginForm": {
     "emailPlaceholder": "tu.email@ejemplo.com",
     "passwordPlaceholder": "Introduce tu contraseña",
+    "emailInvalid": "Formato de correo electrónico inválido",
+    "passwordInvalid": "La contraseña debe tener 8+ caracteres con mayúscula, minúscula, número y sin espacios",
     "loginButton": "Iniciar sesión",
     "alternative": "o continuar con"
   },
@@ -44,6 +81,19 @@
     "emailPlaceholder": "tu.email@ejemplo.com",
     "passwordPlaceholder": "Introduce tu contraseña",
     "confirmPasswordPlaceholder": "Confirma tu contraseña",
+    "usernameTooShort": "El nombre de usuario debe tener al menos 3 caracteres",
+    "usernameInvalid": "El nombre de usuario solo puede contener letras, números y guiones bajos",
+    "usernameTaken": "El nombre de usuario ya está en uso",
+    "emailTooShort": "El correo es muy corto",
+    "emailTooLong": "El correo es muy largo",
+    "emailInvalid": "Formato de correo electrónico inválido",
+    "emailTaken": "El correo electrónico ya está en uso",
+    "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+    "passwordNoLowercase": "La contraseña debe contener al menos una letra minúscula",
+    "passwordNoUppercase": "La contraseña debe contener al menos una letra mayúscula",
+    "passwordNoNumber": "La contraseña debe contener al menos un número",
+    "passwordHasSpaces": "La contraseña no puede contener espacios",
+    "passwordNotMatching": "Las contraseñas no coinciden",
     "signUpButton": "Registrarse",
     "signingUp": "Registrándote...",
     "alternative": "o continuar con"

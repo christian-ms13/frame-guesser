@@ -4,10 +4,16 @@ import { useCallback, useEffect, useRef, useState } from "react"
 
 import { checkUsernameAvailability } from "../utils/supabase/actions"
 
-type UsernameStatus = "idle" | "checking" | "available" | "taken"
+type UsernameStatus = "idle" | "checking" | "available" | "taken" | "invalid"
+type UsernameError = "too_short" | "invalid_characters" | "taken" | null
+
+interface UsernameValidation {
+  status: UsernameStatus
+  error: UsernameError
+}
 
 export function useUsernameAvailability() {
-  const [status, setStatus] = useState<UsernameStatus>("idle")
+  const [validation, setValidation] = useState<UsernameValidation>({ status: "idle", error: null })
   const debounceTimerRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   const checkUsername = useCallback(async (username: string) => {
@@ -16,20 +22,23 @@ export function useUsernameAvailability() {
     }
 
     if (username.length < 3) {
-      setStatus("idle")
+      setValidation({ status: "invalid", error: "too_short" })
       return
     }
 
     if (!/^[A-Za-z0-9_]+$/.test(username) || username.includes(" ")) {
-      setStatus("taken")
+      setValidation({ status: "invalid", error: "invalid_characters" })
       return
     }
 
+    setValidation({ status: "checking", error: null })
     debounceTimerRef.current = setTimeout(async () => {
-      setStatus("checking")
-
       const isAvailable = await checkUsernameAvailability(username)
-      setStatus(isAvailable ? "available" : "taken")
+      if (isAvailable) {
+        setValidation({ status: "available", error: null })
+      } else {
+        setValidation({ status: "taken", error: "taken" })
+      }
     }, 500)
   }, [])
 
@@ -41,5 +50,5 @@ export function useUsernameAvailability() {
     }
   }, [])
 
-  return { status, checkUsername }
+  return { status: validation.status, error: validation.error, checkUsername }
 }

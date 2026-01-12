@@ -39,7 +39,7 @@ export default function ProfileDropdown({ user }: { user: UserProfile | null }) 
 
   useEffect(() => {
     if (user?.created_at) {
-      const dateLocale = locale === "es" ? "es-ES" : "en-US"
+      const dateLocale = locale === "en" ? "en-US" : "es-ES"
       const date = new Date(user.created_at)
       setMemberSince(date.toLocaleDateString(dateLocale, { month: "short", year: "numeric" }))
     }
@@ -90,9 +90,9 @@ export default function ProfileDropdown({ user }: { user: UserProfile | null }) 
           <div className = "flex flex-col items-center gap-1 w-full">
             <Link
               href = {user ? `/${locale}/user/${user.username}` : "#"}
-              className = "text-lg font-karnak-pro-bold text-neutral-900 dark:text-white px-5 flex items-center gap-1 hover:underline justify-center ring-2 rounded-full ring-neutral-300 dark:ring-neutral-600 hover:ring-neutral-500 dark:hover:ring-neutral-400 transition-color duration-400 max-w-full pb-1 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 mb-4 mt-1"
+              className = "text-lg font-karnak-pro-bold text-neutral-900 dark:text-white px-3 flex items-center gap-1 hover:underline justify-center ring-2 rounded-full ring-neutral-300 dark:ring-neutral-600 hover:ring-neutral-500 dark:hover:ring-neutral-400 transition-color duration-400 max-w-full py-1 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 mb-4 mt-1"
             >
-              <span className = "truncate leading-none">{user?.username || "Guest"}</span>
+              <span className = "truncate leading-none font-cascadiacode-medium">@{user?.username || "-"}</span>
             </Link>
             <p className = "text-sm font-robotoslab-medium text-neutral-600 dark:text-neutral-400 truncate max-w-full px-2">
               {user?.email || "Not logged in"}
@@ -112,7 +112,7 @@ export default function ProfileDropdown({ user }: { user: UserProfile | null }) 
         <div className = "p-4">
           <button
             onClick = {handleLogout}
-            className = "cursor-pointer w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-red-400 hover:bg-red-500 text-white font-play-bold transition-all duration-150 hover:scale-105 active:scale-100 hover:shadow-md hover:shadow-red-300"
+            className = "cursor-pointer w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-red-400 hover:bg-red-500 text-white font-play-bold transition-all duration-150 hover:scale-105 active:scale-100 hover:shadow-md hover:shadow-red-800 dark:hover:shadow-red-300"
           >
             <IconLogout className = "w-5 h-5" />
             <span>{translations("logout")}</span>

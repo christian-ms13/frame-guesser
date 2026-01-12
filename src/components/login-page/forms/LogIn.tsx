@@ -102,47 +102,63 @@ export default function LoginForm() {
       </div>
 
       <form className = "flex flex-col gap-4 w-full" onSubmit = {handleSubmit}>
-        <label className = {labelClassName}>
-          <IconEmail className = "w-5 h-5" />
+        <div>
+          <label className = {labelClassName}>
+            <IconEmail className = "w-5 h-5" />
 
-          <input
-            type = "email"
-            placeholder = {translations("emailPlaceholder")}
-            className = {inputClassName}
-            required
-            minLength = {3}
-            maxLength = {254}
-            value = {email}
-            pattern = {EMAIL_REGEX.source}
-            title = "Enter a valid email like name@domain.com"
-            onChange = {handleEmailChange}
-            autoFocus
-          />
-        </label>
+            <input
+              type = "email"
+              placeholder = {translations("emailPlaceholder")}
+              className = {inputClassName}
+              required
+              minLength = {3}
+              maxLength = {254}
+              value = {email}
+              pattern = {EMAIL_REGEX.source}
+              title = "Enter a valid email like name@domain.com"
+              onChange = {handleEmailChange}
+              autoFocus
+            />
+          </label>
 
-        <label className = {labelClassName}>
-          <IconPassword className = "w-5 h-5" />
+          {email && !isEmailValid && (
+            <p className = "text-xs text-red-600 dark:text-red-400 font-corporatespro-medium px-2 pt-1">
+              {translations("emailInvalid")}
+            </p>
+          )}
+        </div>
 
-          <input
-            type = {isPasswordShown ? "text" : "password"}
-            placeholder = {translations("passwordPlaceholder")}
-            className = {inputClassName}
-            required
-            minLength = {8}
-            value = {password}
-            onChange = {handlePasswordChange}
-            pattern = {PASSWORD_REGEX.source}
-            title = "Use 8+ chars with upper, lower, number, no spaces"
-          />
+        <div>
+          <label className = {labelClassName}>
+            <IconPassword className = "w-5 h-5" />
 
-          <button
-            type = "button"
-            className = "cursor-pointer flex-none"
-            onClick = {() => setIsPasswordShown(!isPasswordShown)}
-          >
-            {isPasswordShown ? <IconHidePassword className = "w-5 h-5" /> : <IconShowPassword className = "w-5 h-5" />}
-          </button>
-        </label>
+            <input
+              type = {isPasswordShown ? "text" : "password"}
+              placeholder = {translations("passwordPlaceholder")}
+              className = {inputClassName}
+              required
+              minLength = {8}
+              value = {password}
+              onChange = {handlePasswordChange}
+              pattern = {PASSWORD_REGEX.source}
+              title = "Use 8+ chars with upper, lower, number, no spaces"
+            />
+
+            <button
+              type = "button"
+              className = "cursor-pointer flex-none"
+              onClick = {() => setIsPasswordShown(!isPasswordShown)}
+            >
+              {isPasswordShown ? <IconHidePassword className = "w-5 h-5" /> : <IconShowPassword className = "w-5 h-5" />}
+            </button>
+          </label>
+
+          {password && !isPasswordValid && (
+            <p className = "text-xs text-red-600 dark:text-red-400 font-corporatespro-medium px-2 pt-1">
+              {translations("passwordInvalid")}
+            </p>
+          )}
+        </div>
 
         <button
           type = "submit"

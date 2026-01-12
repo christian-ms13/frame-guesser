@@ -18,6 +18,41 @@
     "logout": "Log out",
     "guest": "Guest User"
   },
+  "userPage": {
+    "displayName": "Display Name",
+    "username": "Username",
+    "email": "Email",
+    "memberSince": "Member since",
+    "logout": "Log out",
+    "editProfile": "Edit Profile",
+    "tooltips": {
+      "play": "Play"
+    }
+  },
+  "userSettings": {
+    "title": "Edit Profile",
+    "subtitle": "Update your profile information",
+    "avatarTitle": "Profile picture",
+    "avatarUpload": "Upload photo",
+    "avatarRemove": "Remove photo",
+    "avatarHint": "Use PNG, JPG, or WebP up to 2 MB.",
+    "avatarTooLarge": "Image must be under 2 MB",
+    "avatarInvalidType": "Only PNG, JPG, or WebP are allowed",
+    "avatarUploadFailed": "Could not upload image. Try again.",
+    "avatarRemoveFailed": "Could not remove image. Try again.",
+    "displayNamePlaceholder": "Enter your display name",
+    "usernamePlaceholder": "Enter your username",
+    "emailPlaceholder": "Enter your email",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "successMessage": "Profile updated successfully!",
+    "errorMessage": "Please fix validation errors before saving",
+    "usernameInvalid": "Username must be 3+ characters, only letters, numbers, and underscores",
+    "usernameTaken": "Username is already taken",
+    "emailInvalid": "Invalid email format",
+    "emailTaken": "Email is already in use"
+  },
   "loginPage": {
     "backHome": "Back to home",
     "login": {
@@ -36,6 +71,8 @@
   "loginForm": {
     "emailPlaceholder": "your.email@example.com",
     "passwordPlaceholder": "Enter your password",
+    "emailInvalid": "Invalid email format",
+    "passwordInvalid": "Password must be 8+ characters with uppercase, lowercase, number, and no spaces",
     "loginButton": "Log in",
     "alternative": "or continue with"
   },
@@ -44,6 +81,19 @@
     "emailPlaceholder": "your.email@example.com",
     "passwordPlaceholder": "Enter your password",
     "confirmPasswordPlaceholder": "Confirm your password",
+    "usernameTooShort": "Username must be at least 3 characters",
+    "usernameInvalid": "Username can only contain letters, numbers, and underscores",
+    "usernameTaken": "Username is already taken",
+    "emailTooShort": "Email is too short",
+    "emailTooLong": "Email is too long",
+    "emailInvalid": "Invalid email format",
+    "emailTaken": "Email is already in use",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordNoLowercase": "Password must contain at least one lowercase letter",
+    "passwordNoUppercase": "Password must contain at least one uppercase letter",
+    "passwordNoNumber": "Password must contain at least one number",
+    "passwordHasSpaces": "Password cannot contain spaces",
+    "passwordNotMatching": "Passwords do not match",
     "signUpButton": "Sign up",
     "signingUp": "Signing up...",
     "alternative": "or continue with"
