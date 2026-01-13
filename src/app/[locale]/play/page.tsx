@@ -1,11 +1,9 @@
 import { redirect } from "next/navigation"
 
-import Game from "../../../components/game/Game"
 import PreferencesIndex from "../../../components/preferences"
 import BackHomeButton from "../../../components/ui/BackHomeButton"
 import ProfileDropdown from "../../../components/user/ProfileDropdown"
 import GetCurrentUserProfile from "../../../utils/GetCurrentUserProfile"
-import fetchRandomMovie from "../../../utils/tmdb"
 
 export default async function GamePage({
   params,
@@ -20,13 +18,10 @@ export default async function GamePage({
     redirect(`/${locale}/login`)
   }
 
-  const randomMovie = await fetchRandomMovie()
-
   return (
     <main className = "pb-20 flex min-h-screen flex-col items-center justify-start pt-5">
       <BackHomeButton />
       {isLoggedIn && <ProfileDropdown user = {userProfile} />}
-      <Game movie = {randomMovie} />
       <PreferencesIndex />
     </main>
   )
