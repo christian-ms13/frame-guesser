@@ -120,6 +120,12 @@
     "results": {
       "roundByRound": "Ronda por ronda"
     },
-    "playAgain": "Jugar de nuevo"
+    "playAgain": "Jugar de nuevo",
+    "roundResult": {
+      "correct": "¡Correcto! Bien hecho.",
+      "incorrect": "Incorrecto. Vamos a intentar con la siguiente."
+    },
+    "nextRound": "Siguiente ronda",
+    "seeResults": "Ver resultados"
   }
 }

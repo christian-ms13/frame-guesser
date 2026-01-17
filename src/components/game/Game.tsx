@@ -9,7 +9,7 @@ import type { GameMovie } from "../../utils/tmdb"
 import type { DifficultyLevel, GameConfig, RoundResult, GameState } from "../../types/game"
 import { useAuth } from "../../hooks/useAuth"
 import { IconEasy, IconHard, IconMedium } from "./DifficultyIcons"
-import { IconFireworks, IconSad } from "./ResultIcons"
+import { IconFireworks, IconSad, IconCorrect } from "./ResultIcons"
 
 const GAME_CONFIG: GameConfig = {
   totalRounds: 5,
@@ -353,59 +353,114 @@ export default function Game({ movies }: GameProps) {
   // ---
 
   // if (gameState.gameOver) {
+  //   return (
+  //     <div className = "min-h-[90vh] flex items-center justify-center p-4">
+  //       <div className = "max-w-4xl w-full">
+  //         <div className = "text-center mb-8">
+  //           <div className = "mb-4">
+  //             {gameState.gameWon ? <IconFireworks className = "w-24 h-24" /> : <IconSad className = "w-24 h-24" />}
+  //           </div>
+  //           <h1 className = "text-4xl font-bold mb-2">
+  //             {gameState.gameWon ? translations("gameOver.won") : translations("gameOver.lost")}
+  //           </h1>
+  //           <div className = "text-6xl font-bold">
+  //             {gameState.score} {translations("basePoints")}
+  //           </div>
+  //         </div>
+
+  //         <div className = "bg-white rounded-xl shadow-lg p-6 mb-6">
+  //           <h2 className = "text-2xl font-bold mb-4">
+  //             {translations("results.roundByRound")}
+  //           </h2>
+  //           <div className = "space-y-2">
+  //             {roundResults.map((result) => (
+  //               <div
+  //                 key = {result.round}
+  //                 className = "flex items-center justify-between p-3 rounded-lg bg-neutral-50"
+  //               >
+  //                 <div className = "flex items-center gap-3">
+  //                   <div className = {`w-8 h-8 rounded-full flex items-center justify-center ${result.correct ? "bg-green-500" : "bg-red-500"}`}>
+  //                     <span className = "text-white font-bold">
+  //                       {result.round}
+  //                     </span>
+  //                   </div>
+
+  //                   <div>
+  //                     <div className = "font-semibold">{result.movie}</div>
+  //                     <div className = "text-sm text-neutral-500">
+  //                       {result.timeSeconds}s
+  //                     </div>
+  //                   </div>
+  //                 </div>
+
+  //                 <div className = "text-lg font-bold text-purple-600">
+  //                   +{result.score}
+  //                 </div>
+  //               </div>
+  //             ))}
+  //           </div>
+  //         </div>
+
+  //         <button
+  //           onClick = {restartGame}
+  //           className = "cursor-pointer w-full py-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity"
+  //         >
+  //           {translations("playAgain")}
+  //         </button>
+  //       </div>
+  //     </div>
+  //   )
+  // }
+
+  // ---
+
+  // if (gameState.roundComplete && gameState.isCorrect !== null) {
     return (
       <div className = "min-h-[90vh] flex items-center justify-center p-4">
-        <div className = "max-w-4xl w-full">
-          <div className = "text-center mb-8">
-            <div className = "mb-4">
-              {gameState.gameWon ? <IconFireworks className = "w-24 h-24" /> : <IconSad className = "w-24 h-24" />}
-            </div>
-            <h1 className = "text-4xl font-bold mb-2">
-              {gameState.gameWon ? translations("gameOver.won") : translations("gameOver.lost")}
-            </h1>
-            <div className = "text-6xl font-bold">
-              {gameState.score} {translations("basePoints")}
-            </div>
+        <div className = "max-w-2xl w-full text-center">
+          <div className = "text-8xl mb-6">
+            {gameState.isCorrect ? <IconCorrect className = "w-24 h-24" /> : <IconSad className = "w-24 h-24" />}
           </div>
 
-          <div className = "bg-white rounded-xl shadow-lg p-6 mb-6">
-            <h2 className = "text-2xl font-bold mb-4">
-              {translations("results.roundByRound")}
-            </h2>
-            <div className = "space-y-2">
-              {roundResults.map((result) => (
-                <div
-                  key = {result.round}
-                  className = "flex items-center justify-between p-3 rounded-lg bg-neutral-50"
-                >
-                  <div className = "flex items-center gap-3">
-                    <div className = {`w-8 h-8 rounded-full flex items-center justify-center ${result.correct ? "bg-green-500" : "bg-red-500"}`}>
-                      <span className = "text-white font-bold">
-                        {result.round}
-                      </span>
-                    </div>
+          <h1 className = "text-4xl font-bold mb-4">
+            {gameState.isCorrect ? translations("roundResult.correct") : translations("roundResult.incorrect")}
+          </h1>
 
-                    <div>
-                      <div className = "font-semibold">{result.movie}</div>
-                      <div className = "text-sm text-neutral-500">
-                        {result.timeSeconds}s
-                      </div>
-                    </div>
-                  </div>
+          <p className = "text-2xl text-neutral-600 mb-8">
+            {gameState.currentMovie?.title}
+          </p>
 
-                  <div className = "text-lg font-bold text-purple-600">
-                    +{result.score}
-                  </div>
-                </div>
+          {gameState.isCorrect && (
+            <div className = "text-5xl font-bold text-purple-600 mb-4">
+              +{roundResults[roundResults.length - 1]?.score}
+            </div>
+          )}
+
+          <div className = "flex items-center justify-center gap-8 mb-8">
+            <div className = "flex items-center gap-2">
+              <IconTrophy className = "w-6 h-6 text-yellow-500" />
+              <span className = "text-2xl font-bold">
+                {gameState.score}
+              </span>
+            </div>
+            <div className = "flex items-center gap-2">
+              {Array.from({ length: GAME_CONFIG.maxLives }).map((_, i) => (
+                <IconHeart
+                  key = {i}
+                  className = {`w-6 h-6 ${i < gameState.lives ? "text-red-500" : "text-neutral-300"}`}
+                />
               ))}
             </div>
           </div>
 
           <button
-            onClick = {restartGame}
-            className = "cursor-pointer w-full py-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity"
+            onClick = {handleNextRound}
+            className = "px-8 py-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity inline-flex items-center gap-2"
           >
-            {translations("playAgain")}
+            {gameState.currentRound < GAME_CONFIG.totalRounds && gameState.lives > 0
+            ? translations("nextRound")
+            : translations("seeResults")}
+            <IconArrowRight className = "w-5 h-5" />
           </button>
         </div>
       </div>
