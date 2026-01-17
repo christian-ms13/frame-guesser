@@ -126,6 +126,20 @@
       "incorrect": "Incorrecto. Vamos a intentar con la siguiente."
     },
     "nextRound": "Siguiente ronda",
-    "seeResults": "Ver resultados"
+    "seeResults": "Ver resultados",
+    "round": "Ronda",
+    "clarity": "Nivel de claridad",
+    "guessPlaceholder": "Ingresa tu respuesta aquí",
+    "submitGuess": "Enviar respuesta",
+    "hints": {
+      "genre": "Género",
+      "noGenre": "No hay pista de género disponible",
+      "year": "Año de lanzamiento",
+      "rating": "Calificación",
+      "tagline": "Lema",
+      "noTagline": "No hay pista de lema disponible"
+    },
+    "revealBlur": "Disminuir desenfoque",
+    "skipRound": "Saltar ronda"
   }
 }

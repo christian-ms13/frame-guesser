@@ -126,6 +126,20 @@
       "incorrect": "Incorrect. Lets try the next one."
     },
     "nextRound": "Next Round",
-    "seeResults": "See Results"
+    "seeResults": "See Results",
+    "round": "Round",
+    "clarity": "Clarity level",
+    "guessPlaceholder": "Enter your guess here",
+    "submitGuess": "Submit Guess",
+    "hints": {
+      "genre": "Genre",
+      "noGenre": "No genre hint available",
+      "year": "Release Year",
+      "rating": "Rating",
+      "tagline": "Tagline",
+      "noTagline": "No tagline hint available"
+    },
+    "revealBlur": "Reveal Blur",
+    "skipRound": "Skip Round"
   }
 }
