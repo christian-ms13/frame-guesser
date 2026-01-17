@@ -1,9 +1,9 @@
 "use client"
 
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { redirect } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import LoginForm from "../../../components/login-page/forms/LogIn"
@@ -13,25 +13,17 @@ import BackHomeButton from "../../../components/ui/BackHomeButton"
 import { useAuth } from "../../../hooks/useAuth"
 
 export default function FormsPage() {
-  const { isLoggedIn, loading } = useAuth()
-  const router = useRouter()
+  const { isLoggedIn } = useAuth()
+  const locale = useLocale()
 
   const translations = useTranslations("loginPage")
-  const [isLoginOrSignup, setIsLoginOrSignup] = useState(true) // true for login, false for signup. deafult to login
+  const [isLoginOrSignup, setIsLoginOrSignup] = useState(true) // true for login, false for signup. default to login
 
   useEffect(() => {
-    if (!loading && isLoggedIn) {
-      router.push("/play")
+    if (isLoggedIn) {
+      redirect(`/${locale}/play`)
     }
-  }, [isLoggedIn, loading, router])
-
-  if (loading) {
-    return (
-      <main className = "flex flex-col items-center justify-center min-h-screen">
-        <p>Loading...</p> {/* todo: make this way fancier */}
-      </main>
-    )
-  }
+  }, [isLoggedIn, locale])
 
   const tabButtonsClassName = `flex justify-center items-center w-full py-4 px-30 cursor-pointer max-w-1/2 group`
   const tabTitleClassName = "text-xl whitespace-nowrap font-karnak-pro-bold tracking-wide"

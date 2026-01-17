@@ -80,6 +80,12 @@ const cascadiaCodeMedium = localFont({
   display: "swap"
 })
 
+const audiowideRegular = localFont({
+  src: "../fonts/audiowide-regular.woff2",
+  variable: "--font-audiowide-regular",
+  display: "swap"
+})
+
 const fontsToPreload = [
   karnakLight,
   karnakCondensedBlack,
@@ -91,7 +97,8 @@ const fontsToPreload = [
   robotoSlabMedium,
   robotoSlabBold,
   courierPrimeBold,
-  cascadiaCodeMedium
+  cascadiaCodeMedium,
+  audiowideRegular
 ]
 
 export default async function RootLayout({

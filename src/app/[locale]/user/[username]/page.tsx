@@ -115,8 +115,8 @@ export default function UserPage({ params }: UserPageProps) {
           />
         )
       ) : (
-        <div className = "min-h-[60vh] w-full flex items-center justify-center">
-          <div>Profile not found.</div>
+        <div className = "min-h-[90vh] w-full flex items-center justify-center">
+          <p>{userPageTranslations("profileNotFound")}</p>
         </div>
       )}
     </>

@@ -19,6 +19,7 @@
     "guest": "Guest User"
   },
   "userPage": {
+    "profileNotFound": "Profile not found.",
     "displayName": "Display Name",
     "username": "Username",
     "email": "Email",
@@ -97,5 +98,20 @@
     "signUpButton": "Sign up",
     "signingUp": "Signing up...",
     "alternative": "or continue with"
+  },
+  "gamePage": {
+    "unableToLoadGame": "Unable to load game. Please try again later.",
+    "selectDifficulty": "Please, select a difficulty to start playing.",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "gameSettings": {
+      "easyDescription": "For a relaxed experience with more hints.",
+      "mediumDescription": "A balanced challenge for most players.",
+      "hardDescription": "For experts seeking a tough challenge."
+    },
+    "basePoints": "points"
   }
 }

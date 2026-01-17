@@ -39,7 +39,7 @@ export interface GameState {
   currentMovie: GameMovie | null
   guess: string
   isCorrect: boolean | null
-  roundCompleted: boolean
+  roundComplete: boolean
 
   hintsUsed: {
     genre: boolean

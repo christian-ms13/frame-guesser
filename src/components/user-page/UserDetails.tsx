@@ -34,7 +34,7 @@ export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, member
       <div className = "w-full max-w-3xl">
         <div className = "bg-neutral-100 dark:bg-neutral-800 rounded-4xl shadow-xl shadow-black/40 dark:shadow-black/70 border-2 border-neutral-200 dark:border-neutral-700 overflow-hidden relative">
           {isOwner && (
-            <Tooltip text={translations("tooltips.play")}>
+            <Tooltip text = {translations("tooltips.play")}>
               <Link
                 href = "/play"
                 className = "absolute top-5 right-5 z-10 cursor-pointer flex items-center justify-center gap-1 px-4 py-3 rounded-2xl bg-green-400 hover:bg-green-500 text-white font-play-bold transition-all duration-150 hover:scale-105 active:scale-100 hover:shadow-md hover:shadow-green-800 dark:hover:shadow-green-300"
@@ -52,13 +52,13 @@ export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, member
             </div>
 
             <div className = "flex-1 flex flex-col gap-2 min-w-0 pr-12">
-              <TruncatedTooltip text={viewedUserProfile.display_name || viewedUserProfile.username}>
+              <TruncatedTooltip text = {viewedUserProfile.display_name || viewedUserProfile.username}>
                 <h1 className = "text-4xl font-courierprime-bold text-neutral-900 dark:text-white truncate">
                   {viewedUserProfile.display_name || viewedUserProfile.username}
                 </h1>
               </TruncatedTooltip>
               <div className = "flex items-center gap-3 flex-wrap">
-                <TruncatedTooltip text={viewedUserProfile.username}>
+                <TruncatedTooltip text = {viewedUserProfile.username}>
                   <span className = "px-4 py-1 rounded-full text-sm font-cascadiacode-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-200 ring-2 ring-neutral-300 dark:ring-neutral-600 truncate">
                     @{viewedUserProfile.username}
                   </span>

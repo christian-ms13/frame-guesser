@@ -19,6 +19,7 @@
     "guest": "Usuario Invitado"
   },
   "userPage": {
+    "profileNotFound": "Usuario inexistente.",
     "displayName": "Nombre",
     "username": "Usuario",
     "email": "Correo electrónico",
@@ -97,5 +98,20 @@
     "signUpButton": "Registrarse",
     "signingUp": "Registrándote...",
     "alternative": "o continuar con"
+  },
+  "gamePage": {
+    "unableToLoadGame": "No se pudo cargar el juego. Por favor, inténtalo de nuevo más tarde.",
+    "selectDifficulty": "Por favor, selecciona una dificultad para comenzar a jugar.",
+    "difficulty": {
+      "easy": "Fácil",
+      "medium": "Medio",
+      "hard": "Difícil"
+    },
+    "gameSettings": {
+      "easyDescription": "Para una experiencia relajada con más pistas.",
+      "mediumDescription": "Un desafío equilibrado para la mayoría de los jugadores.",
+      "hardDescription": "Para expertos que buscan un desafío difícil."
+    },
+    "basePoints": "puntos"
   }
 }
