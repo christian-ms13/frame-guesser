@@ -8,7 +8,7 @@ const testState: GameState = {
   currentMovie: null,
   guess: "",
   isCorrect: null,
-  roundCompleted: false,
+  roundComplete: false,
   hintsUsed: {
     genre: false,
     year: false,

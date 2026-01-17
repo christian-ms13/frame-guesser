@@ -198,13 +198,13 @@ export default function Game({ movies }: GameProps) {
 
       if (user && difficulty) {
         try {
-          // await saveGameResult({
-          //   userId: user.id,
-          //   difficulty,
-          //   score: gameState.score,
-          //   roundsCompleted: gameState.currentRound,
-          //   livesRemaining: gameState.lives
-          // })
+          await saveGameResult({
+            userId: user.id,
+            difficulty,
+            score: gameState.score,
+            roundsCompleted: gameState.currentRound,
+            livesRemaining: gameState.lives
+          })
         } catch (error) {
           console.error("Failed to save game result:", error)
         }
