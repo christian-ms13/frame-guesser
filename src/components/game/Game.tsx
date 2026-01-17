@@ -292,15 +292,15 @@ export default function Game({ movies }: GameProps) {
           <div className = "grid grid-cols-3 gap-6">
             <button
               onClick = {() => startGame("easy")}
-              className = "cursor-pointer bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:scale-105"
+              className = "cursor-pointer bg-white dark:bg-neutral-800 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
             >
               <div className = "flex items-center justify-center mb-4">
                 <IconEasy className = "w-23 h-23" />
               </div>
-              <h3 className = "text-3xl font-audiowide-regular text-gray-900 dark:text-white mb-3">
+              <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
                 {translations("difficulty.easy")}
               </h3>
-              <p className = "text-[16px] text-gray-600 dark:text-gray-400 mb-4 min-h-10">
+              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
                 {translations("gameSettings.easyDescription")}
               </p>
               <div className = "text-lg font-bold text-red-500">
@@ -310,15 +310,15 @@ export default function Game({ movies }: GameProps) {
 
             <button
               onClick = {() => startGame("medium")}
-              className = "cursor-pointer bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:scale-105"
+              className = "cursor-pointer bg-white dark:bg-neutral-800 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
             >
               <div className = "flex items-center justify-center mb-4">
                 <IconMedium className = "w-23 h-23" />
               </div>
-              <h3 className = "text-3xl font-audiowide-regular text-gray-900 dark:text-white mb-3">
+              <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
                 {translations("difficulty.medium")}
               </h3>
-              <p className = "text-[16px] text-gray-600 dark:text-gray-400 mb-4 min-h-10">
+              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
                 {translations("gameSettings.mediumDescription")}
               </p>
               <div className = "text-lg font-bold text-yellow-500 dark:text-yellow-400">
@@ -328,15 +328,15 @@ export default function Game({ movies }: GameProps) {
 
             <button
               onClick = {() => startGame("hard")}
-              className = "cursor-pointer bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:scale-105"
+              className = "cursor-pointer bg-white dark:bg-neutral-800 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
             >
               <div className = "flex items-center justify-center mb-4">
                 <IconHard className = "w-23 h-23" />
               </div>
-              <h3 className = "text-3xl font-audiowide-regular text-gray-900 dark:text-white mb-3">
+              <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
                 {translations("difficulty.hard")}
               </h3>
-              <p className = "text-[16px] text-gray-600 dark:text-gray-400 mb-4 min-h-10">
+              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
                 {translations("gameSettings.hardDescription")}
               </p>
               <div className = "text-lg font-bold text-green-500">
