@@ -112,6 +112,14 @@
       "mediumDescription": "A balanced challenge for most players.",
       "hardDescription": "For experts seeking a tough challenge."
     },
-    "basePoints": "points"
+    "basePoints": "points",
+    "gameOver": {
+      "won": "Congratulations! You won!",
+      "lost": "Game Over! Better luck next time."
+    },
+    "results": {
+      "roundByRound": "Round by Round"
+    },
+    "playAgain": "Play Again"
   }
 }

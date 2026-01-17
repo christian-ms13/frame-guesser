@@ -9,6 +9,7 @@ import type { GameMovie } from "../../utils/tmdb"
 import type { DifficultyLevel, GameConfig, RoundResult, GameState } from "../../types/game"
 import { useAuth } from "../../hooks/useAuth"
 import { IconEasy, IconHard, IconMedium } from "./DifficultyIcons"
+import { IconFireworks, IconSad } from "./ResultIcons"
 
 const GAME_CONFIG: GameConfig = {
   totalRounds: 5,
@@ -281,71 +282,133 @@ export default function Game({ movies }: GameProps) {
 
   // ---
 
-  if (!gameStarted || !difficulty) {
+  // if (!gameStarted || !difficulty) {
+  //   return (
+  //     <div className = "min-h-[90vh] flex items-center justify-center p-4">
+  //       <div className = "max-w-4xl w-full">
+  //         <h1 className = "text-5xl font-play-bold text-center mb-12 text-neutral-900 dark:text-white">
+  //           {translations("selectDifficulty")}
+  //         </h1>
+
+  //         <div className = "grid grid-cols-3 gap-6">
+  //           <button
+  //             onClick = {() => startGame("easy")}
+  //             className = "cursor-pointer bg-white dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
+  //           >
+  //             <div className = "flex items-center justify-center mb-4">
+  //               <IconEasy className = "w-23 h-23" />
+  //             </div>
+  //             <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
+  //               {translations("difficulty.easy")}
+  //             </h3>
+  //             <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
+  //               {translations("gameSettings.easyDescription")}
+  //             </p>
+  //             <div className = "text-lg font-bold text-red-500">
+  //               {GAME_CONFIG.baseScore.easy} {translations("basePoints")}
+  //             </div>
+  //           </button>
+
+  //           <button
+  //             onClick = {() => startGame("medium")}
+  //             className = "cursor-pointer bg-white dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
+  //           >
+  //             <div className = "flex items-center justify-center mb-4">
+  //               <IconMedium className = "w-23 h-23" />
+  //             </div>
+  //             <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
+  //               {translations("difficulty.medium")}
+  //             </h3>
+  //             <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
+  //               {translations("gameSettings.mediumDescription")}
+  //             </p>
+  //             <div className = "text-lg font-bold text-yellow-500 dark:text-yellow-400">
+  //               {GAME_CONFIG.baseScore.medium} {translations("basePoints")}
+  //             </div>
+  //           </button>
+
+  //           <button
+  //             onClick = {() => startGame("hard")}
+  //             className = "cursor-pointer bg-white dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
+  //           >
+  //             <div className = "flex items-center justify-center mb-4">
+  //               <IconHard className = "w-23 h-23" />
+  //             </div>
+  //             <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
+  //               {translations("difficulty.hard")}
+  //             </h3>
+  //             <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
+  //               {translations("gameSettings.hardDescription")}
+  //             </p>
+  //             <div className = "text-lg font-bold text-green-500">
+  //               {GAME_CONFIG.baseScore.hard} {translations("basePoints")}
+  //             </div>
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   )
+  // }
+
+  // ---
+
+  // if (gameState.gameOver) {
     return (
       <div className = "min-h-[90vh] flex items-center justify-center p-4">
         <div className = "max-w-4xl w-full">
-          <h1 className = "text-5xl font-play-bold text-center mb-12 text-neutral-900 dark:text-white">
-            {translations("selectDifficulty")}
-          </h1>
-
-          <div className = "grid grid-cols-3 gap-6">
-            <button
-              onClick = {() => startGame("easy")}
-              className = "cursor-pointer bg-white dark:bg-neutral-800 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
-            >
-              <div className = "flex items-center justify-center mb-4">
-                <IconEasy className = "w-23 h-23" />
-              </div>
-              <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
-                {translations("difficulty.easy")}
-              </h3>
-              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
-                {translations("gameSettings.easyDescription")}
-              </p>
-              <div className = "text-lg font-bold text-red-500">
-                {GAME_CONFIG.baseScore.easy} {translations("basePoints")}
-              </div>
-            </button>
-
-            <button
-              onClick = {() => startGame("medium")}
-              className = "cursor-pointer bg-white dark:bg-neutral-800 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
-            >
-              <div className = "flex items-center justify-center mb-4">
-                <IconMedium className = "w-23 h-23" />
-              </div>
-              <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
-                {translations("difficulty.medium")}
-              </h3>
-              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
-                {translations("gameSettings.mediumDescription")}
-              </p>
-              <div className = "text-lg font-bold text-yellow-500 dark:text-yellow-400">
-                {GAME_CONFIG.baseScore.medium} {translations("basePoints")}
-              </div>
-            </button>
-
-            <button
-              onClick = {() => startGame("hard")}
-              className = "cursor-pointer bg-white dark:bg-neutral-800 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
-            >
-              <div className = "flex items-center justify-center mb-4">
-                <IconHard className = "w-23 h-23" />
-              </div>
-              <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
-                {translations("difficulty.hard")}
-              </h3>
-              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
-                {translations("gameSettings.hardDescription")}
-              </p>
-              <div className = "text-lg font-bold text-green-500">
-                {GAME_CONFIG.baseScore.hard} {translations("basePoints")}
-              </div>
-            </button>
+          <div className = "text-center mb-8">
+            <div className = "mb-4">
+              {gameState.gameWon ? <IconFireworks className = "w-24 h-24" /> : <IconSad className = "w-24 h-24" />}
+            </div>
+            <h1 className = "text-4xl font-bold mb-2">
+              {gameState.gameWon ? translations("gameOver.won") : translations("gameOver.lost")}
+            </h1>
+            <div className = "text-6xl font-bold">
+              {gameState.score} {translations("basePoints")}
+            </div>
           </div>
+
+          <div className = "bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h2 className = "text-2xl font-bold mb-4">
+              {translations("results.roundByRound")}
+            </h2>
+            <div className = "space-y-2">
+              {roundResults.map((result) => (
+                <div
+                  key = {result.round}
+                  className = "flex items-center justify-between p-3 rounded-lg bg-neutral-50"
+                >
+                  <div className = "flex items-center gap-3">
+                    <div className = {`w-8 h-8 rounded-full flex items-center justify-center ${result.correct ? "bg-green-500" : "bg-red-500"}`}>
+                      <span className = "text-white font-bold">
+                        {result.round}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className = "font-semibold">{result.movie}</div>
+                      <div className = "text-sm text-neutral-500">
+                        {result.timeSeconds}s
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className = "text-lg font-bold text-purple-600">
+                    +{result.score}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick = {restartGame}
+            className = "cursor-pointer w-full py-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity"
+          >
+            {translations("playAgain")}
+          </button>
         </div>
       </div>
     )
-  }
+  // }
 }
