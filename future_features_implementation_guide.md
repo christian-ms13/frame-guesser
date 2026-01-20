@@ -3393,7 +3393,7 @@ export async function getUserRank(
 
   return (count || 0) + 1;
 }
-```
+
 
 **Key Features**:
 - **Server Actions**: Run on server, secure database access

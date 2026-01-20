@@ -44,6 +44,73 @@ export type Database = {
         }
         Relationships: []
       }
+      leaderboard: {
+        Row: {
+          id: string
+          user_id: string
+          username: string | null
+          difficulty: "easy" | "medium" | "hard"
+          score: number
+          rounds_completed: number
+          lives_remaining: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          username?: string | null
+          difficulty: "easy" | "medium" | "hard"
+          score: number
+          rounds_completed: number
+          lives_remaining: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          username?: string | null
+          difficulty?: "easy" | "medium" | "hard"
+          score?: number
+          rounds_completed?: number
+          lives_remaining?: number
+          created_at?: string
+        }
+      }
+      game_sessions: {
+        Row: {
+          id: string
+          user_id: string
+          difficulty: "easy" | "medium" | "hard"
+          score: number
+          rounds_completed: number
+          lives_remaining: number
+          round_results: Json | null
+          created_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          difficulty: "easy" | "medium" | "hard"
+          score: number
+          rounds_completed: number
+          lives_remaining: number
+          round_results?: Json | null
+          created_at?: string
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          difficulty?: "easy" | "medium" | "hard"
+          score?: number
+          rounds_completed?: number
+          lives_remaining?: number
+          round_results?: Json | null
+          created_at?: string
+          completed_at?: string | null
+        }
+      }
     }
     Views: {
       [_ in never]: never

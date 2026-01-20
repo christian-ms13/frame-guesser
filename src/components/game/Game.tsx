@@ -1,15 +1,16 @@
 "use client"
 
-import { useState, useCallback, useMemo, useEffect } from "react"
-import Image from "next/image"
 import { useTranslations } from "next-intl"
+import Image from "next/image"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
-import { IconTrophy, IconHeart, IconArrowRight, IconClock, IconEye, IconLightbulb, IconSkipForward, IconStar } from "./GameIcons"
-import type { GameMovie } from "../../utils/tmdb"
-import type { DifficultyLevel, GameConfig, RoundResult, GameState } from "../../types/game"
+import { saveGameResult } from "../../app/game/actions"
 import { useAuth } from "../../hooks/useAuth"
+import type { DifficultyLevel, GameConfig, GameState, RoundResult } from "../../types/game"
+import type { GameMovie } from "../../utils/tmdb"
 import { IconEasy, IconHard, IconMedium } from "./DifficultyIcons"
-import { IconFireworks, IconSad, IconCorrect } from "./ResultIcons"
+import { IconArrowRight, IconClock, IconEye, IconHeart, IconLightbulb, IconSkipForward, IconStar, IconTrophy } from "./GameIcons"
+import { IconCorrect, IconFireworks, IconSad } from "./ResultIcons"
 
 const GAME_CONFIG: GameConfig = {
   totalRounds: 5,
