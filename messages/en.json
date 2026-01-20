@@ -141,5 +141,17 @@
     },
     "revealBlur": "Reveal Blur",
     "skipRound": "Skip Round"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "loading": "Loading leaderboard...",
+    "table": {
+      "rank": "Rank",
+      "player": "Player",
+      "difficulty": "Difficulty",
+      "score": "Score",
+      "rounds": "Rounds",
+      "anonymous": "Anonymous"
+    }
   }
 }

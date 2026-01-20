@@ -141,5 +141,17 @@
     },
     "revealBlur": "Disminuir desenfoque",
     "skipRound": "Saltar ronda"
+  },
+  "leaderboard": {
+    "title": "Tabla de clasificación",
+    "loading": "Cargando tabla de clasificación...",
+    "table": {
+      "rank": "Rango",
+      "player": "Jugador",
+      "difficulty": "Dificultad",
+      "score": "Puntuación",
+      "rounds": "Rondas",
+      "anonymous": "Anónim@"
+    }
   }
 }
