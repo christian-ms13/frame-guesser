@@ -29,7 +29,8 @@
     "logout": "Cerrar sesión",
     "editProfile": "Editar perfil",
     "tooltips": {
-      "play": "Jugar"
+      "play": "Jugar",
+      "userRecords": "Mis Puntuaciones"
     }
   },
   "userSettings": {

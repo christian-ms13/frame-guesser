@@ -5,12 +5,16 @@ import BackHomeButton from "../../../components/ui/BackHomeButton"
 import ProfileDropdown from "../../../components/user/ProfileDropdown"
 import GetCurrentUserProfile from "../../../utils/GetCurrentUserProfile"
 
-export default async function PersonalRecordsPage() {
+export default async function PersonalRecordsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
   const { userProfile, isLoggedIn } = await GetCurrentUserProfile()
 
-  // Redirect to home if user is not logged in
   if (!isLoggedIn || !userProfile) {
-    redirect("/")
+    redirect(`/${locale}/login`)
   }
 
   return (
