@@ -2,7 +2,8 @@ import { getTranslations } from "next-intl/server"
 import Image from "next/image"
 import Link from "next/link"
 
-import { IconCode, IconPlay } from "../../components/home-page/actions/LinkIcons"
+import AnimatedLinkButton from "@/components/home-page/AnimatedLinkButton"
+import { IconCode, IconLeaderboard, IconPersonalRecords, IconPlay } from "../../components/home-page/actions/LinkIcons"
 import PreferencesIndex from "../../components/preferences"
 import ProfileDropdown from "../../components/user/ProfileDropdown"
 import GetCurrentUserProfile from "../../utils/GetCurrentUserProfile"
@@ -32,17 +33,15 @@ export default async function Home() {
 
       {isLoggedIn && <ProfileDropdown user = {userProfile} />}
 
-      <div className = "grid grid-flow-col auto-cols-[minmax(max-content,1fr)] gap-10">
-        <Link
+      <div className = "grid grid-cols-2 grid-rows-2 gap-10">
+        <AnimatedLinkButton
           href = "https://github.com/christian-ms13/frame-guesser"
           target = "_blank"
-          className = {`${linkStyle} font-googlesanscode-light border-2 border-[#121212] dark:border-[#e3e3e1] relative overflow-hidden group`}
-        >
-          <div className = "absolute inset-0 bg-[url('/home-page/code-bg.gif')] bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity duration-350 z-0" />
-          <div className = "absolute inset-0 bg-black/47 opacity-0 group-hover:opacity-100 transition-opacity duration-350 z-0" />
-          <IconCode className = "w-6 h-6 relative z-10 group-hover:text-[#e3e3e1] duration-50" />
-          <span className = "relative z-10 group-hover:text-[#e3e3e1] duration-50">GitHub</span>
-        </Link>
+          icon = {<IconCode className = "w-full h-full" />}
+          text = "GitHub"
+          bgGif = "/home-page/code-bg.gif"
+          linkStyle = {linkStyle}
+        />
 
         <Link
           href = {isLoggedIn ? "/play" : "/login"}
@@ -52,17 +51,21 @@ export default async function Home() {
           <span>{translations("play")}</span>
         </Link>
 
-        <Link
+        <AnimatedLinkButton
           href = "/leaderboard"
-        > 
-          Leaderboard
-        </Link>
+          icon = {<IconLeaderboard className = "w-full h-full" />}
+          text = {translations("leaderboard")}
+          bgGif = "/home-page/leaderboard-bg.gif"
+          linkStyle = {linkStyle}
+        />
 
-        <Link
+        <AnimatedLinkButton
           href = "/records"
-        >
-          My Records
-        </Link>
+          icon = {<IconPersonalRecords className = "w-full h-full" />}
+          text = {translations("myRecords")}
+          bgGif = "/home-page/records-bg.gif"
+          linkStyle = {linkStyle}
+        />
       </div>
 
       <PreferencesIndex />

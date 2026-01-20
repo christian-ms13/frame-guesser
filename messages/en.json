@@ -2,6 +2,8 @@
   "homePage": {
     "subtitle": "Guess the movie from a single frame.",
     "play": "Play",
+    "leaderboard": "Leaderboard",
+    "myRecords": "My Records",
     "tooltips": {
       "theme": "Change Theme",
       "language": "Change Language"
