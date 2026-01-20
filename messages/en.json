@@ -153,5 +153,17 @@
       "rounds": "Rounds",
       "anonymous": "Anonymous"
     }
+  },
+  "personalRecords": {
+    "title": "My Records",
+    "loading": "Loading your records...",
+    "noRecords": "No records yet. Start playing to see your scores here!",
+    "table": {
+      "rank": "Rank",
+      "difficulty": "Difficulty",
+      "score": "Score",
+      "rounds": "Rounds",
+      "date": "Date"
+    }
   }
 }

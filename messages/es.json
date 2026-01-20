@@ -152,6 +152,16 @@
       "score": "Puntuación",
       "rounds": "Rondas",
       "anonymous": "Anónim@"
-    }
-  }
+    }  },
+  "personalRecords": {
+    "title": "Mis Récords",
+    "loading": "Cargando tus récords...",
+    "noRecords": "Aún no hay récords. ¡Comienza a jugar para ver tus puntuaciones aquí!",
+    "table": {
+      "rank": "Rango",
+      "difficulty": "Dificultad",
+      "score": "Puntuación",
+      "rounds": "Rondas",
+      "date": "Fecha"
+    }  }
 }

@@ -51,6 +51,18 @@ export default async function Home() {
           <IconPlay className = "w-6 h-6" />
           <span>{translations("play")}</span>
         </Link>
+
+        <Link
+          href = "/leaderboard"
+        > 
+          Leaderboard
+        </Link>
+
+        <Link
+          href = "/records"
+        >
+          My Records
+        </Link>
       </div>
 
       <PreferencesIndex />

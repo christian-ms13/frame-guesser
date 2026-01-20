@@ -187,3 +187,42 @@ export async function getUserRank(
 
   return (count || 0) + 1
 }
+
+export async function getPersonalRecords(
+  userId: string,
+  difficulty?: DifficultyLevel,
+  limit: number = 50
+): Promise<LeaderboardEntry[]> {
+  const supabase = await createClient()
+
+  let query = supabase
+    .from("leaderboard")
+    .select("*")
+    .eq("user_id", userId)
+    .order("score", { ascending: false })
+    .limit(limit)
+
+  if (difficulty) {
+    query = query.eq("difficulty", difficulty)
+  }
+
+  const { data, error } = await query
+
+  if (error) {
+    console.error("Error fetching personal records:", error)
+    return []
+  }
+
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data.map((entry: any) => ({
+      id: entry.id,
+      username: entry.username,
+      difficulty: entry.difficulty,
+      score: entry.score,
+      roundsCompleted: entry.rounds_completed,
+      livesRemaining: entry.lives_remaining,
+      createdAt: entry.created_at
+    })) || []
+  )
+}
