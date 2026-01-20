@@ -77,8 +77,7 @@
     "passwordPlaceholder": "Enter your password",
     "emailInvalid": "Invalid email format",
     "passwordInvalid": "Password must be 8+ characters with uppercase, lowercase, number, and no spaces",
-    "loginButton": "Log in",
-    "alternative": "or continue with"
+    "loginButton": "Log in"
   },
   "signUpForm": {
     "usernamePlaceholder": "your_username",
@@ -99,8 +98,7 @@
     "passwordHasSpaces": "Password cannot contain spaces",
     "passwordNotMatching": "Passwords do not match",
     "signUpButton": "Sign up",
-    "signingUp": "Signing up...",
-    "alternative": "or continue with"
+    "signingUp": "Signing up..."
   },
   "gamePage": {
     "unableToLoadGame": "Unable to load game. Please try again later.",

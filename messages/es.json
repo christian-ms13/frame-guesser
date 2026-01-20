@@ -77,8 +77,7 @@
     "passwordPlaceholder": "Introduce tu contraseña",
     "emailInvalid": "Formato de correo electrónico inválido",
     "passwordInvalid": "La contraseña debe tener 8+ caracteres con mayúscula, minúscula, número y sin espacios",
-    "loginButton": "Iniciar sesión",
-    "alternative": "o continuar con"
+    "loginButton": "Iniciar sesión"
   },
   "signUpForm": {
     "usernamePlaceholder": "tu_usuario",
@@ -99,8 +98,7 @@
     "passwordHasSpaces": "La contraseña no puede contener espacios",
     "passwordNotMatching": "Las contraseñas no coinciden",
     "signUpButton": "Registrarse",
-    "signingUp": "Registrándote...",
-    "alternative": "o continuar con"
+    "signingUp": "Registrándote..."
   },
   "gamePage": {
     "unableToLoadGame": "No se pudo cargar el juego. Por favor, inténtalo de nuevo más tarde.",

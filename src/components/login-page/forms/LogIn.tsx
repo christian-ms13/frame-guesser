@@ -1,15 +1,13 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-import { useTheme } from "next-themes"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import { EMAIL_REGEX } from "../../../hooks/useEmailAvailability"
 import { PASSWORD_REGEX } from "../../../hooks/usePasswordValidation"
 import { signInUser } from "../../../utils/supabase/actions"
 import { IconEmail, IconHidePassword, IconPassword, IconShowPassword } from "../InputIcons"
-import { IconAppleDark, IconAppleLight, IconGitHubDark, IconGitHubLight, IconGoogle, IconMicrosoft } from "../SocialIcons"
 
 const labelClassName = "flex gap-2 items-center w-full px-4 py-2 border bg-neutral-100 ring-neutral-200 ring-1 border-none hover:bg-neutral-200 rounded-xl transition-colors duration-150 font-robotoslab-medium text-black placeholder:font-robotoslab-bold group dark:bg-neutral-700 dark:ring-neutral-600 dark:hover:bg-neutral-600 dark:text-white"
 const inputClassName = "w-full focus:outline-none flex-1"
@@ -17,8 +15,6 @@ const inputClassName = "w-full focus:outline-none flex-1"
 export default function LoginForm() {
   const translations = useTranslations("loginForm")
   const router = useRouter()
-  const { resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [email, setEmail] = useState("")
@@ -27,23 +23,6 @@ export default function LoginForm() {
   const [isPasswordValid, setIsPasswordValid] = useState(false)
   const [isPasswordShown, setIsPasswordShown] = useState(false)
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setMounted(true), 0)
-
-    return () => clearTimeout(timeout)
-  }, [])
-
-  const socialIconsSize = "w-7 h-7"
-
-  const GitHubIcon = mounted && resolvedTheme === "light" ? IconGitHubLight : IconGitHubDark
-  const AppleIcon = mounted && resolvedTheme === "light" ? IconAppleLight : IconAppleDark
-
-  const socialIcons = [
-    <IconGoogle key = "google" className = {socialIconsSize} />,
-    <GitHubIcon key = "github" className = {socialIconsSize} />,
-    <AppleIcon key = "apple" className = {socialIconsSize} />,
-    <IconMicrosoft key = "microsoft" className = {socialIconsSize} />
-  ]
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const nextEmail = event.target.value.trim()
@@ -83,24 +62,6 @@ export default function LoginForm() {
 
   return (
     <>
-      <div className = "grid grid-cols-4 justify-items-center items-center w-full gap-6">
-        {socialIcons.map((IconComponent, index) => (
-          <button
-            key = {index}
-            type = "button"
-            className = "inline-flex items-center justify-center cursor-pointer p-4 rounded-xl bg-neutral-100 ring-2 ring-neutral-200 hover:bg-neutral-200 dark:bg-neutral-700 dark:ring-neutral-600 dark:hover:bg-neutral-600 transition-colors duration-150"
-          >
-            {IconComponent}
-          </button>
-        ))}
-      </div>
-
-      <div className = "flex items-center w-full gap-4 text-neutral-600 dark:text-neutral-300 font-corporatespro-medium uppercase tracking-wide">
-        <hr className = "w-full h-0.5 translate-y-0.5" />
-        <h5 className = "min-w-max">{translations("alternative")}</h5>
-        <hr className = "w-full h-0.5 translate-y-0.5" />
-      </div>
-
       <form className = "flex flex-col gap-4 w-full" onSubmit = {handleSubmit}>
         <div>
           <label className = {labelClassName}>
