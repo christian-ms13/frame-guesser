@@ -30,7 +30,8 @@
     "editProfile": "Editar perfil",
     "tooltips": {
       "play": "Jugar",
-      "userRecords": "Mis Puntuaciones"
+      "userRecords": "Mis Puntuaciones",
+      "deleteUser": "Eliminar Cuenta"
     }
   },
   "userSettings": {

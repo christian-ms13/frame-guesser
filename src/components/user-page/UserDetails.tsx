@@ -1,13 +1,19 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
+import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 import { logout } from "../../app/auth/actions"
+import { deleteUser } from "../../utils/supabase/actions"
 import { Database } from "../../types/supabase"
 import { IconTrophy } from "../game/GameIcons"
 import { IconPlay } from "../home-page/actions/LinkIcons"
 import Tooltip from "../ui/Tooltip"
 import TruncatedTooltip from "../ui/TruncatedTooltip"
-import { IconEdit, IconLogout } from "../user-page/FieldIcons"
+import { IconEdit, IconLogout, IconTrash } from "../user-page/FieldIcons"
 
 type UserProfile = Database['public']['Tables']['profiles']['Row']
 
@@ -21,6 +27,20 @@ interface UserDetailsProps {
 }
 
 export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, memberSince, translations, setAreSettingsClosed }: UserDetailsProps) {
+  const router = useRouter()
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleDeleteUser = async () => {
+    setIsDeleting(true)
+    const result = await deleteUser()
+    
+    if (result.success) {
+      router.push("/")
+    } else {
+      setIsDeleting(false)
+      console.error("Failed to delete user:", result.error)
+    }
+  }
   return (
     <div className = "min-h-[70vh] w-full flex items-center justify-center px-6 relative">
       {!isOwner && (
@@ -57,6 +77,20 @@ export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, member
                 >
                   <IconTrophy className = "w-5 h-5" />
                 </Link>
+              </div>
+            </Tooltip>
+          )}
+
+          {isOwner && (
+            <Tooltip text = {translations("tooltips.deleteUser")}>
+              <div>
+                <button
+                  onClick = {handleDeleteUser}
+                  disabled = {isDeleting}
+                  className = "cursor-pointer flex items-center justify-center gap-1 px-4 py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-play-bold transition-all duration-150 hover:scale-105 active:scale-100 hover:shadow-md hover:shadow-red-900 dark:hover:shadow-red-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <IconTrash className = "w-5 h-5" />
+                </button>
               </div>
             </Tooltip>
           )}

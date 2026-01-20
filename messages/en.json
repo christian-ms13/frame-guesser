@@ -30,7 +30,8 @@
     "editProfile": "Edit Profile",
     "tooltips": {
       "play": "Play",
-      "userRecords": "My Records"
+      "userRecords": "My Records",
+      "deleteUser": "Delete Account"
     }
   },
   "userSettings": {
