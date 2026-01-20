@@ -171,22 +171,20 @@ export async function checkEmailAvailabilityForUpdate(
   return data === null
 }
 
-interface ProfileUpdateData {
-  display_name?: string | null
-  username?: string
-  email?: string
-  avatar_url?: string | null
-}
-
 export async function updateUserProfile(
   userId: string,
-  updateData: ProfileUpdateData
+  updateData: Database['public']['Tables']['profiles']['Update']
 ): Promise<{ success: boolean; data?: Database['public']['Tables']['profiles']['Row']; error?: string }> {
   const supabase = await createClient()
-
+  
   const { data, error } = await supabase
     .from("profiles")
-    .update(updateData)
+    .update({
+      display_name: updateData.display_name,
+      username: updateData.username,
+      email: updateData.email,
+      avatar_url: updateData.avatar_url,
+    })
     .eq("id", userId)
     .select("*")
     .single()

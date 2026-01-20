@@ -12,8 +12,135 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.1"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
+      game_sessions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          difficulty: string
+          id: string
+          lives_remaining: number
+          round_results: Json | null
+          rounds_completed: number
+          score: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          difficulty: string
+          id?: string
+          lives_remaining?: number
+          round_results?: Json | null
+          rounds_completed?: number
+          score?: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          difficulty?: string
+          id?: string
+          lives_remaining?: number
+          round_results?: Json | null
+          rounds_completed?: number
+          score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      leaderboard: {
+        Row: {
+          created_at: string
+          difficulty: string
+          id: string
+          lives_remaining: number
+          rounds_completed: number
+          score: number
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          created_at?: string
+          difficulty: string
+          id?: string
+          lives_remaining?: number
+          rounds_completed?: number
+          score?: number
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          created_at?: string
+          difficulty?: string
+          id?: string
+          lives_remaining?: number
+          rounds_completed?: number
+          score?: number
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      password_policy: {
+        Row: {
+          created_at: string | null
+          id: number
+          min_length: number | null
+          require_lowercase: boolean | null
+          require_numbers: boolean | null
+          require_special_chars: boolean | null
+          require_uppercase: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          min_length?: number | null
+          require_lowercase?: boolean | null
+          require_numbers?: boolean | null
+          require_special_chars?: boolean | null
+          require_uppercase?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          min_length?: number | null
+          require_lowercase?: boolean | null
+          require_numbers?: boolean | null
+          require_special_chars?: boolean | null
+          require_uppercase?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -43,73 +170,6 @@ export type Database = {
           username?: string
         }
         Relationships: []
-      }
-      leaderboard: {
-        Row: {
-          id: string
-          user_id: string
-          username: string | null
-          difficulty: "easy" | "medium" | "hard"
-          score: number
-          rounds_completed: number
-          lives_remaining: number
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          username?: string | null
-          difficulty: "easy" | "medium" | "hard"
-          score: number
-          rounds_completed: number
-          lives_remaining: number
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          username?: string | null
-          difficulty?: "easy" | "medium" | "hard"
-          score?: number
-          rounds_completed?: number
-          lives_remaining?: number
-          created_at?: string
-        }
-      }
-      game_sessions: {
-        Row: {
-          id: string
-          user_id: string
-          difficulty: "easy" | "medium" | "hard"
-          score: number
-          rounds_completed: number
-          lives_remaining: number
-          round_results: Json | null
-          created_at: string
-          completed_at: string | null
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          difficulty: "easy" | "medium" | "hard"
-          score: number
-          rounds_completed: number
-          lives_remaining: number
-          round_results?: Json | null
-          created_at?: string
-          completed_at?: string | null
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          difficulty?: "easy" | "medium" | "hard"
-          score?: number
-          rounds_completed?: number
-          lives_remaining?: number
-          round_results?: Json | null
-          created_at?: string
-          completed_at?: string | null
-        }
       }
     }
     Views: {
@@ -245,6 +305,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },
