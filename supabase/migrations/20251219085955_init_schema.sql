@@ -1,37 +1,37 @@
-create table public.profiles (
-  id uuid not null primary key references auth.users(id) on delete cascade,
-  username text unique not null,
-  email text unique not null,
-  display_name text,
-  avatar_url text,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+CREATE TABLE public.profiles (
+  id UUID NOT NULL PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  username TEXT UNIQUE NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  display_name TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
-alter table public.profiles enable row level security;
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
-alter table public.profiles
-  add constraint profiles_username_allowed_chars
-  check (username ~ '^[A-Za-z0-9_\-]+$' and username !~ ' ');
+ALTER TABLE public.profiles
+  ADD CONSTRAINT profiles_username_allowed_chars
+  CHECK (username ~ '^[A-Za-z0-9_\-]+$' AND username !~ ' ');
 
-create policy "Public profiles are viewable by everyone." on public.profiles for select using (true);
+CREATE POLICY "Public profiles are viewable by everyone." ON public.profiles FOR SELECT USING (TRUE);
 
-create function public.handle_new_user()
-returns trigger
-language plpgsql
-security definer set search_path = public
-as $$
-begin
-  insert into public.profiles (id, username, email)
-  values (
-    new.id,
-    new.raw_user_meta_data ->> 'username',
-    new.email
+CREATE FUNCTION public.handle_new_user()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER SET SEARCH_PATH = public
+AS $$
+BEGIN
+  INSERT INTO public.profiles (id, username, email)
+  VALUES (
+    NEW.id,
+    NEW.raw_user_meta_data ->> 'username',
+    NEW.email
   );
-  return new;
-end;
+  RETURN NEW;
+END;
 $$;
 
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();

@@ -1,36 +1,36 @@
-insert into storage.buckets (id, name, public)
-values ('avatars', 'avatars', true)
-on conflict (id) do nothing;
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('avatars', 'avatars', TRUE)
+ON CONFLICT (id) DO NOTHING;
 
-create policy "Public read access for avatars"
-  on storage.objects
-  for select
-  using (bucket_id = 'avatars');
+CREATE POLICY "Public read access for avatars"
+  ON storage.objects
+  FOR SELECT
+  USING (bucket_id = 'avatars');
 
-create policy "Users can upload their avatar"
-  on storage.objects
-  for insert
-  with check (
+CREATE POLICY "Users can upload their avatar"
+  ON storage.objects
+  FOR INSERT
+  WITH CHECK (
     bucket_id = 'avatars'
-    and auth.role() = 'authenticated'
+    AND auth.role() = 'authenticated'
   );
 
-create policy "Users can update their avatar"
-  on storage.objects
-  for update
-  using (
+CREATE POLICY "Users can update their avatar"
+  ON storage.objects
+  FOR UPDATE
+  USING (
     bucket_id = 'avatars'
-    and owner = auth.uid()
+    AND owner = auth.uid()
   )
-  with check (
+  WITH CHECK (
     bucket_id = 'avatars'
-    and owner = auth.uid()
+    AND owner = auth.uid()
   );
 
-create policy "Users can delete their avatar"
-  on storage.objects
-  for delete
-  using (
+CREATE POLICY "Users can delete their avatar"
+  ON storage.objects
+  FOR DELETE
+  USING (
     bucket_id = 'avatars'
-    and owner = auth.uid()
+    AND owner = auth.uid()
   );

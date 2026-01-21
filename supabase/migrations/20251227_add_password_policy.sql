@@ -1,19 +1,19 @@
-create table public.password_policy (
-  id int primary key default 1,
-  min_length int default 8,
-  require_uppercase boolean default true,
-  require_lowercase boolean default true,
-  require_numbers boolean default true,
-  require_special_chars boolean default false,
-  created_at timestamp with time zone default timezone('utc'::text, now()),
-  updated_at timestamp with time zone default timezone('utc'::text, now())
+CREATE TABLE public.password_policy (
+  id INT PRIMARY KEY DEFAULT 1,
+  min_length INT DEFAULT 8,
+  require_uppercase BOOLEAN DEFAULT TRUE,
+  require_lowercase BOOLEAN DEFAULT TRUE,
+  require_numbers BOOLEAN DEFAULT TRUE,
+  require_special_chars BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 
-insert into public.password_policy (id, min_length, require_uppercase, require_lowercase, require_numbers, require_special_chars)
-values (1, 8, true, true, true, false);
+INSERT INTO public.password_policy (id, min_length, require_uppercase, require_lowercase, require_numbers, require_special_chars)
+VALUES (1, 8, TRUE, TRUE, TRUE, FALSE);
 
-alter table public.password_policy enable row level security;
+ALTER TABLE public.password_policy ENABLE ROW LEVEL SECURITY;
 
-create policy "Password policy is viewable by everyone." on public.password_policy for select using (true);
+CREATE POLICY "Password policy is viewable by everyone." ON public.password_policy FOR SELECT USING (TRUE);
 
-create policy "Only admins can update password policy." on public.password_policy for update using (false);
+CREATE POLICY "Only admins can update password policy." ON public.password_policy FOR UPDATE USING (FALSE);
