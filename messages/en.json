@@ -103,7 +103,7 @@
   },
   "gamePage": {
     "unableToLoadGame": "Unable to load game. Please try again later.",
-    "selectDifficulty": "Please, select a difficulty to start playing.",
+    "selectDifficulty": "Pick a difficulty to start.",
     "difficulty": {
       "easy": "Easy",
       "medium": "Medium",

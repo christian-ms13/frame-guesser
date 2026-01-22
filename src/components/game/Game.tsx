@@ -8,6 +8,7 @@ import { saveGameResult } from "../../app/game/actions"
 import { useAuth } from "../../hooks/useAuth"
 import type { DifficultyLevel, GameConfig, GameState, RoundResult } from "../../types/game"
 import type { GameMovie } from "../../utils/tmdb"
+import TruncatedTooltip from "../ui/TruncatedTooltip"
 import { IconEasy, IconHard, IconMedium } from "./DifficultyIcons"
 import { IconArrowRight, IconClock, IconEye, IconHeart, IconLightbulb, IconSkipForward, IconStar, IconTrophy } from "./GameIcons"
 import { IconCorrect, IconFireworks, IconSad } from "./ResultIcons"
@@ -46,8 +47,8 @@ interface HintButtonProps {
   label: string
   value?: string
   onClick: () => void
-  disabled: boolean
   cost: number
+  revealed?: boolean
 }
 
 function HintButton({
@@ -55,24 +56,40 @@ function HintButton({
   label,
   value,
   onClick,
-  disabled,
-  cost
-}: HintButtonProps) {
+  cost,
+  revealed = false,
+  isTagline = false
+}: HintButtonProps & { isTagline?: boolean }) {
   return (
     <button
       onClick = {onClick}
-      disabled = {disabled}
-      className = "p-3 rounded-lg border-2 border-purple-500 hover:bg-purple-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-left"
+      className = {
+        `cursor-pointer p-4 rounded-2xl border-2 ${
+          revealed
+            ? "border-red-500/80 bg-red-50/60 dark:bg-red-500/10"
+            : "border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800"
+        } hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 text-left hover:shadow-md hover:scale-105 active:scale-100 h-full flex flex-col`
+      }
     >
-      <div className = "flex items-center gap-2 mb-1">
+      <div className = "flex items-center gap-2 mb-2">
         {icon}
-        <span className = "text-sm font-semibold">{label}</span>
+        <span className = "text-sm font-semibold text-neutral-900 dark:text-white font-robotoslab-medium">{label}</span>
       </div>
 
       {value ? (
-        <div className = "text-sm font-bold text-purple-600">{value}</div>
+        isTagline ? (
+          <TruncatedTooltip text = {value}>
+            <div className = "text-base font-bold text-neutral-900 dark:text-white font-courierprime-bold truncate min-h-10 flex items-start">
+              {value}
+            </div>
+          </TruncatedTooltip>
+        ) : (
+          <div className = "text-sm font-bold text-neutral-900 dark:text-white font-courierprime-bold line-clamp-2 overflow-hidden min-h-10 leading-tight">
+            {value}
+          </div>
+        )
       ) : (
-        <div className = "text-xs text-neutral-500">-{cost} pts</div>
+        <div className = "text-xs text-neutral-500 dark:text-neutral-400 font-robotoslab-medium min-h-10 flex items-start">-{cost} pts</div>
       )}
     </button>
   )
@@ -112,6 +129,19 @@ export default function Game({ movies }: GameProps) {
   const [roundResults, setRoundResults] = useState<RoundResult[]>([])
 
   const [timer, setTimer] = useState(0)
+
+  const [hintModal, setHintModal] = useState<{ title: string; content: string } | null>(null)
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setHintModal(null)
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [])
 
   useEffect(() => {
     if (!gameState.roundStartTime || gameState.roundComplete) return
@@ -270,15 +300,44 @@ export default function Game({ movies }: GameProps) {
     difficulty
   ])
 
-  const revealHint = useCallback((hintType: keyof typeof gameState.hintsUsed) => {
-    setGameState((prevState) => ({
-      ...prevState,
-      hintsUsed: {
-        ...prevState.hintsUsed,
-        [hintType]: true
-      }
-    }))
+  const openHintModal = useCallback((title: string, content: string) => {
+    setHintModal({ title, content })
   }, [])
+
+  const revealHint = useCallback((hintType: keyof typeof gameState.hintsUsed) => {
+    if (!gameState.currentMovie) return
+
+    const title = translations(`hints.${hintType}`)
+
+    const content = (() => {
+      if (hintType === "genre") {
+        return gameState.currentMovie.genres.join(", ") || translations("hints.noGenre")
+      }
+      if (hintType === "year") {
+        return String(gameState.currentMovie.year)
+      }
+      if (hintType === "rating") {
+        return gameState.currentMovie.vote_average.toFixed(1)
+      }
+      return gameState.currentMovie.tagline || translations("hints.noTagline")
+    })()
+
+    setGameState((prevState) => {
+      if (prevState.hintsUsed[hintType]) {
+        return prevState
+      }
+
+      return {
+        ...prevState,
+        hintsUsed: {
+          ...prevState.hintsUsed,
+          [hintType]: true
+        }
+      }
+    })
+
+    openHintModal(title, content)
+  }, [gameState.currentMovie, translations, openHintModal])
 
   const revealBlur = useCallback(() => {
     setGameState((prevState) => ({
@@ -324,14 +383,14 @@ export default function Game({ movies }: GameProps) {
     return (
       <div className = "min-h-[90vh] flex items-center justify-center p-4">
         <div className = "max-w-4xl w-full">
-          <h1 className = "text-5xl font-play-bold text-center mb-12 text-neutral-900 dark:text-white">
+          <h1 className = "text-6xl font-courierprime-bold text-center mb-12 text-neutral-900 dark:text-white">
             {translations("selectDifficulty")}
           </h1>
 
           <div className = "grid grid-cols-3 gap-6">
             <button
               onClick = {() => startGame("easy")}
-              className = "cursor-pointer bg-white dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
+              className = "cursor-pointer bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-300 dark:border-neutral-700 hover:scale-105 active:scale-100"
             >
               <div className = "flex items-center justify-center mb-4">
                 <IconEasy className = "w-23 h-23" />
@@ -339,17 +398,17 @@ export default function Game({ movies }: GameProps) {
               <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
                 {translations("difficulty.easy")}
               </h3>
-              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
+              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10 font-robotoslab-medium">
                 {translations("gameSettings.easyDescription")}
               </p>
-              <div className = "text-lg font-bold text-red-500">
+              <div className = "text-lg font-bold text-red-500 font-courierprime-bold">
                 {GAME_CONFIG.baseScore.easy} {translations("basePoints")}
               </div>
             </button>
 
             <button
               onClick = {() => startGame("medium")}
-              className = "cursor-pointer bg-white dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
+              className = "cursor-pointer bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-300 dark:border-neutral-700 hover:scale-105 active:scale-100"
             >
               <div className = "flex items-center justify-center mb-4">
                 <IconMedium className = "w-23 h-23" />
@@ -357,17 +416,17 @@ export default function Game({ movies }: GameProps) {
               <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
                 {translations("difficulty.medium")}
               </h3>
-              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
+              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10 font-robotoslab-medium">
                 {translations("gameSettings.mediumDescription")}
               </p>
-              <div className = "text-lg font-bold text-yellow-500 dark:text-yellow-400">
+              <div className = "text-lg font-bold text-yellow-500 dark:text-yellow-400 font-courierprime-bold">
                 {GAME_CONFIG.baseScore.medium} {translations("basePoints")}
               </div>
             </button>
 
             <button
               onClick = {() => startGame("hard")}
-              className = "cursor-pointer bg-white dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-800 dark:border-neutral-400 hover:scale-105"
+              className = "cursor-pointer bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-300 dark:border-neutral-700 hover:scale-105 active:scale-100"
             >
               <div className = "flex items-center justify-center mb-4">
                 <IconHard className = "w-23 h-23" />
@@ -375,10 +434,10 @@ export default function Game({ movies }: GameProps) {
               <h3 className = "text-3xl font-audiowide-regular text-neutral-900 dark:text-white mb-3">
                 {translations("difficulty.hard")}
               </h3>
-              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10">
+              <p className = "text-[16px] text-neutral-600 dark:text-neutral-400 mb-4 min-h-10 font-robotoslab-medium">
                 {translations("gameSettings.hardDescription")}
               </p>
-              <div className = "text-lg font-bold text-green-500">
+              <div className = "text-lg font-bold text-green-500 font-courierprime-bold">
                 {GAME_CONFIG.baseScore.hard} {translations("basePoints")}
               </div>
             </button>
@@ -395,43 +454,44 @@ export default function Game({ movies }: GameProps) {
       <div className = "min-h-[90vh] flex items-center justify-center p-4">
         <div className = "max-w-4xl w-full">
           <div className = "text-center mb-8">
-            <div className = "mb-4">
-              {gameState.gameWon ? <IconFireworks className = "w-24 h-24" /> : <IconSad className = "w-24 h-24" />}
+            <div className = "mb-6">
+              {gameState.gameWon ? <IconFireworks className = "w-24 h-24 mx-auto" /> : <IconSad className = "w-24 h-24 mx-auto" />}
             </div>
-            <h1 className = "text-4xl font-bold mb-2">
+            <h1 className = "text-5xl font-courierprime-bold mb-4 text-neutral-900 dark:text-white">
               {gameState.gameWon ? translations("gameOver.won") : translations("gameOver.lost")}
             </h1>
-            <div className = "text-6xl font-bold">
-              {gameState.score} {translations("basePoints")}
+            <div className = "text-7xl font-courierprime-bold text-neutral-900 dark:text-white">
+              {gameState.score}
+            </div>
+            <div className = "text-xl text-neutral-600 dark:text-neutral-400 mt-2 font-robotoslab-medium">
+              {translations("basePoints")}
             </div>
           </div>
 
-          <div className = "bg-white rounded-xl shadow-lg p-6 mb-6">
-            <h2 className = "text-2xl font-bold mb-4">
+          <div className = "bg-neutral-100 dark:bg-neutral-800 rounded-3xl shadow-xl shadow-black/40 dark:shadow-black/70 p-6 mb-8 border-2 border-neutral-300 dark:border-neutral-700">
+            <h2 className = "text-3xl font-courierprime-bold mb-6 text-neutral-900 dark:text-white">
               {translations("results.roundByRound")}
             </h2>
-            <div className = "space-y-2">
+            <div className = "space-y-3">
               {roundResults.map((result) => (
                 <div
                   key = {result.round}
-                  className = "flex items-center justify-between p-3 rounded-lg bg-neutral-50"
+                  className = "flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 transition-all hover:shadow-md"
                 >
-                  <div className = "flex items-center gap-3">
-                    <div className = {`w-8 h-8 rounded-full flex items-center justify-center ${result.correct ? "bg-green-500" : "bg-red-500"}`}>
-                      <span className = "text-white font-bold">
-                        {result.round}
-                      </span>
+                  <div className = "flex items-center gap-4">
+                    <div className = {`w-10 h-10 rounded-full flex items-center justify-center font-bold font-courierprime-bold text-white ${result.correct ? "bg-green-500" : "bg-red-500"}`}>
+                      {result.round}
                     </div>
 
                     <div>
-                      <div className = "font-semibold">{result.movie}</div>
-                      <div className = "text-sm text-neutral-500">
+                      <div className = "font-semibold text-neutral-900 dark:text-white font-robotoslab-medium">{result.movie}</div>
+                      <div className = "text-sm text-neutral-500 dark:text-neutral-400 font-robotoslab-medium">
                         {result.timeSeconds}s
                       </div>
                     </div>
                   </div>
 
-                  <div className = "text-lg font-bold text-purple-600">
+                  <div className = "text-lg font-bold text-neutral-900 dark:text-white font-courierprime-bold">
                     +{result.score}
                   </div>
                 </div>
@@ -441,7 +501,7 @@ export default function Game({ movies }: GameProps) {
 
           <button
             onClick = {restartGame}
-            className = "cursor-pointer w-full py-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity"
+            className = "cursor-pointer w-full py-5 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-2xl font-courierprime-bold text-lg transition-all duration-200 hover:shadow-lg shadow-red-500/50 hover:scale-105 active:scale-100"
           >
             {translations("playAgain")}
           </button>
@@ -455,37 +515,38 @@ export default function Game({ movies }: GameProps) {
   if (gameState.roundComplete && gameState.isCorrect !== null) {
     return (
       <div className = "min-h-[90vh] flex items-center justify-center p-4">
-        <div className = "max-w-2xl w-full text-center">
-          <div className = "text-8xl mb-6">
-            {gameState.isCorrect ? <IconCorrect className = "w-24 h-24" /> : <IconSad className = "w-24 h-24" />}
+        <div className = "max-w-3xl w-full text-center">
+          <div className = "mb-8">
+            {gameState.isCorrect ? <IconCorrect className = "w-28 h-28 mx-auto" /> : <IconSad className = "w-28 h-28 mx-auto" />}
           </div>
 
-          <h1 className = "text-4xl font-bold mb-4">
+          <h1 className = "text-5xl font-courierprime-bold mb-6 text-neutral-900 dark:text-white">
             {gameState.isCorrect ? translations("roundResult.correct") : translations("roundResult.incorrect")}
           </h1>
 
-          <p className = "text-2xl text-neutral-600 mb-8">
+          <p className = "text-2xl text-neutral-600 dark:text-neutral-400 mb-10 font-robotoslab-medium">
             {gameState.currentMovie?.title}
           </p>
 
           {gameState.isCorrect && (
-            <div className = "text-5xl font-bold text-purple-600 mb-4">
+            <div className = "text-6xl font-courierprime-bold text-neutral-900 dark:text-white mb-8">
               +{roundResults[roundResults.length - 1]?.score}
             </div>
           )}
 
-          <div className = "flex items-center justify-center gap-8 mb-8">
-            <div className = "flex items-center gap-2">
-              <IconTrophy className = "w-6 h-6 text-yellow-500" />
-              <span className = "text-2xl font-bold">
+          <div className = "flex items-center justify-center gap-12 mb-10 bg-neutral-100 dark:bg-neutral-800 rounded-2xl py-6 px-8 border-2 border-neutral-300 dark:border-neutral-700">
+            <div className = "flex items-center gap-3">
+              <IconTrophy className = "w-7 h-7 text-yellow-500" />
+              <span className = "text-3xl font-courierprime-bold text-neutral-900 dark:text-white">
                 {gameState.score}
               </span>
             </div>
-            <div className = "flex items-center gap-2">
+            <div className = "w-px h-12 bg-neutral-300 dark:bg-neutral-600" />
+            <div className = "flex items-center gap-3">
               {Array.from({ length: GAME_CONFIG.maxLives }).map((_, i) => (
                 <IconHeart
                   key = {i}
-                  className = {`w-6 h-6 ${i < gameState.lives ? "text-red-500" : "text-neutral-300"}`}
+                  className = {`w-7 h-7 transition-all duration-200 ${i < gameState.lives ? "text-red-500 scale-100" : "text-neutral-300 dark:text-neutral-600 scale-75"}`}
                 />
               ))}
             </div>
@@ -493,12 +554,12 @@ export default function Game({ movies }: GameProps) {
 
           <button
             onClick = {handleNextRound}
-            className = "px-8 py-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity inline-flex items-center gap-2"
+            className = "cursor-pointer px-10 py-5 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-2xl font-courierprime-bold text-lg transition-all duration-200 hover:shadow-lg shadow-red-500/50 hover:scale-105 active:scale-100 inline-flex items-center gap-3"
           >
             {gameState.currentRound < GAME_CONFIG.totalRounds && gameState.lives > 0
             ? translations("nextRound")
             : translations("seeResults")}
-            <IconArrowRight className = "w-5 h-5" />
+            <IconArrowRight className = "w-6 h-6" />
           </button>
         </div>
       </div>
@@ -511,43 +572,43 @@ export default function Game({ movies }: GameProps) {
 
   return (
     <div className = "min-h-[90vh] p-4">
-      <div className = "max-w-6xl mx-auto">
-        <div className = "flex items-center justify-between mb-6">
-          <div className = "flex items-center gap-6">
-            <div className = "flex items-center gap-2">
+      <div className = "max-w-8xl mx-auto w-full px-2 sm:px-4">
+        <div className = "flex items-center justify-between mb-8 bg-neutral-100 dark:bg-neutral-800 rounded-2xl px-6 py-4 border-2 border-neutral-300 dark:border-neutral-700">
+          <div className = "flex items-center gap-8">
+            <div className = "flex items-center gap-3 px-4 py-2 bg-white dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600">
               <IconTrophy className = "w-6 h-6 text-yellow-500" />
-              <span className = "text-2xl font-bold">
+              <span className = "text-2xl font-courierprime-bold text-neutral-900 dark:text-white">
                 {gameState.score}
               </span>
             </div>
 
-            <div className = "flex items-center gap-1">
+            <div className = "flex items-center gap-2">
               {Array.from({ length: GAME_CONFIG.maxLives }).map((_, i) => (
                 <IconHeart
                   key = {i}
-                  className = {`w-6 h-6 transition-all ${
+                  className = {`w-6 h-6 transition-all duration-200 ${
                     i < gameState.lives
                       ? "text-red-500 scale-100"
-                      : "text-neutral-300 scale-75"
+                      : "text-neutral-300 dark:text-neutral-600 scale-75"
                   }`}
                 />
               ))}
             </div>
 
-            <div className = "flex items-center gap-2">
+            <div className = "flex items-center gap-3 px-4 py-2 bg-white dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600">
               <IconClock className = "w-6 h-6 text-blue-500" />
-              <span className = "text-lg font-semibold">
+              <span className = "text-lg font-courierprime-bold text-neutral-900 dark:text-white">
                 {timer}s
               </span>
             </div>
           </div>
 
-          <div className = "text-lg font-semibold">
+          <div className = "text-lg font-courierprime-bold text-neutral-900 dark:text-white">
             {translations("round")} {gameState.currentRound} / {GAME_CONFIG.totalRounds}
           </div>
         </div>
 
-        <div className = "relative w-full aspect-video rounded-xl overflow-hidden mb-6 shadow-2xl">
+        <div className = "relative w-full aspect-video rounded-2xl overflow-hidden mb-8 shadow-2xl shadow-black/40 dark:shadow-black/70 border-2 border-neutral-300 dark:border-neutral-700">
           <Image
             src = {gameState.currentMovie ? gameState.currentMovie.backdrop_path : ""}
             alt = "Movie Frame"
@@ -557,20 +618,21 @@ export default function Game({ movies }: GameProps) {
           />
         </div>
 
-        <div className = "mb-6">
-          <div className = "flex items-center justify-between mb-2">
-            <span className = "text-sm font-semibold">{translations("clarity")}</span>
-            <span className = "text-sm text-neutral-600">{gameState.blurLevel}/4</span>
+        <div className = "max-w-5xl mx-auto w-full">
+          <div className = "mb-8 bg-neutral-100 dark:bg-neutral-800 rounded-2xl p-5 border-2 border-neutral-300 dark:border-neutral-700">
+          <div className = "flex items-center justify-between mb-3">
+            <span className = "text-sm font-courierprime-bold text-neutral-900 dark:text-white uppercase tracking-wide">{translations("clarity")}</span>
+            <span className = "text-sm font-robotoslab-medium text-neutral-600 dark:text-neutral-400">{gameState.blurLevel}/4</span>
           </div>
-          <div className = "h-2 bg-neutral-200 rounded-full overflow-hidden">
+          <div className = "h-3 bg-neutral-300 dark:bg-neutral-700 rounded-full overflow-hidden border border-neutral-400 dark:border-neutral-600">
             <div
-              className = "h-full bg-linear-to-r from-purple-600 to-pink-600 transition-all duration-300"
+              className = "h-full bg-linear-to-r from-red-500 via-amber-500 to-yellow-400 transition-all duration-300"
               style = {{ width: `${(gameState.blurLevel / 4) * 100}%` }}
             />
           </div>
         </div>
 
-        <div className = "mb-6">
+          <div className = "mb-6">
           <input
             type = "text"
             value = {gameState.guess}
@@ -579,90 +641,119 @@ export default function Game({ movies }: GameProps) {
             }
             onKeyDown = {(e) => e.key === "Enter" && handleSubmitGuess()}
             placeholder = {translations("guessPlaceholder")}
-            className = "w-full px-6 py-4 text-lg rounded-xl border-2 border-neutral-300 focus:border-purple-500 focus:outline-none"
+            className = "w-full px-6 py-4 text-lg rounded-2xl border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:border-blue-500 focus:outline-none transition-all duration-200 font-robotoslab-medium"
           />
 
           <button
             onClick = {handleSubmitGuess}
             disabled = {!gameState.guess.trim()}
-            className = "w-full mt-3 py-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            className = "cursor-pointer w-full mt-4 py-4 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-2xl font-courierprime-bold text-lg transition-all duration-200 hover:shadow-lg shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-100"
           >
             {translations("submitGuess")}
           </button>
         </div>
 
-        <div className = "grid grid-cols-4 gap-3 mb-4">
+          <div className = "grid grid-cols-4 gap-3 mb-6 auto-rows-fr">
             <HintButton
               icon = {<IconStar className = "w-5 h-5 text-yellow-500" />}
               label = {translations("hints.genre")}
-              value = {
-                gameState.hintsUsed.genre
-                  ? gameState.currentMovie.genres.join(", ") || translations("hints.noGenre")
-                  : undefined
-              }
+              value = {undefined}
               onClick = {() => revealHint("genre")}
-              disabled = {gameState.hintsUsed.genre}
+              revealed = {gameState.hintsUsed.genre}
               cost = {GAME_CONFIG.hints.genreReveal}
             />
 
             <HintButton
               icon = {<IconClock className = "w-5 h-5 text-blue-500" />}
               label = {translations("hints.year")}
-              value = {
-                gameState.hintsUsed.year
-                  ? String(gameState.currentMovie.year)
-                  : undefined
-              }
+              value = {undefined}
               onClick = {() => revealHint("year")}
-              disabled = {gameState.hintsUsed.year}
+              revealed = {gameState.hintsUsed.year}
               cost = {GAME_CONFIG.hints.yearReveal}
             />
 
             <HintButton
               icon = {<IconStar className = "w-5 h-5 text-yellow-500" />}
               label = {translations("hints.rating")}
-              value = {
-                gameState.hintsUsed.rating
-                  ? gameState.currentMovie.vote_average.toFixed(1)
-                  : undefined
-              }
+              value = {undefined}
               onClick = {() => revealHint("rating")}
-              disabled = {gameState.hintsUsed.rating}
+              revealed = {gameState.hintsUsed.rating}
               cost = {GAME_CONFIG.hints.ratingReveal}
             />
 
             <HintButton
               icon = {<IconLightbulb className = "w-5 h-5 text-green-500" />}
               label = {translations("hints.tagline")}
-              value = {
-                gameState.hintsUsed.tagline
-                  ? gameState.currentMovie.tagline || translations("hints.noTagline")
-                  : undefined
-              }
+              value = {undefined}
               onClick = {() => revealHint("tagline")}
-              disabled = {gameState.hintsUsed.tagline}
+              revealed = {gameState.hintsUsed.tagline}
               cost = {GAME_CONFIG.hints.taglineReveal}
+              isTagline = {true}
             />
         </div>
 
-        <div className = "flex gap-3">
+          <div className = "flex gap-4">
           <button
             onClick = {revealBlur}
             disabled = {gameState.blurLevel >= 4}
-            className = "cursor-pointer flex-1 py-3 border-2 border-blue-500 text-blue-500 rounded-xl font-semibold hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
+            className = "cursor-pointer flex-1 py-4 border-2 border-red-500 text-red-600 dark:text-red-400 bg-white dark:bg-neutral-800 rounded-2xl font-courierprime-bold hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 hover:scale-105 active:scale-100"
           >
             <IconEye className = "w-5 h-5" />
             {translations("revealBlur")} (-{GAME_CONFIG.blurReveal} pts)
           </button>
           <button
             onClick = {skipRound}
-            className = "cursor-pointer flex-1 py-3 border-2 border-neutral-500 text-neutral-500 rounded-xl font-semibold hover:bg-neutral-50 transition-colors inline-flex items-center justify-center gap-2"
+            className = "cursor-pointer flex-1 py-4 border-2 border-neutral-400 dark:border-neutral-600 text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-800 rounded-2xl font-courierprime-bold hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 inline-flex items-center justify-center gap-2 hover:scale-105 active:scale-100"
           >
             <IconSkipForward className = "w-5 h-5" />
             {translations("skipRound")} (-{GAME_CONFIG.skipRound} pts)
           </button>
         </div>
+        </div>
       </div>
+
+      {hintModal && (
+        <div
+          className = "fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-lg px-4"
+          onClick = {() => setHintModal(null)}
+        >
+          <div
+            className = "relative max-w-2xl w-full drop-shadow-2xl"
+            onClick = {(e) => e.stopPropagation()}
+          >
+            <div className = "absolute -inset-0.5 bg-linear-to-br from-red-500/45 via-amber-400/30 to-yellow-400/45 rounded-3xl blur-xl opacity-80" aria-hidden = "true" />
+
+            <div className = "relative bg-neutral-50/98 dark:bg-neutral-900/98 rounded-3xl border border-white/20 dark:border-black/30 shadow-2xl shadow-black/80 p-8">
+              <div className = "flex items-start justify-between mb-6">
+                <div className = "flex items-center gap-3">
+                  <div className = "h-11 w-11 rounded-2xl bg-linear-to-br from-red-500 to-amber-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30 font-courierprime-bold text-xl">
+                    !
+                  </div>
+                  <div>
+                    <p className = "text-sm uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 font-robotoslab-medium">Hint reveal</p>
+                    <h3 className = "text-2xl font-courierprime-bold text-neutral-900 dark:text-white leading-tight">
+                      {hintModal.title}
+                    </h3>
+                  </div>
+                </div>
+                <button
+                  className = "h-10 w-10 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 hover:scale-105 active:scale-95 transition-all font-courierprime-bold border border-neutral-300/60 dark:border-neutral-700/80"
+                  onClick = {() => setHintModal(null)}
+                  aria-label = "Close"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className = "bg-neutral-100 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 p-5 shadow-inner">
+                <p className = "text-lg font-robotoslab-medium text-neutral-800 dark:text-neutral-200 leading-relaxed">
+                  {hintModal.content}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
