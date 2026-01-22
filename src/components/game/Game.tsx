@@ -619,11 +619,11 @@ export default function Game({ movies }: GameProps) {
             />
 
             <HintButton
-              icon = {<IconTrophy className = "w-5 h-5 text-yellow-500" />}
+              icon = {<IconStar className = "w-5 h-5 text-yellow-500" />}
               label = {translations("hints.rating")}
               value = {
                 gameState.hintsUsed.rating
-                  ? `${<IconStar className = "w-5 h-5 text-yellow-500" />} ${gameState.currentMovie.vote_average.toFixed(1)}`
+                  ? gameState.currentMovie.vote_average.toFixed(1)
                   : undefined
               }
               onClick = {() => revealHint("rating")}
