@@ -165,6 +165,8 @@
     "subtitle": "Ver y rastrear tus mejores desempeños en todos los niveles de dificultad",
     "loading": "Cargando tus puntuaciones...",
     "noRecords": "Aún no hay puntuaciones. ¡Comienza a jugar para ver tus resultados aquí!",
+    "sortByScore": "Por Puntuación",
+    "sortByDate": "Por Fecha",
     "difficulty": {
       "easy": "Fácil",
       "medium": "Medio",

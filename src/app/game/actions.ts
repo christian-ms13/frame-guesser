@@ -190,8 +190,7 @@ export async function getUserRank(
 
 export async function getPersonalRecords(
   userId: string,
-  difficulty?: DifficultyLevel,
-  limit: number = 50
+  difficulty?: DifficultyLevel
 ): Promise<LeaderboardEntry[]> {
   const supabase = await createClient()
 
@@ -200,7 +199,6 @@ export async function getPersonalRecords(
     .select("*")
     .eq("user_id", userId)
     .order("score", { ascending: false })
-    .limit(limit)
 
   if (difficulty) {
     query = query.eq("difficulty", difficulty)

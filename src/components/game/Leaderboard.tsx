@@ -68,6 +68,15 @@ export default function Leaderboard() {
               </p>
             </div>
           </div>
+        ) : entries.length === 0 ? (
+          <div className = "flex items-center justify-center py-16">
+            <div className = "text-center">
+              <IconTrophy className = "w-16 h-16 mx-auto mb-4 text-neutral-300 dark:text-neutral-600" />
+              <p className = "text-lg text-neutral-600 dark:text-neutral-400 font-robotoslab-medium">
+                No entries yet for this difficulty
+              </p>
+            </div>
+          </div>
         ) : (
           <div className = "bg-neutral-100 dark:bg-neutral-800 rounded-3xl shadow-xl shadow-black/40 dark:shadow-black/70 border-2 border-neutral-200 dark:border-neutral-700 overflow-hidden">
             <div className = "overflow-x-auto">

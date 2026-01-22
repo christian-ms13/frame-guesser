@@ -16,6 +16,9 @@ export default function PersonalRecords({ userId }: PersonalRecordsProps) {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [difficulty, setDifficulty] = useState<DifficultyLevel | "all">("all")
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [sortBy, setSortBy] = useState<"score" | "date">("score")
+  const entriesPerPage = 20
 
   const translations = useTranslations("personalRecords")
 
@@ -30,10 +33,30 @@ export default function PersonalRecords({ userId }: PersonalRecordsProps) {
 
       setEntries(data)
       setLoading(false)
+      setCurrentPage(1)
     }
 
     fetchPersonalRecords()
   }, [difficulty, userId])
+
+  // Sort entries based on current sort mode
+  const sortedEntries = [...entries].sort((a, b) => {
+    if (sortBy === "score") {
+      return b.score - a.score
+    }
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  })
+
+  // Track top 3 scores for trophy display
+  const top3Ids = [...entries]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(entry => entry.id)
+
+  const totalPages = Math.ceil(sortedEntries.length / entriesPerPage)
+  const startIndex = (currentPage - 1) * entriesPerPage
+  const endIndex = startIndex + entriesPerPage
+  const currentEntries = sortedEntries.slice(startIndex, endIndex)
 
   return (
     <>
@@ -47,23 +70,35 @@ export default function PersonalRecords({ userId }: PersonalRecordsProps) {
           </p>
         </div>
 
-        <div className = "flex gap-3 mb-8 justify-center flex-wrap">
-          {["all", "easy", "medium", "hard"].map((diff) => (
-            <button
-              key = {diff}
-              onClick = {() => setDifficulty(diff as DifficultyLevel | "all")}
-              className = {`
-                px-6 py-3 rounded-2xl font-play-bold transition-all duration-150 hover:scale-105 active:scale-100
-                ${
-                  difficulty === diff
-                    ? "bg-[#121212] text-[#e3e3e1] dark:bg-[#e3e3e1] dark:text-[#121212] shadow-lg shadow-black/50 dark:shadow-white/20"
-                    : "bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-600 shadow-md"
-                }
-              `}
-            >
-              {diff === "all" ? "All" : translations(`difficulty.${diff}`)}
-            </button>
-          ))}
+        <div className = "flex gap-3 mb-8 justify-center flex-wrap items-center">
+          <div className = "flex gap-3">
+            {["all", "easy", "medium", "hard"].map((diff) => (
+              <button
+                key = {diff}
+                onClick = {() => setDifficulty(diff as DifficultyLevel | "all")}
+                className = {`
+                  cursor-pointer px-6 py-3 rounded-2xl font-play-bold transition-all duration-150 hover:scale-105 active:scale-100
+                  ${
+                    difficulty === diff
+                      ? "bg-[#121212] text-[#e3e3e1] dark:bg-[#e3e3e1] dark:text-[#121212] shadow-lg shadow-black/50 dark:shadow-white/20"
+                      : "bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-600 shadow-md"
+                  }
+                `}
+              >
+                {diff === "all" ? "All" : translations(`difficulty.${diff}`)}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick = {() => {
+              setSortBy(prev => prev === "score" ? "date" : "score")
+              setCurrentPage(1)
+            }}
+            className = "cursor-pointer px-6 py-3 rounded-2xl font-play-bold transition-all duration-150 hover:scale-105 active:scale-100 bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-600 shadow-md"
+          >
+            {translations(sortBy === "score" ? "sortByScore" : "sortByDate")}
+          </button>
         </div>
 
         {loading ? (
@@ -109,25 +144,26 @@ export default function PersonalRecords({ userId }: PersonalRecordsProps) {
                     </th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  {entries.map((entry, index) => (
-                    <tr
-                      key = {entry.id}
-                      className = {`border-b border-neutral-300 dark:border-neutral-600 transition-colors duration-150 ${
-                        index < 3
-                          ? "bg-neutral-50 dark:bg-neutral-700/50"
-                          : "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-150 dark:hover:bg-neutral-750"
-                      }`}
-                    >
-                      <td className = "px-6 py-4">
-                        <div className = "flex items-center gap-3">
-                          {index === 0 && <IconTrophy className = "w-5 h-5 text-yellow-500" />}
-                          {index === 1 && <IconTrophy className = "w-5 h-5 text-gray-400" />}
-                          {index === 2 && <IconTrophy className = "w-5 h-5 text-orange-500" />}
+                  {currentEntries.map((entry, index) => {
+                    const globalIndex = startIndex + index
+                    return (
+                      <tr
+                        key = {entry.id}
+                        className = {`border-b border-neutral-300 dark:border-neutral-600 transition-colors duration-150 ${
+                          globalIndex < 3
+                            ? "bg-neutral-50 dark:bg-neutral-700/50"
+                            : "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-150 dark:hover:bg-neutral-750"
+                        }`}
+                      >
+                        <td className = "px-6 py-4">
+                          <div className = "flex items-center gap-3">
+                          {top3Ids[0] === entry.id && <IconTrophy className = "w-5 h-5 text-yellow-500" />}
+                          {top3Ids[1] === entry.id && <IconTrophy className = "w-5 h-5 text-gray-400" />}
+                          {top3Ids[2] === entry.id && <IconTrophy className = "w-5 h-5 text-orange-500" />}
 
-                          <span className = "font-courierprime-bold text-lg text-neutral-900 dark:text-white">
-                            {index + 1}
+                            <span className = "font-courierprime-bold text-lg text-neutral-900 dark:text-white">
+                              {globalIndex + 1}
                           </span>
                         </div>
                       </td>
@@ -157,13 +193,77 @@ export default function PersonalRecords({ userId }: PersonalRecordsProps) {
                       </td>
 
                       <td className = "px-6 py-4 text-right text-sm text-neutral-600 dark:text-neutral-400 font-robotoslab-medium">
-                        {new Date(entry.createdAt).toLocaleDateString(locale === "es" ? "es-ES" : "en-US")}
+                        {new Date(entry.createdAt).toLocaleString(locale === "es" ? "es-ES" : "en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        })}
                       </td>
                     </tr>
-                  ))}
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
+          </div>
+        )}
+
+        {!loading && entries.length > entriesPerPage && (
+          <div className = "flex items-center justify-center gap-2 mt-8">
+            <button
+              onClick = {() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled = {currentPage === 1}
+              className = "px-4 py-2 rounded-xl font-play-bold text-neutral-900 dark:text-white bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 cursor-pointer"
+            >
+              ‹
+            </button>
+
+            <div className = "flex gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
+                if (
+                  pageNum === 1 ||
+                  pageNum === totalPages ||
+                  (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                ) {
+                  return (
+                    <button
+                      key = {pageNum}
+                      onClick = {() => setCurrentPage(pageNum)}
+                      className = {`
+                        cursor-pointer px-4 py-2 rounded-xl font-play-bold transition-all duration-150
+                        ${
+                          currentPage === pageNum
+                            ? "bg-[#121212] text-[#e3e3e1] dark:bg-[#e3e3e1] dark:text-[#121212]"
+                            : "bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-white hover:bg-neutral-300 dark:hover:bg-neutral-600"
+                        }
+                      `}
+                    >
+                      {pageNum}
+                    </button>
+                  )
+                } else if (
+                  pageNum === currentPage - 2 ||
+                  pageNum === currentPage + 2
+                ) {
+                  return (
+                    <span key = {pageNum} className = "px-2 py-2 text-neutral-600 dark:text-neutral-400">
+                      …
+                    </span>
+                  )
+                }
+                return null
+              })}
+            </div>
+
+            <button
+              onClick = {() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled = {currentPage === totalPages}
+              className = "px-4 py-2 rounded-xl font-play-bold text-neutral-900 dark:text-white bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 cursor-pointer"
+            >
+              ›
+            </button>
           </div>
         )}
       </div>
