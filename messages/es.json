@@ -147,6 +147,11 @@
   "leaderboard": {
     "title": "Tabla de clasificación",
     "loading": "Cargando tabla de clasificación...",
+    "difficulty": {
+      "easy": "Fácil",
+      "medium": "Medio",
+      "hard": "Difícil"
+    },
     "table": {
       "rank": "Rango",
       "player": "Jugador",
@@ -156,9 +161,15 @@
       "anonymous": "Anónim@"
     }  },
   "personalRecords": {
-    "title": "Mis Récords",
-    "loading": "Cargando tus récords...",
-    "noRecords": "Aún no hay récords. ¡Comienza a jugar para ver tus puntuaciones aquí!",
+    "title": "Mis Puntuaciones",
+    "subtitle": "Ver y rastrear tus mejores desempeños en todos los niveles de dificultad",
+    "loading": "Cargando tus puntuaciones...",
+    "noRecords": "Aún no hay puntuaciones. ¡Comienza a jugar para ver tus resultados aquí!",
+    "difficulty": {
+      "easy": "Fácil",
+      "medium": "Medio",
+      "hard": "Difícil"
+    },
     "table": {
       "rank": "Rango",
       "difficulty": "Dificultad",

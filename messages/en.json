@@ -147,6 +147,11 @@
   "leaderboard": {
     "title": "Leaderboard",
     "loading": "Loading leaderboard...",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
     "table": {
       "rank": "Rank",
       "player": "Player",
@@ -158,8 +163,14 @@
   },
   "personalRecords": {
     "title": "My Records",
+    "subtitle": "View and track your best game performances across all difficulty levels",
     "loading": "Loading your records...",
     "noRecords": "No records yet. Start playing to see your scores here!",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
     "table": {
       "rank": "Rank",
       "difficulty": "Difficulty",
