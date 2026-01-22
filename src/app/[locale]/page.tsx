@@ -3,6 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 import AnimatedLinkButton from "@/components/home-page/AnimatedLinkButton"
+import PlayButton from "@/components/home-page/PlayButton"
 import { IconCode, IconLeaderboard, IconPersonalRecords, IconPlay } from "../../components/home-page/actions/LinkIcons"
 import PreferencesIndex from "../../components/preferences"
 import ProfileDropdown from "../../components/user/ProfileDropdown"
@@ -43,13 +44,10 @@ export default async function Home() {
           linkStyle = {linkStyle}
         />
 
-        <Link
+        <PlayButton
           href = {isLoggedIn ? "/play" : "/login"}
-          className = {`${linkStyle} font-play-bold bg-[#121212] text-[#e3e3e1] dark:bg-[#e3e3e1] dark:text-[#121212]`}
-        >
-          <IconPlay className = "w-6 h-6" />
-          <span>{translations("play")}</span>
-        </Link>
+          linkStyle = {linkStyle}
+        />
 
         <AnimatedLinkButton
           href = "/leaderboard"
