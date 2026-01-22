@@ -78,10 +78,10 @@ export default function Leaderboard() {
             </div>
           </div>
         ) : (
-          <div className = "bg-neutral-100 dark:bg-neutral-800 rounded-3xl shadow-xl shadow-black/40 dark:shadow-black/70 border-2 border-neutral-200 dark:border-neutral-700 overflow-hidden">
+          <div className = "bg-neutral-100 dark:bg-[#1b1b1d] rounded-3xl shadow-xl shadow-black/40 dark:shadow-black/70 border-2 border-neutral-200 dark:border-[#2d2d30] overflow-hidden">
             <div className = "overflow-x-auto">
               <table className = "w-full">
-                <thead className = "bg-neutral-200 dark:bg-neutral-700 border-b-2 border-neutral-300 dark:border-neutral-600">
+                <thead className = "bg-neutral-200 dark:bg-[#232326] border-b-2 border-neutral-300 dark:border-[#2e2e32]">
                   <tr>
                     <th className = "px-6 py-4 text-left text-sm font-courierprime-bold text-neutral-900 dark:text-white uppercase tracking-wide">
                       {translations("table.rank")}
@@ -105,10 +105,10 @@ export default function Leaderboard() {
                   {entries.map((entry, index) => (
                     <tr
                       key = {entry.id}
-                      className = {`border-b border-neutral-300 dark:border-neutral-600 transition-colors duration-150 ${
+                      className = {`border-b border-neutral-300 dark:border-[#2a2a2f] transition-colors duration-150 ${
                         index < 3
-                          ? "bg-neutral-50 dark:bg-neutral-700/50"
-                          : "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-150 dark:hover:bg-neutral-750"
+                          ? "bg-neutral-50 hover:bg-neutral-100 dark:bg-[#222224] dark:hover:bg-[#1d1d20]"
+                          : "bg-neutral-100 hover:bg-neutral-200 dark:bg-[#1a1a1c] dark:hover:bg-[#222226]"
                       }`}
                     >
                       <td className = "px-6 py-4">
@@ -131,12 +131,12 @@ export default function Leaderboard() {
 
                       <td className = "px-6 py-4 text-center">
                         <span className = {`
-                          px-3 py-1 rounded-full text-xs font-play-bold uppercase tracking-wide
+                          px-3 py-1 rounded-full text-xs font-play-bold uppercase tracking-wide shadow-sm
                           ${entry.difficulty === "easy"
-                            ? "bg-red-200 dark:bg-red-900 text-red-600 dark:text-red-100"
+                            ? "bg-red-200 dark:bg-red-500/25 dark:border dark:border-red-400/70 text-red-700 dark:text-red-200"
                             : entry.difficulty === "medium"
-                            ? "bg-yellow-200 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-100"
-                            : "bg-green-200 dark:bg-green-900 text-green-600 dark:text-green-100"
+                            ? "bg-amber-200 dark:bg-amber-500/25 dark:border dark:border-amber-400/70 text-amber-700 dark:text-amber-200"
+                            : "bg-emerald-200 dark:bg-emerald-500/25 dark:border dark:border-emerald-400/70 text-emerald-700 dark:text-emerald-200"
                           }
                         `}>
                           {translations(`difficulty.${entry.difficulty}`)}
