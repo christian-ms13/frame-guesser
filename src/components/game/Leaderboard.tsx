@@ -52,7 +52,7 @@ export default function Leaderboard() {
                 }
               `}
             >
-              {diff === "all" ? "All" : translations(`difficulty.${diff}`)}
+              {translations(diff === "all" ? "all" : `difficulty.${diff}`)}
             </button>
           ))}
         </div>

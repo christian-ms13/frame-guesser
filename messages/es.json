@@ -218,6 +218,7 @@
   "leaderboard": {
     "title": "Tabla de clasificación",
     "loading": "Cargando tabla de clasificación...",
+    "all": "Todos",
     "difficulty": {
       "easy": "Fácil",
       "medium": "Medio",
@@ -238,6 +239,7 @@
     "noRecords": "Aún no hay puntuaciones. ¡Comienza a jugar para ver tus resultados aquí!",
     "sortByScore": "Por Puntuación",
     "sortByDate": "Por Fecha",
+    "all": "Todos",
     "difficulty": {
       "easy": "Fácil",
       "medium": "Medio",

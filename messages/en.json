@@ -218,6 +218,7 @@
   "leaderboard": {
     "title": "Leaderboard",
     "loading": "Loading leaderboard...",
+    "all": "All",
     "difficulty": {
       "easy": "Easy",
       "medium": "Medium",
@@ -239,6 +240,7 @@
     "noRecords": "No records yet. Start playing to see your scores here!",
     "sortByScore": "By Score",
     "sortByDate": "By Date",
+    "all": "All",
     "difficulty": {
       "easy": "Easy",
       "medium": "Medium",

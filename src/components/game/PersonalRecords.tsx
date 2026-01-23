@@ -83,7 +83,7 @@ export default function PersonalRecords({ userId }: PersonalRecordsProps) {
                   }
                 `}
               >
-                {diff === "all" ? "All" : translations(`difficulty.${diff}`)}
+                {translations(diff === "all" ? "all" : `difficulty.${diff}`)}
               </button>
             ))}
           </div>
