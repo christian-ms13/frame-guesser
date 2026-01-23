@@ -88,10 +88,12 @@ export default function PreferencesIndex() {
   const router = useRouter()
 
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false)
+  const [isLanguageChanging, setIsLanguageChanging] = useState(false)
 
   const languageDropdownRef = useClickOutside(() => setIsLanguageDropdownOpen(false))
 
   const handleLanguageChange = (newLocale: string) => {
+    setIsLanguageChanging(true)
     setLanguageCookie(newLocale)
 
     let newPath
@@ -200,10 +202,16 @@ export default function PreferencesIndex() {
               setIsLanguageDropdownOpen(!isLanguageDropdownOpen)
             }}
             className = {`${floatingButtonClassName} relative overflow-hidden group p-0`}
+            disabled = {isLanguageChanging}
           >
             <div className = {`absolute inset-0 ${langBgClass} bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity duration-350 z-0`} />
             <div className = "absolute inset-0 bg-black/47 opacity-0 group-hover:opacity-100 transition-opacity duration-350 z-0" />
-            <ActiveLanguageIcon className = "w-8 h-8 cursor-pointer relative z-10" />
+            <ActiveLanguageIcon className = {`w-8 h-8 cursor-pointer relative z-10 ${isLanguageChanging ? 'opacity-30' : ''}`} />
+            {isLanguageChanging && (
+              <div className = "absolute inset-0 flex items-center justify-center z-20">
+                <div className = "w-5 h-5 border-2 border-neutral-400 border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
           </button>
         </Tootltip>
       </div>
