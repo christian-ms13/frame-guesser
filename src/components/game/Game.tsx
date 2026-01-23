@@ -135,7 +135,6 @@ export default function Game({ movies }: GameProps) {
   const [gameMovies, setGameMovies] = useState<GameMovie[]>(movies)
   const [isLoadingMovies, setIsLoadingMovies] = useState(false)
 
-  // Get difficulty config
   const difficultyConfig = useMemo(() => {
     if (!difficulty) return GAME_CONFIG.difficultyModifiers.easy
     return GAME_CONFIG.difficultyModifiers[difficulty]
@@ -191,10 +190,8 @@ export default function Game({ movies }: GameProps) {
       const elapsed = Math.floor((Date.now() - gameState.roundStartTime!) / 1000)
       setTimer(elapsed)
 
-      // Auto-skip on hard mode when time limit exceeded
       if (difficultyConfig.timeLimit && elapsed >= difficultyConfig.timeLimit && !gameState.roundComplete) {
         clearInterval(interval)
-        // Trigger skip by setting state
         setGameState((prevState) => ({
           ...prevState,
           score: Math.max(0, prevState.score - GAME_CONFIG.skipRound),
@@ -373,7 +370,6 @@ export default function Game({ movies }: GameProps) {
     setHintModal({ title, content })
   }, [])
 
-  // Helper to check if hint limit reached
   const isHintLimitReached = useMemo(() => {
     const hintsUsedCount = Object.values(gameState.hintsUsed).filter(Boolean).length
     const totalReveals = hintsUsedCount + gameState.revealsUsed
@@ -383,10 +379,8 @@ export default function Game({ movies }: GameProps) {
   const revealHint = useCallback((hintType: keyof typeof gameState.hintsUsed) => {
     if (!gameState.currentMovie) return
 
-    // Count hints used
     const hintsUsedCount = Object.values(gameState.hintsUsed).filter(Boolean).length
 
-    // Check if max hints reached
     if (hintsUsedCount >= difficultyConfig.maxHints) {
       return
     }
@@ -424,11 +418,9 @@ export default function Game({ movies }: GameProps) {
   }, [gameState.currentMovie, gameState.hintsUsed, difficultyConfig.maxHints, translations, openHintModal])
 
   const revealBlur = useCallback(() => {
-    // Count all reveals (hints + blur reveals)
     const hintsUsedCount = Object.values(gameState.hintsUsed).filter(Boolean).length
     const totalReveals = hintsUsedCount + gameState.revealsUsed
 
-    // Check if max hints reached
     if (totalReveals >= difficultyConfig.maxHints) {
       return
     }
@@ -470,8 +462,6 @@ export default function Game({ movies }: GameProps) {
 
     return levels[gameState.blurLevel]
   }, [gameState.blurLevel])
-
-  // ---
 
   if (!gameStarted || !difficulty) {
     return (
@@ -837,8 +827,6 @@ export default function Game({ movies }: GameProps) {
     )
   }
 
-  // ---
-
   if (gameState.gameOver) {
     return (
       <div className = "min-h-[90vh] flex items-center justify-center p-4">
@@ -900,8 +888,6 @@ export default function Game({ movies }: GameProps) {
     )
   }
 
-  // ---
-
   if (gameState.roundComplete && gameState.isCorrect !== null) {
     return (
       <div className = "min-h-[90vh] flex items-center justify-center p-4">
@@ -955,8 +941,6 @@ export default function Game({ movies }: GameProps) {
       </div>
     )
   }
-
-  // ---
 
   if (!gameState.currentMovie) return null
 

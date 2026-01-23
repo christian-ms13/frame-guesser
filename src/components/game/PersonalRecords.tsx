@@ -39,7 +39,6 @@ export default function PersonalRecords({ userId }: PersonalRecordsProps) {
     fetchPersonalRecords()
   }, [difficulty, userId])
 
-  // Sort entries based on current sort mode
   const sortedEntries = [...entries].sort((a, b) => {
     if (sortBy === "score") {
       return b.score - a.score
@@ -47,7 +46,6 @@ export default function PersonalRecords({ userId }: PersonalRecordsProps) {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   })
 
-  // Track top 3 scores for trophy display
   const top3Ids = [...entries]
     .sort((a, b) => b.score - a.score)
     .slice(0, 3)

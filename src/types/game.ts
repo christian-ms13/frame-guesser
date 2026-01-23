@@ -28,7 +28,6 @@ export interface GameConfig {
 
   skipRound: number // -50 points
 
-  // Difficulty-specific modifiers
   difficultyModifiers: {
     easy: {
       startingBlurLevel: number // 2 (blur-[15px]) - starts clearer
@@ -73,11 +72,6 @@ export interface GameState {
     tagline: boolean
   }
 
-  // 0 = fully blurred (blur-[50px])
-  // 1 = blur-[30px]
-  // 2 = blur-[15px]
-  // 3 = blur-[5px]
-  // 4 = fully clear (blur-none)
   blurLevel: number
 
   revealsUsed: number

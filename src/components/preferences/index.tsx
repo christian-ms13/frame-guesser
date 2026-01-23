@@ -82,8 +82,6 @@ export default function PreferencesIndex() {
 
   const ActiveThemeIcon = themeOptions.find(opt => opt.id === mode)?.Icon || IconSystemSettings
 
-  // ---
-
   const pathname = usePathname()
   const router = useRouter()
 

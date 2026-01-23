@@ -200,7 +200,6 @@ export async function updateUserProfile(
 export async function deleteUser(): Promise<{ success: boolean; error?: string }> {
   const supabase = await createClient()
 
-  // Get the current user
   const { data: { user }, error: userError } = await supabase.auth.getUser()
   
   if (userError || !user) {
@@ -208,7 +207,6 @@ export async function deleteUser(): Promise<{ success: boolean; error?: string }
     return { success: false, error: "Not authenticated" }
   }
 
-  // Delete user profile (will cascade delete related data due to RLS policies)
   const { error: profileError } = await supabase
     .from("profiles")
     .delete()
@@ -219,7 +217,6 @@ export async function deleteUser(): Promise<{ success: boolean; error?: string }
     return { success: false, error: profileError.message }
   }
 
-  // Sign out the user
   const { error: signOutError } = await supabase.auth.signOut()
 
   if (signOutError) {

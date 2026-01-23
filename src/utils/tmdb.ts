@@ -61,7 +61,6 @@ export async function fetchMultipleMovies(count: number = 10): Promise<GameMovie
 
     const category = categories[Math.floor(Math.random() * categories.length)]
 
-    // Increased page range for more variety
     const randomPage = Math.floor(Math.random() * 100) + 1
 
     try {
