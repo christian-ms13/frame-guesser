@@ -3,9 +3,12 @@ import createMiddleware from "next-intl/middleware"
 import { type NextRequest } from "next/server"
 
 export default async function proxy(request: NextRequest) {
+  const storedLocale = request.cookies.get("NEXT_LOCALE")?.value
+  const defaultLocale = (storedLocale && ["en", "es"].includes(storedLocale)) ? (storedLocale as "en" | "es") : "en"
+
   const handleI18n = createMiddleware({
     locales: ["en", "es"],
-    defaultLocale: "en"
+    defaultLocale: defaultLocale
   })
 
   const response = handleI18n(request)
