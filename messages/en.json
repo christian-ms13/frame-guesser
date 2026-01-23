@@ -143,7 +143,77 @@
       "noTagline": "No tagline hint available"
     },
     "revealBlur": "Reveal Blur",
-    "skipRound": "Skip Round"
+    "skipRound": "Skip Round",
+    "howToPlay": "How to Play",
+    "gameRules": {
+      "title": "Game Rules",
+      "objective": {
+        "title": "Objective",
+        "text": "Guess the movie title from a blurred frame. You have 5 rounds and 3 lives. Each correct guess earns points based on difficulty and speed!"
+      },
+      "gameplay": {
+        "title": "How to Play",
+        "rounds": "Complete 5 rounds of movie guessing",
+        "lives": "You have 3 lives - lose one for each wrong answer",
+        "timer": "The faster you answer, the more bonus points you earn",
+        "input": "Type your guess and press Submit or hit Enter"
+      },
+      "hints": {
+        "title": "Hints & Reveals",
+        "text": "Use hints strategically to help identify the movie:",
+        "genre": "Genre - Shows movie categories",
+        "year": "Release Year - When the movie came out",
+        "rating": "Rating - TMDB score out of 10",
+        "tagline": "Tagline - The movie's promotional phrase",
+        "blur": "Blur Reveal - Reduces blur by one level (0-4 scale)",
+        "maxBlur": "You can reveal up to level 4 (fully clear)",
+        "cost": "Each hint and blur reveal costs points"
+      },
+      "scoring": {
+        "title": "Scoring System",
+        "base": "Base Points: Varies by difficulty",
+        "timeBonus": "Time Bonus: Up to 50 points (decreases every 2 seconds)",
+        "penalties": "Penalties: Hints and reveals subtract points",
+        "skip": "Skip Round: -50 points and -1 life"
+      },
+      "difficulties": {
+        "title": "Difficulty Modes",
+        "easy": {
+          "name": "Easy Mode",
+          "blur": "Starts at blur level 2 (clearer image)",
+          "points": "100 base points per correct answer",
+          "timeBonus": "2x time bonus multiplier",
+          "hints": "Hints cost 50% less (5-10 pts)",
+          "maxHints": "Use up to 4 hints/reveals per round",
+          "timeLimit": "No time limit"
+        },
+        "medium": {
+          "name": "Medium Mode",
+          "blur": "Starts fully blurred (level 0)",
+          "points": "200 base points per correct answer",
+          "timeBonus": "1x time bonus (standard)",
+          "hints": "Standard hint costs (10-20 pts)",
+          "maxHints": "Use up to 4 hints/reveals per round",
+          "timeLimit": "No time limit"
+        },
+        "hard": {
+          "name": "Hard Mode",
+          "blur": "Starts fully blurred (level 0)",
+          "points": "300 base points per correct answer",
+          "timeBonus": "0.5x time bonus (half points)",
+          "hints": "Hints cost 2x more (20-40 pts)",
+          "maxHints": "Limited to 2 hints/reveals per round",
+          "timeLimit": "30 seconds per round (auto-skips)"
+        }
+      },
+      "tips": {
+        "title": "Pro Tips",
+        "tip1": "Start with cheaper hints like Genre or Year",
+        "tip2": "Save blur reveals for when you're close to guessing",
+        "tip3": "Speed matters - answer quickly for bonus points",
+        "tip4": "Hard mode requires strategic hint usage"
+      }
+    }
   },
   "leaderboard": {
     "title": "Leaderboard",

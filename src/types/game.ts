@@ -27,6 +27,31 @@ export interface GameConfig {
   blurReveal: number // -25 points per reveal
 
   skipRound: number // -50 points
+
+  // Difficulty-specific modifiers
+  difficultyModifiers: {
+    easy: {
+      startingBlurLevel: number // 2 (blur-[15px]) - starts clearer
+      timeBonusMultiplier: number // 2x time bonus
+      hintCostMultiplier: number // 0.5x hint cost
+      maxHints: number // can use all hints
+      timeLimit?: number // no time limit
+    }
+    medium: {
+      startingBlurLevel: number // 0 (blur-[50px]) - starts fully blurred
+      timeBonusMultiplier: number // 1x time bonus
+      hintCostMultiplier: number // 1x hint cost
+      maxHints: number // can use all hints
+      timeLimit?: number // no time limit
+    }
+    hard: {
+      startingBlurLevel: number // 0 (blur-[50px]) - starts fully blurred
+      timeBonusMultiplier: number // 0.5x time bonus
+      hintCostMultiplier: number // 2x hint cost
+      maxHints: number // limited to 2 hints
+      timeLimit: number // 30 seconds per round
+    }
+  }
 }
 
 export interface GameState {

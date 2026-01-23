@@ -143,7 +143,77 @@
       "noTagline": "No hay pista de lema disponible"
     },
     "revealBlur": "Disminuir desenfoque",
-    "skipRound": "Saltar ronda"
+    "skipRound": "Saltar ronda",
+    "howToPlay": "Cómo jugar",
+    "gameRules": {
+      "title": "Reglas del Juego",
+      "objective": {
+        "title": "Objetivo",
+        "text": "Adivina el título de la película a partir de una imagen desenfocada. Tienes 5 rondas y 3 vidas. ¡Cada respuesta correcta otorga puntos según la dificultad y velocidad!"
+      },
+      "gameplay": {
+        "title": "Cómo Jugar",
+        "rounds": "Completa 5 rondas adivinando películas",
+        "lives": "Tienes 3 vidas - pierdes una por cada respuesta incorrecta",
+        "timer": "Cuanto más rápido respondas, más puntos de bonificación ganas",
+        "input": "Escribe tu respuesta y presiona Enviar o Enter"
+      },
+      "hints": {
+        "title": "Pistas y Revelaciones",
+        "text": "Usa las pistas estratégicamente para identificar la película:",
+        "genre": "Género - Muestra las categorías de la película",
+        "year": "Año de lanzamiento - Cuándo se estrenó la película",
+        "rating": "Calificación - Puntuación TMDB sobre 10",
+        "tagline": "Lema - La frase promocional de la película",
+        "blur": "Revelar desenfoque - Reduce el desenfoque un nivel (escala 0-4)",
+        "maxBlur": "Puedes revelar hasta el nivel 4 (completamente claro)",
+        "cost": "Cada pista y revelación de desenfoque resta puntos"
+      },
+      "scoring": {
+        "title": "Sistema de Puntuación",
+        "base": "Puntos Base: Varían según la dificultad",
+        "timeBonus": "Bonus de Tiempo: Hasta 50 puntos (disminuye cada 2 segundos)",
+        "penalties": "Penalizaciones: Las pistas y revelaciones restan puntos",
+        "skip": "Saltar Ronda: -50 puntos y -1 vida"
+      },
+      "difficulties": {
+        "title": "Modos de Dificultad",
+        "easy": {
+          "name": "Modo Fácil",
+          "blur": "Comienza en nivel de desenfoque 2 (imagen más clara)",
+          "points": "100 puntos base por respuesta correcta",
+          "timeBonus": "Multiplicador de bonus de tiempo 2x",
+          "hints": "Las pistas cuestan 50% menos (5-10 pts)",
+          "maxHints": "Usa hasta 4 pistas/revelaciones por ronda",
+          "timeLimit": "Sin límite de tiempo"
+        },
+        "medium": {
+          "name": "Modo Medio",
+          "blur": "Comienza completamente desenfocado (nivel 0)",
+          "points": "200 puntos base por respuesta correcta",
+          "timeBonus": "Bonus de tiempo 1x (estándar)",
+          "hints": "Costo estándar de pistas (10-20 pts)",
+          "maxHints": "Usa hasta 4 pistas/revelaciones por ronda",
+          "timeLimit": "Sin límite de tiempo"
+        },
+        "hard": {
+          "name": "Modo Difícil",
+          "blur": "Comienza completamente desenfocado (nivel 0)",
+          "points": "300 puntos base por respuesta correcta",
+          "timeBonus": "Bonus de tiempo 0.5x (mitad de puntos)",
+          "hints": "Las pistas cuestan 2x más (20-40 pts)",
+          "maxHints": "Limitado a 2 pistas/revelaciones por ronda",
+          "timeLimit": "30 segundos por ronda (salta automáticamente)"
+        }
+      },
+      "tips": {
+        "title": "Consejos Pro",
+        "tip1": "Comienza con pistas más baratas como Género o Año",
+        "tip2": "Guarda las revelaciones de desenfoque para cuando estés cerca de adivinar",
+        "tip3": "La velocidad importa - responde rápido para puntos bonus",
+        "tip4": "El modo difícil requiere uso estratégico de pistas"
+      }
+    }
   },
   "leaderboard": {
     "title": "Tabla de clasificación",

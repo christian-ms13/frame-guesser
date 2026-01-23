@@ -10,7 +10,7 @@ import type { DifficultyLevel, GameConfig, GameState, RoundResult } from "../../
 import type { GameMovie } from "../../utils/tmdb"
 import TruncatedTooltip from "../ui/TruncatedTooltip"
 import { IconEasy, IconHard, IconMedium } from "./DifficultyIcons"
-import { IconArrowRight, IconClock, IconEye, IconHeart, IconLightbulb, IconSkipForward, IconStar, IconTrophy } from "./GameIcons"
+import { IconArrowRight, IconClock, IconEye, IconHeart, IconInfo, IconLightbulb, IconSkipForward, IconStar, IconTrophy } from "./GameIcons"
 import { IconCorrect, IconFireworks, IconSad } from "./ResultIcons"
 
 const GAME_CONFIG: GameConfig = {
@@ -35,7 +35,31 @@ const GAME_CONFIG: GameConfig = {
   },
 
   blurReveal: 25,
-  skipRound: 50
+  skipRound: 50,
+
+  difficultyModifiers: {
+    easy: {
+      startingBlurLevel: 2,
+      timeBonusMultiplier: 2,
+      hintCostMultiplier: 0.5,
+      maxHints: 4,
+      timeLimit: undefined
+    },
+    medium: {
+      startingBlurLevel: 0,
+      timeBonusMultiplier: 1,
+      hintCostMultiplier: 1,
+      maxHints: 4,
+      timeLimit: undefined
+    },
+    hard: {
+      startingBlurLevel: 0,
+      timeBonusMultiplier: 0.5,
+      hintCostMultiplier: 2,
+      maxHints: 2,
+      timeLimit: 30
+    }
+  }
 }
 
 interface GameProps {
@@ -49,6 +73,7 @@ interface HintButtonProps {
   onClick: () => void
   cost: number
   revealed?: boolean
+  disabled?: boolean
 }
 
 function HintButton({
@@ -58,17 +83,21 @@ function HintButton({
   onClick,
   cost,
   revealed = false,
+  disabled = false,
   isTagline = false
 }: HintButtonProps & { isTagline?: boolean }) {
   return (
     <button
       onClick = {onClick}
+      disabled = {disabled || revealed}
       className = {
-        `cursor-pointer p-4 rounded-2xl border-2 ${
-          revealed
-            ? "border-red-500/80 bg-red-50/60 dark:bg-red-500/10"
-            : "border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800"
-        } hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 text-left hover:shadow-md hover:scale-105 active:scale-100 h-full flex flex-col`
+        `cursor-pointer p-4 rounded-2xl border-2 transition-all duration-200 text-left h-full flex flex-col ${
+          disabled && !revealed
+            ? "border-neutral-400 dark:border-neutral-600 bg-neutral-200 dark:bg-neutral-900 opacity-50 cursor-not-allowed"
+            : revealed
+            ? "border-red-500/80 bg-red-50/60 dark:bg-red-500/10 hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:shadow-md hover:scale-105 active:scale-100"
+            : "border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:shadow-md hover:scale-105 active:scale-100"
+        }`
       }
     >
       <div className = "flex items-center gap-2 mb-2">
@@ -89,7 +118,9 @@ function HintButton({
           </div>
         )
       ) : (
-        <div className = "text-xs text-neutral-500 dark:text-neutral-400 font-robotoslab-medium min-h-10 flex items-start">-{cost} pts</div>
+          <div className = "text-xs text-neutral-500 dark:text-neutral-400 font-robotoslab-medium min-h-10 flex items-start">
+            {disabled ? "Limit reached" : `-${cost} pts`}
+          </div>
       )}
     </button>
   )
@@ -103,6 +134,12 @@ export default function Game({ movies }: GameProps) {
   const [gameStarted, setGameStarted] = useState(false)
   const [gameMovies, setGameMovies] = useState<GameMovie[]>(movies)
   const [isLoadingMovies, setIsLoadingMovies] = useState(false)
+
+  // Get difficulty config
+  const difficultyConfig = useMemo(() => {
+    if (!difficulty) return GAME_CONFIG.difficultyModifiers.easy
+    return GAME_CONFIG.difficultyModifiers[difficulty]
+  }, [difficulty])
 
   const initialState: GameState = {
     currentRound: 0,
@@ -119,7 +156,7 @@ export default function Game({ movies }: GameProps) {
       rating: false,
       tagline: false
     },
-    blurLevel: 0,
+    blurLevel: difficultyConfig.startingBlurLevel,
     revealsUsed: 0,
     roundStartTime: null,
     gameOver: false,
@@ -133,11 +170,13 @@ export default function Game({ movies }: GameProps) {
   const [timer, setTimer] = useState(0)
 
   const [hintModal, setHintModal] = useState<{ title: string; content: string } | null>(null)
+  const [showRulesModal, setShowRulesModal] = useState(false)
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setHintModal(null)
+        setShowRulesModal(false)
       }
     }
 
@@ -151,17 +190,31 @@ export default function Game({ movies }: GameProps) {
     const interval = setInterval(() => {
       const elapsed = Math.floor((Date.now() - gameState.roundStartTime!) / 1000)
       setTimer(elapsed)
+
+      // Auto-skip on hard mode when time limit exceeded
+      if (difficultyConfig.timeLimit && elapsed >= difficultyConfig.timeLimit && !gameState.roundComplete) {
+        clearInterval(interval)
+        // Trigger skip by setting state
+        setGameState((prevState) => ({
+          ...prevState,
+          score: Math.max(0, prevState.score - GAME_CONFIG.skipRound),
+          isCorrect: false,
+          roundComplete: true,
+          lives: prevState.lives - 1
+        }))
+      }
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [gameState.roundStartTime, gameState.roundComplete])
+  }, [gameState.roundStartTime, gameState.roundComplete, difficultyConfig.timeLimit])
 
   const calculateTimeBonus = useCallback((seconds: number): number => {
     const { max, interval } = GAME_CONFIG.timeBonus
     const penalty = Math.floor(seconds / interval)
+    const baseBonus = Math.max(0, max - penalty)
 
-    return Math.max(0, max - penalty)
-  }, [])
+    return Math.round(baseBonus * difficultyConfig.timeBonusMultiplier)
+  }, [difficultyConfig.timeBonusMultiplier])
 
   const calculateRoundScore = useCallback((timeSeconds: number): number => {
     if (!difficulty) return 0
@@ -169,23 +222,25 @@ export default function Game({ movies }: GameProps) {
     let score = GAME_CONFIG.baseScore[difficulty]
     score += calculateTimeBonus(timeSeconds)
 
+    const hintCostMultiplier = difficultyConfig.hintCostMultiplier
+
     if (gameState.hintsUsed.genre) {
-      score -= GAME_CONFIG.hints.genreReveal
+      score -= Math.round(GAME_CONFIG.hints.genreReveal * hintCostMultiplier)
     }
     if (gameState.hintsUsed.year) {
-      score -= GAME_CONFIG.hints.yearReveal
+      score -= Math.round(GAME_CONFIG.hints.yearReveal * hintCostMultiplier)
     }
     if (gameState.hintsUsed.rating) {
-      score -= GAME_CONFIG.hints.ratingReveal
+      score -= Math.round(GAME_CONFIG.hints.ratingReveal * hintCostMultiplier)
     }
     if (gameState.hintsUsed.tagline) {
-      score -= GAME_CONFIG.hints.taglineReveal
+      score -= Math.round(GAME_CONFIG.hints.taglineReveal * hintCostMultiplier)
     }
 
-    score -= gameState.revealsUsed * GAME_CONFIG.blurReveal
+    score -= gameState.revealsUsed * Math.round(GAME_CONFIG.blurReveal * difficultyConfig.hintCostMultiplier)
 
     return Math.max(0, score)
-  }, [difficulty, gameState.hintsUsed, gameState.revealsUsed, calculateTimeBonus])
+  }, [difficulty, gameState.hintsUsed, gameState.revealsUsed, calculateTimeBonus, difficultyConfig])
 
   const fuzzyMatch = useCallback((guess: string, title: string): boolean => {
     const normalize = (str: string) =>
@@ -318,8 +373,23 @@ export default function Game({ movies }: GameProps) {
     setHintModal({ title, content })
   }, [])
 
+  // Helper to check if hint limit reached
+  const isHintLimitReached = useMemo(() => {
+    const hintsUsedCount = Object.values(gameState.hintsUsed).filter(Boolean).length
+    const totalReveals = hintsUsedCount + gameState.revealsUsed
+    return totalReveals >= difficultyConfig.maxHints
+  }, [gameState.hintsUsed, gameState.revealsUsed, difficultyConfig.maxHints])
+
   const revealHint = useCallback((hintType: keyof typeof gameState.hintsUsed) => {
     if (!gameState.currentMovie) return
+
+    // Count hints used
+    const hintsUsedCount = Object.values(gameState.hintsUsed).filter(Boolean).length
+
+    // Check if max hints reached
+    if (hintsUsedCount >= difficultyConfig.maxHints) {
+      return
+    }
 
     const title = translations(`hints.${hintType}`)
 
@@ -351,15 +421,24 @@ export default function Game({ movies }: GameProps) {
     })
 
     openHintModal(title, content)
-  }, [gameState.currentMovie, translations, openHintModal])
+  }, [gameState.currentMovie, gameState.hintsUsed, difficultyConfig.maxHints, translations, openHintModal])
 
   const revealBlur = useCallback(() => {
+    // Count all reveals (hints + blur reveals)
+    const hintsUsedCount = Object.values(gameState.hintsUsed).filter(Boolean).length
+    const totalReveals = hintsUsedCount + gameState.revealsUsed
+
+    // Check if max hints reached
+    if (totalReveals >= difficultyConfig.maxHints) {
+      return
+    }
+
     setGameState((prevState) => ({
       ...prevState,
       blurLevel: Math.min(4, prevState.blurLevel + 1),
       revealsUsed: prevState.revealsUsed + 1
     }))
-  }, [])
+  }, [gameState.hintsUsed, gameState.revealsUsed, difficultyConfig.maxHints])
 
   const skipRound = useCallback(() => {
     setGameState((prevState) => ({
@@ -460,7 +539,300 @@ export default function Game({ movies }: GameProps) {
               </div>
             </button>
           </div>
+
+          <div className = "mt-8 flex justify-center">
+            <button
+              onClick = {() => setShowRulesModal(true)}
+              className = "cursor-pointer flex items-center gap-2 px-6 py-3 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-xl border-2 border-neutral-300 dark:border-neutral-700 transition-all duration-200 hover:scale-105 active:scale-100"
+            >
+              <IconInfo className = "w-5 h-5 text-red-500" />
+              <span className = "font-robotoslab-medium text-neutral-900 dark:text-white">
+                {translations("howToPlay")}
+              </span>
+            </button>
+          </div>
         </div>
+
+        {showRulesModal && (
+          <div
+            className = "fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-lg px-4 py-8 overflow-y-auto"
+            onClick = {() => setShowRulesModal(false)}
+          >
+            <div
+              className = "relative max-w-4xl w-full my-8 drop-shadow-2xl"
+              onClick = {(e) => e.stopPropagation()}
+            >
+              <div className = "absolute -inset-0.5 bg-linear-to-br from-red-500/45 via-amber-400/30 to-yellow-400/45 rounded-3xl blur-xl opacity-80" aria-hidden = "true" />
+
+              <div className = "relative bg-neutral-50/98 dark:bg-neutral-900/98 rounded-3xl border border-white/20 dark:border-black/30 shadow-2xl shadow-black/80 p-8 max-h-[85vh] overflow-y-auto">
+                <div className = "flex items-start justify-between mb-6 sticky top-0 bg-neutral-50 dark:bg-neutral-900 z-10 pb-4 -mx-8 px-8 pt-8 -mt-8 border-b border-neutral-200 dark:border-neutral-700">
+                  <div className = "flex items-center gap-3">
+                    <div className = "h-11 w-11 rounded-2xl bg-linear-to-br from-red-500 to-amber-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30">
+                      <IconInfo className = "w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className = "text-sm uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 font-robotoslab-medium">Game Guide</p>
+                      <h3 className = "text-2xl font-courierprime-bold text-neutral-900 dark:text-white leading-tight">
+                        {translations("gameRules.title")}
+                      </h3>
+                    </div>
+                  </div>
+                  <button
+                    className = "h-10 w-10 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 hover:scale-105 active:scale-95 transition-all font-courierprime-bold text-2xl border border-neutral-300/60 dark:border-neutral-700/80"
+                    onClick = {() => setShowRulesModal(false)}
+                    aria-label = "Close"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <div className = "space-y-6">
+                  {/* Objective */}
+                  <div className = "bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-2xl border border-blue-200 dark:border-blue-800 p-5">
+                    <h4 className = "text-lg font-courierprime-bold text-blue-900 dark:text-blue-300 mb-2 flex items-center gap-2">
+                      <IconTrophy className = "w-5 h-5" />
+                      {translations("gameRules.objective.title")}
+                    </h4>
+                    <p className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium leading-relaxed">
+                      {translations("gameRules.objective.text")}
+                    </p>
+                  </div>
+
+                  {/* How to Play */}
+                  <div className = "bg-neutral-100 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 p-5">
+                    <h4 className = "text-lg font-courierprime-bold text-neutral-900 dark:text-white mb-3">
+                      {translations("gameRules.gameplay.title")}
+                    </h4>
+                    <ul className = "space-y-2">
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                        <span className = "text-blue-500 mt-1">•</span>
+                        {translations("gameRules.gameplay.rounds")}
+                      </li>
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                        <span className = "text-red-500 mt-1">•</span>
+                        {translations("gameRules.gameplay.lives")}
+                      </li>
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                        <span className = "text-green-500 mt-1">•</span>
+                        {translations("gameRules.gameplay.timer")}
+                      </li>
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                        <span className = "text-yellow-500 mt-1">•</span>
+                        {translations("gameRules.gameplay.input")}
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Hints & Reveals */}
+                  <div className = "bg-neutral-100 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 p-5">
+                    <h4 className = "text-lg font-courierprime-bold text-neutral-900 dark:text-white mb-2">
+                      {translations("gameRules.hints.title")}
+                    </h4>
+                    <p className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium mb-3">
+                      {translations("gameRules.hints.text")}
+                    </p>
+                    <div className = "grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+                      <div className = "flex items-center gap-2 text-sm">
+                        <IconStar className = "w-4 h-4 text-yellow-500" />
+                        <span className = "font-robotoslab-medium text-neutral-700 dark:text-neutral-300">
+                          {translations("gameRules.hints.genre")}
+                        </span>
+                      </div>
+                      <div className = "flex items-center gap-2 text-sm">
+                        <IconClock className = "w-4 h-4 text-blue-500" />
+                        <span className = "font-robotoslab-medium text-neutral-700 dark:text-neutral-300">
+                          {translations("gameRules.hints.year")}
+                        </span>
+                      </div>
+                      <div className = "flex items-center gap-2 text-sm">
+                        <IconStar className = "w-4 h-4 text-yellow-500" />
+                        <span className = "font-robotoslab-medium text-neutral-700 dark:text-neutral-300">
+                          {translations("gameRules.hints.rating")}
+                        </span>
+                      </div>
+                      <div className = "flex items-center gap-2 text-sm">
+                        <IconLightbulb className = "w-4 h-4 text-green-500" />
+                        <span className = "font-robotoslab-medium text-neutral-700 dark:text-neutral-300">
+                          {translations("gameRules.hints.tagline")}
+                        </span>
+                      </div>
+                    </div>
+                    <div className = "bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-3 space-y-1">
+                      <div className = "flex items-center gap-2 text-sm">
+                        <IconEye className = "w-4 h-4 text-red-500" />
+                        <span className = "font-robotoslab-medium text-neutral-700 dark:text-neutral-300">
+                          {translations("gameRules.hints.blur")}
+                        </span>
+                      </div>
+                      <p className = "text-xs text-neutral-600 dark:text-neutral-400 font-robotoslab-medium pl-6">
+                        {translations("gameRules.hints.maxBlur")}
+                      </p>
+                      <p className = "text-xs text-amber-700 dark:text-amber-400 font-robotoslab-medium pl-6">
+                        ⚠️ {translations("gameRules.hints.cost")}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Scoring */}
+                  <div className = "bg-neutral-100 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 p-5">
+                    <h4 className = "text-lg font-courierprime-bold text-neutral-900 dark:text-white mb-3">
+                      {translations("gameRules.scoring.title")}
+                    </h4>
+                    <ul className = "space-y-2">
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium text-sm">
+                        <span className = "text-green-500 mt-0.5">+</span>
+                        {translations("gameRules.scoring.base")}
+                      </li>
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium text-sm">
+                        <span className = "text-blue-500 mt-0.5">+</span>
+                        {translations("gameRules.scoring.timeBonus")}
+                      </li>
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium text-sm">
+                        <span className = "text-red-500 mt-0.5">-</span>
+                        {translations("gameRules.scoring.penalties")}
+                      </li>
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium text-sm">
+                        <span className = "text-red-500 mt-0.5">-</span>
+                        {translations("gameRules.scoring.skip")}
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Difficulties */}
+                  <div className = "bg-neutral-100 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 p-5">
+                    <h4 className = "text-lg font-courierprime-bold text-neutral-900 dark:text-white mb-4">
+                      {translations("gameRules.difficulties.title")}
+                    </h4>
+                    <div className = "space-y-4">
+                      {/* Easy */}
+                      <div className = "bg-red-50 dark:bg-red-950/20 border-2 border-red-200 dark:border-red-800 rounded-xl p-4">
+                        <div className = "flex items-center gap-2 mb-2">
+                          <IconEasy className = "w-6 h-6 text-red-500" />
+                          <h5 className = "font-courierprime-bold text-red-600 dark:text-red-400">
+                            {translations("gameRules.difficulties.easy.name")}
+                          </h5>
+                        </div>
+                        <ul className = "space-y-1.5 text-sm">
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.easy.blur")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.easy.points")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.easy.timeBonus")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.easy.hints")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.easy.maxHints")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.easy.timeLimit")}
+                          </li>
+                        </ul>
+                      </div>
+
+                      {/* Medium */}
+                      <div className = "bg-yellow-50 dark:bg-yellow-950/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
+                        <div className = "flex items-center gap-2 mb-2">
+                          <IconMedium className = "w-6 h-6 text-yellow-500" />
+                          <h5 className = "font-courierprime-bold text-yellow-600 dark:text-yellow-400">
+                            {translations("gameRules.difficulties.medium.name")}
+                          </h5>
+                        </div>
+                        <ul className = "space-y-1.5 text-sm">
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.medium.blur")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.medium.points")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.medium.timeBonus")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.medium.hints")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.medium.maxHints")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.medium.timeLimit")}
+                          </li>
+                        </ul>
+                      </div>
+
+                      {/* Hard */}
+                      <div className = "bg-green-50 dark:bg-green-950/20 border-2 border-green-200 dark:border-green-800 rounded-xl p-4">
+                        <div className = "flex items-center gap-2 mb-2">
+                          <IconHard className = "w-6 h-6 text-green-500" />
+                          <h5 className = "font-courierprime-bold text-green-600 dark:text-green-400">
+                            {translations("gameRules.difficulties.hard.name")}
+                          </h5>
+                        </div>
+                        <ul className = "space-y-1.5 text-sm">
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.hard.blur")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.hard.points")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.hard.timeBonus")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.hard.hints")}
+                          </li>
+                          <li className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium">
+                            • {translations("gameRules.difficulties.hard.maxHints")}
+                          </li>
+                          <li className = "font-robotoslab-medium font-bold text-red-600 dark:text-red-400">
+                            ⏱️ {translations("gameRules.difficulties.hard.timeLimit")}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pro Tips */}
+                  <div className = "bg-linear-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30 rounded-2xl border border-purple-200 dark:border-purple-800 p-5">
+                    <h4 className = "text-lg font-courierprime-bold text-purple-900 dark:text-purple-300 mb-3 flex items-center gap-2">
+                      <IconLightbulb className = "w-5 h-5" />
+                      {translations("gameRules.tips.title")}
+                    </h4>
+                    <ul className = "space-y-2">
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium text-sm">
+                        <span className = "text-purple-500 mt-0.5">💡</span>
+                        {translations("gameRules.tips.tip1")}
+                      </li>
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium text-sm">
+                        <span className = "text-purple-500 mt-0.5">💡</span>
+                        {translations("gameRules.tips.tip2")}
+                      </li>
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium text-sm">
+                        <span className = "text-purple-500 mt-0.5">💡</span>
+                        {translations("gameRules.tips.tip3")}
+                      </li>
+                      <li className = "flex items-start gap-3 text-neutral-700 dark:text-neutral-300 font-robotoslab-medium text-sm">
+                        <span className = "text-purple-500 mt-0.5">💡</span>
+                        {translations("gameRules.tips.tip4")}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <button
+                  onClick = {() => setShowRulesModal(false)}
+                  className = "cursor-pointer w-full mt-6 py-4 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-2xl font-courierprime-bold text-lg transition-all duration-200 hover:shadow-lg shadow-red-500/50 hover:scale-105 active:scale-100"
+                >
+                  Got it!
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -593,6 +965,19 @@ export default function Game({ movies }: GameProps) {
       <div className = "max-w-5xl mx-auto w-full px-2 sm:px-4">
         <div className = "flex items-center justify-between mb-8 bg-neutral-100 dark:bg-neutral-800 rounded-2xl px-6 py-4 border-2 border-neutral-300 dark:border-neutral-700">
           <div className = "flex items-center gap-8">
+            <div className = "flex items-center gap-2">
+              {difficulty === "easy" && <IconEasy className = "w-7 h-7 text-red-500" />}
+              {difficulty === "medium" && <IconMedium className = "w-7 h-7 text-yellow-500" />}
+              {difficulty === "hard" && <IconHard className = "w-7 h-7 text-green-500" />}
+              <span className = {`text-sm font-courierprime-bold uppercase tracking-widest ${
+                difficulty === "easy" ? "text-red-600 dark:text-red-400" :
+                difficulty === "medium" ? "text-yellow-600 dark:text-yellow-400" :
+                "text-green-600 dark:text-green-400"
+              }`}>
+                {difficulty}
+              </span>
+            </div>
+
             <div className = "flex items-center gap-3 px-4 py-2 bg-white dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600">
               <IconTrophy className = "w-6 h-6 text-yellow-500" />
               <span className = "text-2xl font-courierprime-bold text-neutral-900 dark:text-white">
@@ -613,10 +998,22 @@ export default function Game({ movies }: GameProps) {
               ))}
             </div>
 
-            <div className = "flex items-center gap-3 px-4 py-2 bg-white dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600">
-              <IconClock className = "w-6 h-6 text-blue-500" />
-              <span className = "text-lg font-courierprime-bold text-neutral-900 dark:text-white">
-                {timer}s
+            <div className = {`flex items-center gap-3 px-4 py-2 rounded-xl border ${
+              difficultyConfig.timeLimit && timer >= (difficultyConfig.timeLimit * 0.8)
+                ? "bg-red-50 dark:bg-red-500/10 border-red-300 dark:border-red-600"
+                : "bg-white dark:bg-neutral-700 border-neutral-200 dark:border-neutral-600"
+            }`}>
+              <IconClock className = {`w-6 h-6 ${
+                difficultyConfig.timeLimit && timer >= (difficultyConfig.timeLimit * 0.8)
+                  ? "text-red-500"
+                  : "text-blue-500"
+              }`} />
+              <span className = {`text-lg font-courierprime-bold ${
+                difficultyConfig.timeLimit && timer >= (difficultyConfig.timeLimit * 0.8)
+                  ? "text-red-600 dark:text-red-400"
+                  : "text-neutral-900 dark:text-white"
+              }`}>
+                {timer}s {difficultyConfig.timeLimit ? `/ ${difficultyConfig.timeLimit}s` : ""}
               </span>
             </div>
           </div>
@@ -678,7 +1075,8 @@ export default function Game({ movies }: GameProps) {
               value = {undefined}
               onClick = {() => revealHint("genre")}
               revealed = {gameState.hintsUsed.genre}
-              cost = {GAME_CONFIG.hints.genreReveal}
+              cost = {Math.round(GAME_CONFIG.hints.genreReveal * difficultyConfig.hintCostMultiplier)}
+              disabled = {isHintLimitReached && !gameState.hintsUsed.genre}
             />
 
             <HintButton
@@ -687,7 +1085,8 @@ export default function Game({ movies }: GameProps) {
               value = {undefined}
               onClick = {() => revealHint("year")}
               revealed = {gameState.hintsUsed.year}
-              cost = {GAME_CONFIG.hints.yearReveal}
+              cost = {Math.round(GAME_CONFIG.hints.yearReveal * difficultyConfig.hintCostMultiplier)}
+              disabled = {isHintLimitReached && !gameState.hintsUsed.year}
             />
 
             <HintButton
@@ -696,7 +1095,8 @@ export default function Game({ movies }: GameProps) {
               value = {undefined}
               onClick = {() => revealHint("rating")}
               revealed = {gameState.hintsUsed.rating}
-              cost = {GAME_CONFIG.hints.ratingReveal}
+              cost = {Math.round(GAME_CONFIG.hints.ratingReveal * difficultyConfig.hintCostMultiplier)}
+              disabled = {isHintLimitReached && !gameState.hintsUsed.rating}
             />
 
             <HintButton
@@ -705,7 +1105,8 @@ export default function Game({ movies }: GameProps) {
               value = {undefined}
               onClick = {() => revealHint("tagline")}
               revealed = {gameState.hintsUsed.tagline}
-              cost = {GAME_CONFIG.hints.taglineReveal}
+              cost = {Math.round(GAME_CONFIG.hints.taglineReveal * difficultyConfig.hintCostMultiplier)}
+              disabled = {isHintLimitReached && !gameState.hintsUsed.tagline}
               isTagline = {true}
             />
           </div>
@@ -713,11 +1114,11 @@ export default function Game({ movies }: GameProps) {
           <div className = "flex gap-4">
             <button
               onClick = {revealBlur}
-              disabled = {gameState.blurLevel >= 4}
+              disabled = {gameState.blurLevel >= 4 || isHintLimitReached}
               className = "cursor-pointer flex-1 py-4 border-2 border-red-500 text-red-600 dark:text-red-400 bg-white dark:bg-neutral-800 rounded-2xl font-courierprime-bold hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 hover:scale-105 active:scale-100"
             >
               <IconEye className = "w-5 h-5" />
-              {translations("revealBlur")} (-{GAME_CONFIG.blurReveal} pts)
+              {translations("revealBlur")} (-{Math.round(GAME_CONFIG.blurReveal * difficultyConfig.hintCostMultiplier)} pts)
             </button>
             <button
               onClick = {skipRound}
