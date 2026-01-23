@@ -23,6 +23,7 @@ export default async function GamePage({
     redirect(`/${locale}/login`)
   }
 
+  // Provide placeholder movies - actual movies will be fetched on game start
   const movies = await fetchMultipleMovies(10)
 
   return (

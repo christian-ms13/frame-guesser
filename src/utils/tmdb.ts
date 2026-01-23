@@ -54,14 +54,15 @@ export async function fetchMultipleMovies(count: number = 10): Promise<GameMovie
   const categories = ["popular", "top_rated", "now_playing"]
 
   let attempts = 0
-  const maxAttempts = count * 3
+  const maxAttempts = count * 5 // Increased max attempts to ensure uniqueness
 
   while (movies.length < count && attempts < maxAttempts) {
     attempts++
 
     const category = categories[Math.floor(Math.random() * categories.length)]
 
-    const randomPage = Math.floor(Math.random() * 20) + 1
+    // Increased page range for more variety
+    const randomPage = Math.floor(Math.random() * 100) + 1
 
     try {
       const response = await fetch(

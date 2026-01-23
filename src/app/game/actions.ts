@@ -1,6 +1,8 @@
 "use server"
 
 import type { DifficultyLevel } from "../../types/game"
+import type { GameMovie } from "../../utils/tmdb"
+import { fetchMultipleMovies } from "../../utils/tmdb"
 import { createClient } from "../../utils/supabase/server"
 
 export interface GameResult {
@@ -223,4 +225,8 @@ export async function getPersonalRecords(
       createdAt: entry.created_at
     })) || []
   )
+}
+
+export async function fetchNewGameMovies(): Promise<GameMovie[]> {
+  return fetchMultipleMovies(10)
 }

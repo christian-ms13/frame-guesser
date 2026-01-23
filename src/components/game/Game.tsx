@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { useCallback, useEffect, useMemo, useState } from "react"
 
-import { saveGameResult } from "../../app/game/actions"
+import { fetchNewGameMovies, saveGameResult } from "../../app/game/actions"
 import { useAuth } from "../../hooks/useAuth"
 import type { DifficultyLevel, GameConfig, GameState, RoundResult } from "../../types/game"
 import type { GameMovie } from "../../utils/tmdb"
@@ -101,6 +101,8 @@ export default function Game({ movies }: GameProps) {
 
   const [difficulty, setDifficulty] = useState<DifficultyLevel | null>(null)
   const [gameStarted, setGameStarted] = useState(false)
+  const [gameMovies, setGameMovies] = useState<GameMovie[]>(movies)
+  const [isLoadingMovies, setIsLoadingMovies] = useState(false)
 
   const initialState: GameState = {
     currentRound: 0,
@@ -205,18 +207,30 @@ export default function Game({ movies }: GameProps) {
     return guessWords.every((guessWord) => titleWords.some((titleWord) => titleWord.startsWith(guessWord)))
   }, [])
 
-  const startGame = useCallback((selectedDifficulty: DifficultyLevel) => {
+  const startGame = useCallback(async (selectedDifficulty: DifficultyLevel) => {
     setDifficulty(selectedDifficulty)
-    setGameStarted(true)
-    setGameState({
-      ...initialState,
-      currentRound: 1,
-      currentMovie: movies[0],
-      roundStartTime: Date.now()
-    })
-    setRoundResults([])
-    setTimer(0)
-  }, [movies])
+    setIsLoadingMovies(true)
+    
+    try {
+      const newMovies = await fetchNewGameMovies()
+      setGameMovies(newMovies)
+      
+      setGameStarted(true)
+      setGameState({
+        ...initialState,
+        currentRound: 1,
+        currentMovie: newMovies[0],
+        roundStartTime: Date.now()
+      })
+      setRoundResults([])
+      setTimer(0)
+    } catch (error) {
+      console.error("Error fetching movies:", error)
+      setIsLoadingMovies(false)
+    } finally {
+      setIsLoadingMovies(false)
+    }
+  }, [initialState])
 
   const handleSubmitGuess = useCallback(() => {
     if (!gameState.currentMovie || !gameState.guess.trim()) return
@@ -285,7 +299,7 @@ export default function Game({ movies }: GameProps) {
         totalRounds: GAME_CONFIG.totalRounds,
         lives: gameState.lives,
         score: gameState.score,
-        currentMovie: movies[nextRound - 1],
+        currentMovie: gameMovies[nextRound - 1],
         roundStartTime: Date.now()
       })
 
@@ -295,7 +309,7 @@ export default function Game({ movies }: GameProps) {
     gameState.currentRound,
     gameState.lives,
     gameState.score,
-    movies,
+    gameMovies,
     user,
     difficulty
   ])
@@ -357,13 +371,14 @@ export default function Game({ movies }: GameProps) {
     }))
   }, [])
 
-  const restartGame = useCallback(() => {
+  const restartGame = useCallback(async () => {
     setDifficulty(null)
     setGameStarted(false)
     setGameState(initialState)
     setRoundResults([])
     setTimer(0)
-  }, [])
+    setIsLoadingMovies(false)
+  }, [initialState])
 
   const blurClass = useMemo(() => {
     const levels = [
@@ -384,13 +399,14 @@ export default function Game({ movies }: GameProps) {
       <div className = "min-h-[90vh] flex items-center justify-center p-4">
         <div className = "max-w-4xl w-full">
           <h1 className = "text-6xl font-courierprime-bold text-center mb-12 text-neutral-900 dark:text-white">
-            {translations("selectDifficulty")}
+            {isLoadingMovies ? translations("loadingMovies") : translations("selectDifficulty")}
           </h1>
 
           <div className = "grid grid-cols-3 gap-6">
             <button
               onClick = {() => startGame("easy")}
-              className = "cursor-pointer bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-300 dark:border-neutral-700 hover:scale-105 active:scale-100"
+              disabled = {isLoadingMovies}
+              className = "cursor-pointer bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-300 dark:border-neutral-700 hover:scale-105 active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className = "flex items-center justify-center mb-4">
                 <IconEasy className = "w-23 h-23" />
@@ -408,7 +424,8 @@ export default function Game({ movies }: GameProps) {
 
             <button
               onClick = {() => startGame("medium")}
-              className = "cursor-pointer bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-300 dark:border-neutral-700 hover:scale-105 active:scale-100"
+              disabled = {isLoadingMovies}
+              className = "cursor-pointer bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-300 dark:border-neutral-700 hover:scale-105 active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className = "flex items-center justify-center mb-4">
                 <IconMedium className = "w-23 h-23" />
@@ -426,7 +443,8 @@ export default function Game({ movies }: GameProps) {
 
             <button
               onClick = {() => startGame("hard")}
-              className = "cursor-pointer bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-300 dark:border-neutral-700 hover:scale-105 active:scale-100"
+              disabled = {isLoadingMovies}
+              className = "cursor-pointer bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral-300 dark:border-neutral-700 hover:scale-105 active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className = "flex items-center justify-center mb-4">
                 <IconHard className = "w-23 h-23" />
@@ -571,8 +589,8 @@ export default function Game({ movies }: GameProps) {
   if (!gameState.currentMovie) return null
 
   return (
-    <div className = "min-h-[90vh] p-4">
-      <div className = "max-w-8xl mx-auto w-full px-2 sm:px-4">
+    <div className = "min-h-[90vh] w-full p-4">
+      <div className = "max-w-5xl mx-auto w-full px-2 sm:px-4">
         <div className = "flex items-center justify-between mb-8 bg-neutral-100 dark:bg-neutral-800 rounded-2xl px-6 py-4 border-2 border-neutral-300 dark:border-neutral-700">
           <div className = "flex items-center gap-8">
             <div className = "flex items-center gap-3 px-4 py-2 bg-white dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600">
@@ -618,7 +636,7 @@ export default function Game({ movies }: GameProps) {
           />
         </div>
 
-        <div className = "max-w-5xl mx-auto w-full">
+        <div className = "mx-auto w-full">
           <div className = "mb-8 bg-neutral-100 dark:bg-neutral-800 rounded-2xl p-5 border-2 border-neutral-300 dark:border-neutral-700">
           <div className = "flex items-center justify-between mb-3">
             <span className = "text-sm font-courierprime-bold text-neutral-900 dark:text-white uppercase tracking-wide">{translations("clarity")}</span>
@@ -633,25 +651,25 @@ export default function Game({ movies }: GameProps) {
         </div>
 
           <div className = "mb-6">
-          <input
-            type = "text"
-            value = {gameState.guess}
-            onChange = {(e) =>
-              setGameState((prevState) => ({ ...prevState, guess: e.target.value }))
-            }
-            onKeyDown = {(e) => e.key === "Enter" && handleSubmitGuess()}
-            placeholder = {translations("guessPlaceholder")}
-            className = "w-full px-6 py-4 text-lg rounded-2xl border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:border-blue-500 focus:outline-none transition-all duration-200 font-robotoslab-medium"
-          />
+            <input
+              type = "text"
+              value = {gameState.guess}
+              onChange = {(e) =>
+                setGameState((prevState) => ({ ...prevState, guess: e.target.value }))
+              }
+              onKeyDown = {(e) => e.key === "Enter" && handleSubmitGuess()}
+              placeholder = {translations("guessPlaceholder")}
+              className = "w-full px-6 py-4 text-lg rounded-2xl border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:border-blue-500 focus:outline-none transition-all duration-200 font-robotoslab-medium"
+            />
 
-          <button
-            onClick = {handleSubmitGuess}
-            disabled = {!gameState.guess.trim()}
-            className = "cursor-pointer w-full mt-4 py-4 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-2xl font-courierprime-bold text-lg transition-all duration-200 hover:shadow-lg shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-100"
-          >
-            {translations("submitGuess")}
-          </button>
-        </div>
+            <button
+              onClick = {handleSubmitGuess}
+              disabled = {!gameState.guess.trim()}
+              className = "cursor-pointer w-full mt-4 py-4 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-2xl font-courierprime-bold text-lg transition-all duration-200 hover:shadow-lg shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-100"
+            >
+              {translations("submitGuess")}
+            </button>
+          </div>
 
           <div className = "grid grid-cols-4 gap-3 mb-6 auto-rows-fr">
             <HintButton
@@ -690,25 +708,25 @@ export default function Game({ movies }: GameProps) {
               cost = {GAME_CONFIG.hints.taglineReveal}
               isTagline = {true}
             />
-        </div>
+          </div>
 
           <div className = "flex gap-4">
-          <button
-            onClick = {revealBlur}
-            disabled = {gameState.blurLevel >= 4}
-            className = "cursor-pointer flex-1 py-4 border-2 border-red-500 text-red-600 dark:text-red-400 bg-white dark:bg-neutral-800 rounded-2xl font-courierprime-bold hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 hover:scale-105 active:scale-100"
-          >
-            <IconEye className = "w-5 h-5" />
-            {translations("revealBlur")} (-{GAME_CONFIG.blurReveal} pts)
-          </button>
-          <button
-            onClick = {skipRound}
-            className = "cursor-pointer flex-1 py-4 border-2 border-neutral-400 dark:border-neutral-600 text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-800 rounded-2xl font-courierprime-bold hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 inline-flex items-center justify-center gap-2 hover:scale-105 active:scale-100"
-          >
-            <IconSkipForward className = "w-5 h-5" />
-            {translations("skipRound")} (-{GAME_CONFIG.skipRound} pts)
-          </button>
-        </div>
+            <button
+              onClick = {revealBlur}
+              disabled = {gameState.blurLevel >= 4}
+              className = "cursor-pointer flex-1 py-4 border-2 border-red-500 text-red-600 dark:text-red-400 bg-white dark:bg-neutral-800 rounded-2xl font-courierprime-bold hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 hover:scale-105 active:scale-100"
+            >
+              <IconEye className = "w-5 h-5" />
+              {translations("revealBlur")} (-{GAME_CONFIG.blurReveal} pts)
+            </button>
+            <button
+              onClick = {skipRound}
+              className = "cursor-pointer flex-1 py-4 border-2 border-neutral-400 dark:border-neutral-600 text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-800 rounded-2xl font-courierprime-bold hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 inline-flex items-center justify-center gap-2 hover:scale-105 active:scale-100"
+            >
+              <IconSkipForward className = "w-5 h-5" />
+              {translations("skipRound")} (-{GAME_CONFIG.skipRound} pts)
+            </button>
+          </div>
         </div>
       </div>
 

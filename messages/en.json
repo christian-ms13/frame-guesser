@@ -104,6 +104,7 @@
   "gamePage": {
     "unableToLoadGame": "Unable to load game. Please try again later.",
     "selectDifficulty": "Pick a difficulty to start.",
+    "loadingMovies": "Loading movies...",
     "difficulty": {
       "easy": "Easy",
       "medium": "Medium",
