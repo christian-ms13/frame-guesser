@@ -2,13 +2,12 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 import { logout } from "../../app/auth/actions"
-import { deleteUser } from "../../utils/supabase/actions"
 import { Database } from "../../types/supabase"
+import { deleteUser } from "../../utils/supabase/actions"
 import { IconTrophy } from "../game/GameIcons"
 import { IconPlay } from "../home-page/actions/LinkIcons"
 import Tooltip from "../ui/Tooltip"
