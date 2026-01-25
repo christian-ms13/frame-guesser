@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "FrameGuesser • Pon a Prueba Tu Conocimiento Cinematográfico",
+    "description": "Un juego de rompecabezas cinematográfico donde los usuarios adivinan películas a partir de fotogramas ocultos. Construido con Next.js, Tailwind CSS y la API de TMDB."
+  },
   "homePage": {
     "subtitle": "Adivina la película con una sola imagen.",
     "play": "Jugar",

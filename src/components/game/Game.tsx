@@ -900,13 +900,13 @@ export default function Game({ movies }: GameProps) {
             {gameState.isCorrect ? <IconCorrect className = "w-28 h-28 mx-auto" /> : <IconSad className = "w-28 h-28 mx-auto" />}
           </div>
 
-          <h1 className = "text-5xl font-courierprime-bold mb-6 text-neutral-900 dark:text-white">
+          <h2 className = "text-3xl font-courierprime-bold mb-4 text-neutral-700 dark:text-neutral-300">
             {gameState.isCorrect ? translations("roundResult.correct") : translations("roundResult.incorrect")}
-          </h1>
+          </h2>
 
-          <p className = "text-2xl text-neutral-600 dark:text-neutral-400 mb-10 font-robotoslab-medium">
+          <h1 className = "text-6xl font-courierprime-bold mb-10 text-neutral-900 dark:text-white leading-tight">
             {gameState.currentMovie?.title}
-          </p>
+          </h1>
 
           {gameState.isCorrect && (
             <div className = "text-6xl font-courierprime-bold text-neutral-900 dark:text-white mb-8">

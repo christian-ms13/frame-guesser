@@ -2,16 +2,25 @@ import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { Metadata } from "next"
 import { NextIntlClientProvider } from "next-intl"
-import { getMessages } from "next-intl/server"
+import { getMessages, getTranslations } from "next-intl/server"
 import localFont from "next/font/local"
 
 import { ThemeProvider } from "../../components/preferences/ThemeProvider"
 
 import "../globals.css"
 
-export const metadata: Metadata = {
-  title: "FrameGuesser • Test Your Movie Knowledge",
-  description: "A cinematographic puzzle game where users guess movies from obscured frames. Built with Next.js, Tailwind CSS, and the TMDB API."
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "metadata" })
+
+  return {
+    title: t("title"),
+    description: t("description")
+  }
 }
 
 const karnakLight = localFont({

@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "FrameGuesser • Test Your Movie Knowledge",
+    "description": "A cinematographic puzzle game where users guess movies from obscured frames. Built with Next.js, Tailwind CSS, and the TMDB API."
+  },
   "homePage": {
     "subtitle": "Guess the movie from a single frame.",
     "play": "Play",
