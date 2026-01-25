@@ -614,6 +614,18 @@ export default function Game({ movies }: GameProps) {
                         {translations("gameRules.gameplay.input")}
                       </li>
                     </ul>
+
+                    <div className = "mt-4 flex items-start gap-3 rounded-xl bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 p-3">
+                      <IconInfo className = "w-5 h-5 text-amber-600 dark:text-amber-300 mt-0.5" />
+                      <div>
+                        <p className = "text-sm font-courierprime-bold text-amber-800 dark:text-amber-100">
+                          {translations("gameRules.gameplay.languageWarning.title")}
+                        </p>
+                        <p className = "text-sm text-amber-800 dark:text-amber-100 font-robotoslab-medium leading-snug">
+                          {translations("gameRules.gameplay.languageWarning.text")}
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Hints & Reveals */}

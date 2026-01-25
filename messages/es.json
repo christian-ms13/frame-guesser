@@ -169,7 +169,11 @@
         "rounds": "Completa 5 rondas adivinando películas",
         "lives": "Tienes 3 vidas - pierdes una por cada respuesta incorrecta",
         "timer": "Cuanto más rápido respondas, más puntos de bonificación ganas",
-        "input": "Escribe tu respuesta y presiona Enviar o Enter"
+        "input": "Escribe tu respuesta y presiona Enviar o Enter",
+        "languageWarning": {
+          "title": "Usa el título original",
+          "text": "Las respuestas deben usar el título original de la película (sin traducciones)."
+        }
       },
       "hints": {
         "title": "Pistas y Revelaciones",

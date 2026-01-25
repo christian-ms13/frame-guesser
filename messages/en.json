@@ -169,7 +169,11 @@
         "rounds": "Complete 5 rounds of movie guessing",
         "lives": "You have 3 lives - lose one for each wrong answer",
         "timer": "The faster you answer, the more bonus points you earn",
-        "input": "Type your guess and press Submit or hit Enter"
+        "input": "Type your guess and press Submit or hit Enter",
+        "languageWarning": {
+          "title": "Use the original title",
+          "text": "Guesses must use the film's original-language title (no translations)."
+        }
       },
       "hints": {
         "title": "Hints & Reveals",
