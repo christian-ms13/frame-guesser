@@ -146,7 +146,8 @@
       "year": "Release Year",
       "rating": "Rating",
       "tagline": "Tagline",
-      "noTagline": "No tagline hint available"
+      "noTagline": "No tagline hint available",
+      "limitReached": "Limit reached"
     },
     "revealBlur": "Reveal Blur",
     "skipRound": "Skip Round",

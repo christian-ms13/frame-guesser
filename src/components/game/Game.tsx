@@ -74,6 +74,7 @@ interface HintButtonProps {
   cost: number
   revealed?: boolean
   disabled?: boolean
+  translations: (key: string) => string
 }
 
 function HintButton({
@@ -84,12 +85,13 @@ function HintButton({
   cost,
   revealed = false,
   disabled = false,
-  isTagline = false
+  isTagline = false,
+  translations
 }: HintButtonProps & { isTagline?: boolean }) {
   return (
     <button
       onClick = {onClick}
-      disabled = {disabled || revealed}
+      disabled = {disabled}
       className = {
         `cursor-pointer p-4 rounded-2xl border-2 transition-all duration-200 text-left h-full flex flex-col ${
           disabled && !revealed
@@ -119,7 +121,7 @@ function HintButton({
         )
       ) : (
           <div className = "text-xs text-neutral-500 dark:text-neutral-400 font-robotoslab-medium min-h-10 flex items-start">
-            {disabled ? "Limit reached" : `-${cost} pts`}
+            {disabled ? translations("hints.limitReached") : `-${cost} pts`}
           </div>
       )}
     </button>
@@ -380,8 +382,10 @@ export default function Game({ movies }: GameProps) {
     if (!gameState.currentMovie) return
 
     const hintsUsedCount = Object.values(gameState.hintsUsed).filter(Boolean).length
+    const isAlreadyRevealed = gameState.hintsUsed[hintType]
 
-    if (hintsUsedCount >= difficultyConfig.maxHints) {
+    // If not already revealed and limit reached, don't allow
+    if (!isAlreadyRevealed && hintsUsedCount >= difficultyConfig.maxHints) {
       return
     }
 
@@ -400,20 +404,18 @@ export default function Game({ movies }: GameProps) {
       return gameState.currentMovie.tagline || translations("hints.noTagline")
     })()
 
-    setGameState((prevState) => {
-      if (prevState.hintsUsed[hintType]) {
-        return prevState
-      }
-
-      return {
+    // Only update state if this is a new hint reveal
+    if (!isAlreadyRevealed) {
+      setGameState((prevState) => ({
         ...prevState,
         hintsUsed: {
           ...prevState.hintsUsed,
           [hintType]: true
         }
-      }
-    })
+      }))
+    }
 
+    // Always show the modal (whether first time or re-clicking)
     openHintModal(title, content)
   }, [gameState.currentMovie, gameState.hintsUsed, difficultyConfig.maxHints, translations, openHintModal])
 
@@ -1058,42 +1060,46 @@ export default function Game({ movies }: GameProps) {
             <HintButton
               icon = {<IconStar className = "w-5 h-5 text-yellow-500" />}
               label = {translations("hints.genre")}
-              value = {undefined}
+              value = {gameState.hintsUsed.genre ? (gameState.currentMovie?.genres.join(", ") || translations("hints.noGenre")) : undefined}
               onClick = {() => revealHint("genre")}
               revealed = {gameState.hintsUsed.genre}
               cost = {Math.round(GAME_CONFIG.hints.genreReveal * difficultyConfig.hintCostMultiplier)}
               disabled = {isHintLimitReached && !gameState.hintsUsed.genre}
+              translations = {translations}
             />
 
             <HintButton
               icon = {<IconClock className = "w-5 h-5 text-blue-500" />}
               label = {translations("hints.year")}
-              value = {undefined}
+              value = {gameState.hintsUsed.year ? String(gameState.currentMovie?.year) : undefined}
               onClick = {() => revealHint("year")}
               revealed = {gameState.hintsUsed.year}
               cost = {Math.round(GAME_CONFIG.hints.yearReveal * difficultyConfig.hintCostMultiplier)}
               disabled = {isHintLimitReached && !gameState.hintsUsed.year}
+              translations = {translations}
             />
 
             <HintButton
               icon = {<IconStar className = "w-5 h-5 text-yellow-500" />}
               label = {translations("hints.rating")}
-              value = {undefined}
+              value = {gameState.hintsUsed.rating ? gameState.currentMovie?.vote_average.toFixed(1) : undefined}
               onClick = {() => revealHint("rating")}
               revealed = {gameState.hintsUsed.rating}
               cost = {Math.round(GAME_CONFIG.hints.ratingReveal * difficultyConfig.hintCostMultiplier)}
               disabled = {isHintLimitReached && !gameState.hintsUsed.rating}
+              translations = {translations}
             />
 
             <HintButton
               icon = {<IconLightbulb className = "w-5 h-5 text-green-500" />}
               label = {translations("hints.tagline")}
-              value = {undefined}
+              value = {gameState.hintsUsed.tagline ? (gameState.currentMovie?.tagline || translations("hints.noTagline")) : undefined}
               onClick = {() => revealHint("tagline")}
               revealed = {gameState.hintsUsed.tagline}
               cost = {Math.round(GAME_CONFIG.hints.taglineReveal * difficultyConfig.hintCostMultiplier)}
               disabled = {isHintLimitReached && !gameState.hintsUsed.tagline}
               isTagline = {true}
+              translations = {translations}
             />
           </div>
 

@@ -146,7 +146,8 @@
       "year": "Año de lanzamiento",
       "rating": "Calificación",
       "tagline": "Lema",
-      "noTagline": "No hay pista de lema disponible"
+      "noTagline": "No hay pista de lema disponible",
+      "limitReached": "Límite alcanzado"
     },
     "revealBlur": "Disminuir desenfoque",
     "skipRound": "Saltar ronda",
