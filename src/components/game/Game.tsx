@@ -64,6 +64,7 @@ const GAME_CONFIG: GameConfig = {
 
 interface GameProps {
   movies: GameMovie[]
+  locale: string
 }
 
 interface HintButtonProps {
@@ -128,7 +129,7 @@ function HintButton({
   )
 }
 
-export default function Game({ movies }: GameProps) {
+export default function Game({ movies, locale }: GameProps) {
   const translations = useTranslations("gamePage")
   const { user } = useAuth()
 
@@ -266,7 +267,7 @@ export default function Game({ movies }: GameProps) {
     setIsLoadingMovies(true)
     
     try {
-      const newMovies = await fetchNewGameMovies()
+      const newMovies = await fetchNewGameMovies(locale)
       setGameMovies(newMovies)
       
       setGameStarted(true)
@@ -284,7 +285,7 @@ export default function Game({ movies }: GameProps) {
     } finally {
       setIsLoadingMovies(false)
     }
-  }, [initialState])
+  }, [initialState, locale])
 
   const handleSubmitGuess = useCallback(() => {
     if (!gameState.currentMovie || !gameState.guess.trim()) return
@@ -1153,7 +1154,7 @@ export default function Game({ movies }: GameProps) {
                     !
                   </div>
                   <div>
-                    <p className = "text-sm uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 font-robotoslab-medium">Hint reveal</p>
+                    <p className = "text-sm uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 font-robotoslab-medium">{translations("hints.revealTitle")}</p>
                     <h3 className = "text-2xl font-courierprime-bold text-neutral-900 dark:text-white leading-tight">
                       {hintModal.title}
                     </h3>

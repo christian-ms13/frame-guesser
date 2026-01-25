@@ -151,7 +151,8 @@
       "rating": "Rating",
       "tagline": "Tagline",
       "noTagline": "No tagline hint available",
-      "limitReached": "Limit reached"
+      "limitReached": "Limit reached",
+      "revealTitle": "Hint Reveal"
     },
     "revealBlur": "Reveal Blur",
     "skipRound": "Skip Round",

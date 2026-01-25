@@ -23,7 +23,7 @@ export default async function GamePage({
     redirect(`/${locale}/login`)
   }
 
-  const movies = await fetchMultipleMovies(10)
+  const movies = await fetchMultipleMovies(10, locale)
 
   return (
     <>
@@ -34,7 +34,7 @@ export default async function GamePage({
           <p className = "text-center">{translations("unableToLoadGame")}</p>
         </div>
       ) : (
-        <Game movies = {movies} />
+        <Game movies = {movies} locale = {locale} />
       )}
       <PreferencesIndex />
     </>

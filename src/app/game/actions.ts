@@ -227,6 +227,6 @@ export async function getPersonalRecords(
   )
 }
 
-export async function fetchNewGameMovies(): Promise<GameMovie[]> {
-  return fetchMultipleMovies(10)
+export async function fetchNewGameMovies(locale?: string): Promise<GameMovie[]> {
+  return fetchMultipleMovies(10, locale)
 }

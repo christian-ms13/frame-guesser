@@ -151,7 +151,8 @@
       "rating": "Calificación",
       "tagline": "Lema",
       "noTagline": "No hay pista de lema disponible",
-      "limitReached": "Límite alcanzado"
+      "limitReached": "Límite alcanzado",
+      "revealTitle": "Pista Revelada"
     },
     "revealBlur": "Disminuir desenfoque",
     "skipRound": "Saltar ronda",
