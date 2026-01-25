@@ -32,6 +32,12 @@
       "play": "Play",
       "userRecords": "My Records",
       "deleteUser": "Delete Account"
+    },
+    "deleteUserModal": {
+      "title": "Delete Account",
+      "message": "Are you sure you want to permanently delete your account? This action cannot be undone. All your data will be lost.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
     }
   },
   "userSettings": {

@@ -10,6 +10,7 @@ import { Database } from "../../types/supabase"
 import { deleteUser } from "../../utils/supabase/actions"
 import { IconTrophy } from "../game/GameIcons"
 import { IconPlay } from "../home-page/actions/LinkIcons"
+import ConfirmationModal from "../ui/ConfirmationModal"
 import Tooltip from "../ui/Tooltip"
 import TruncatedTooltip from "../ui/TruncatedTooltip"
 import { IconEdit, IconLogout, IconTrash } from "../user-page/FieldIcons"
@@ -28,8 +29,13 @@ interface UserDetailsProps {
 export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, memberSince, translations, setAreSettingsClosed }: UserDetailsProps) {
   const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
 
-  const handleDeleteUser = async () => {
+  const handleDeleteClick = () => {
+    setIsConfirmModalOpen(true)
+  }
+
+  const handleConfirmDelete = async () => {
     setIsDeleting(true)
     const result = await deleteUser()
     
@@ -37,8 +43,13 @@ export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, member
       router.push("/")
     } else {
       setIsDeleting(false)
+      setIsConfirmModalOpen(false)
       console.error("Failed to delete user:", result.error)
     }
+  }
+
+  const handleCancelDelete = () => {
+    setIsConfirmModalOpen(false)
   }
   return (
     <div className = "min-h-[70vh] w-full flex items-center justify-center px-6 relative">
@@ -84,7 +95,7 @@ export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, member
             <Tooltip text = {translations("tooltips.deleteUser")}>
               <div>
                 <button
-                  onClick = {handleDeleteUser}
+                  onClick = {handleDeleteClick}
                   disabled = {isDeleting}
                   className = "cursor-pointer flex items-center justify-center gap-1 px-4 py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-play-bold transition-all duration-150 hover:scale-105 active:scale-100 hover:shadow-md hover:shadow-red-900 dark:hover:shadow-red-400 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -182,6 +193,18 @@ export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, member
           </div>
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        title={translations("deleteUserModal.title")}
+        message={translations("deleteUserModal.message")}
+        confirmText={translations("deleteUserModal.confirm")}
+        cancelText={translations("deleteUserModal.cancel")}
+        isDangerous={true}
+        isLoading={isDeleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   )
 }
