@@ -151,6 +151,8 @@
     "revealBlur": "Disminuir desenfoque",
     "skipRound": "Saltar ronda",
     "howToPlay": "Cómo jugar",
+    "gameGuide": "Guía del Juego",
+    "gotIt": "¡Entendido!",
     "gameRules": {
       "title": "Reglas del Juego",
       "objective": {
@@ -213,7 +215,7 @@
         }
       },
       "tips": {
-        "title": "Consejos Pro",
+        "title": "Consejos",
         "tip1": "Comienza con pistas más baratas como Género o Año",
         "tip2": "Guarda las revelaciones de desenfoque para cuando estés cerca de adivinar",
         "tip3": "La velocidad importa - responde rápido para puntos bonus",

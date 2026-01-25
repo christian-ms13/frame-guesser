@@ -554,14 +554,15 @@ export default function Game({ movies }: GameProps) {
             >
               <div className = "absolute -inset-0.5 bg-linear-to-br from-red-500/45 via-amber-400/30 to-yellow-400/45 rounded-3xl blur-xl opacity-80" aria-hidden = "true" />
 
-              <div className = "relative bg-neutral-50/98 dark:bg-neutral-900/98 rounded-3xl border border-white/20 dark:border-black/30 shadow-2xl shadow-black/80 p-8 max-h-[85vh] overflow-y-auto">
+              <div className = "relative bg-neutral-50/98 dark:bg-neutral-900/98 rounded-3xl border border-white/20 dark:border-black/30 shadow-2xl shadow-black/80 overflow-hidden">
+                <div className = "p-8 max-h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-400/50 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-transparent dark:[&::-webkit-scrollbar-thumb]:bg-neutral-600/50">
                 <div className = "flex items-start justify-between mb-6 sticky top-0 bg-neutral-50 dark:bg-neutral-900 z-10 pb-4 -mx-8 px-8 pt-8 -mt-8 border-b border-neutral-200 dark:border-neutral-700">
                   <div className = "flex items-center gap-3">
                     <div className = "h-11 w-11 rounded-2xl bg-linear-to-br from-red-500 to-amber-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30">
                       <IconInfo className = "w-6 h-6" />
                     </div>
                     <div>
-                      <p className = "text-sm uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 font-robotoslab-medium">Game Guide</p>
+                      <p className = "text-sm uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 font-robotoslab-medium">{translations("gameGuide")}</p>
                       <h3 className = "text-2xl font-courierprime-bold text-neutral-900 dark:text-white leading-tight">
                         {translations("gameRules.title")}
                       </h3>
@@ -817,8 +818,9 @@ export default function Game({ movies }: GameProps) {
                   onClick = {() => setShowRulesModal(false)}
                   className = "cursor-pointer w-full mt-6 py-4 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-2xl font-courierprime-bold text-lg transition-all duration-200 hover:shadow-lg shadow-red-500/50 hover:scale-105 active:scale-100"
                 >
-                  Got it!
+                  {translations("gotIt")}
                 </button>
+                </div>
               </div>
             </div>
           </div>
