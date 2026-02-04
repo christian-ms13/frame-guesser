@@ -637,7 +637,7 @@ export default function Game({ movies, locale }: GameProps) {
                     <p className = "text-neutral-700 dark:text-neutral-300 font-robotoslab-medium mb-3">
                       {translations("gameRules.hints.text")}
                     </p>
-                    <div className = "grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+                    <div className = "grid grid-cols-2 gap-2 mb-3">
                       <div className = "flex items-center gap-2 text-sm">
                         <IconStar className = "w-4 h-4 text-yellow-500" />
                         <span className = "font-robotoslab-medium text-neutral-700 dark:text-neutral-300">
@@ -963,7 +963,7 @@ export default function Game({ movies, locale }: GameProps) {
 
   return (
     <div className = "min-h-[90vh] w-full p-4">
-      <div className = "max-w-5xl mx-auto w-full px-2 sm:px-4">
+      <div className = "max-w-5xl mx-auto w-full px-4">
         <div className = "flex items-center justify-between mb-8 bg-neutral-100 dark:bg-neutral-800 rounded-2xl px-6 py-4 border-2 border-neutral-300 dark:border-neutral-700">
           <div className = "flex items-center gap-8">
             <div className = "flex items-center gap-2">

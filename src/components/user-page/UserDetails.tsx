@@ -135,7 +135,7 @@ export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, member
           </div>
 
           <div className = "p-8 flex flex-col gap-6">
-            <div className = "grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className = "grid grid-cols-2 gap-6">
               <div className = "rounded-2xl p-5 bg-neutral-200 dark:bg-neutral-700 ring-2 ring-neutral-300 dark:ring-neutral-600">
                 <p className = "text-xs uppercase tracking-wide text-neutral-600 dark:text-neutral-300 font-corporatespro-medium">
                   {translations("displayName")}
@@ -174,7 +174,7 @@ export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, member
                 <form action = {logout} className = "mt-2">
                   <button
                     type = "submit"
-                    className = "cursor-pointer w-full sm:w-max flex items-center justify-center gap-1 px-4 py-3 rounded-2xl bg-red-400 hover:bg-red-500 text-white font-play-bold transition-all duration-150 hover:scale-105 active:scale-100 hover:shadow-md hover:shadow-red-800 dark:hover:shadow-red-300"
+                    className = "cursor-pointer flex items-center justify-center gap-1 px-4 py-3 rounded-2xl bg-red-400 hover:bg-red-500 text-white font-play-bold transition-all duration-150 hover:scale-105 active:scale-100 hover:shadow-md hover:shadow-red-800 dark:hover:shadow-red-300"
                   >
                     <IconLogout className = "w-5 h-5" />
                     <span>Log out</span>
@@ -182,7 +182,7 @@ export default function UserDetails({ pfpSrc, viewedUserProfile, isOwner, member
                 </form>
 
                 <button
-                  className = "cursor-pointer w-full sm:w-max flex items-center justify-center gap-1 px-4 py-3 rounded-2xl bg-blue-400 hover:bg-blue-500 text-white font-play-bold transition-all duration-150 hover:scale-105 active:scale-100 hover:shadow-md hover:shadow-blue-800 dark:hover:shadow-blue-300"
+                  className = "cursor-pointer flex items-center justify-center gap-1 px-4 py-3 rounded-2xl bg-blue-400 hover:bg-blue-500 text-white font-play-bold transition-all duration-150 hover:scale-105 active:scale-100 hover:shadow-md hover:shadow-blue-800 dark:hover:shadow-blue-300"
                   onClick = {() => setAreSettingsClosed(false)}
                 >
                   <IconEdit className = "w-5 h-5" />

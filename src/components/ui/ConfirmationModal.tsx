@@ -52,7 +52,7 @@ export default function ConfirmationModal({
         onClick = {onCancel}
       />
 
-      <div className = "relative bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6 border border-neutral-200 dark:border-neutral-700">
+      <div className = "relative bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700">
         <h2 className = "text-2xl font-courierprime-bold text-neutral-900 dark:text-white mb-3">
           {title}
         </h2>

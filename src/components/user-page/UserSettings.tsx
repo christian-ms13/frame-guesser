@@ -5,10 +5,10 @@ import { useEffect, useState, type ChangeEvent } from "react"
 
 import { Database } from "../../types/supabase"
 import GetCurrentTheme from "../../utils/GetCurrentTheme"
-import { createClient } from "../../utils/supabase/client"
 import { checkEmailAvailabilityForUpdate, checkUsernameAvailabilityForUpdate, updateUserProfile } from "../../utils/supabase/actions"
+import { createClient } from "../../utils/supabase/client"
 import { IconCheckmark, IconEmail, IconEmailUnavailable, IconLoading, IconUnavailableUsername, IconUsername } from "../login-page/InputIcons"
-import { IconCamera, IconDisplayName, IconEdit, IconTrash } from "./FieldIcons"
+import { IconCamera, IconDisplayName, IconTrash } from "./FieldIcons"
 
 type UserProfile = Database['public']['Tables']['profiles']['Row']
 
@@ -401,7 +401,7 @@ export default function UserSettings({
               </p>
 
               <div className = "flex flex-wrap items-center gap-4">
-                <div className = "relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-white dark:border-neutral-600 shadow-lg overflow-hidden bg-neutral-200 dark:bg-neutral-700">
+                <div className = "relative w-28 h-28 rounded-full border-4 border-white dark:border-neutral-600 shadow-lg overflow-hidden bg-neutral-200 dark:bg-neutral-700">
                   <Image
                     src = {avatarPreview}
                     alt = {translations("avatarTitle")}
@@ -516,7 +516,7 @@ export default function UserSettings({
                 type = "button"
                 onClick = {() => setAreSettingsClosed(true)}
                 disabled = {isSaving}
-                className = "cursor-pointer flex-1 sm:flex-none px-4 py-2 rounded-xl bg-red-400 hover:bg-red-500 text-white transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50 font-robotoslab-bold text-lg"
+                className = "cursor-pointer px-4 py-2 rounded-xl bg-red-400 hover:bg-red-500 text-white transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50 font-robotoslab-bold text-lg"
               >
                 {translations("cancel")}
               </button>
@@ -528,7 +528,7 @@ export default function UserSettings({
                   (usernameStatus !== "idle" && usernameStatus !== "available") ||
                   (emailStatus !== "idle" && emailStatus !== "available")
                 }
-                className = "cursor-pointer flex-1 sm:flex-none px-4 py-2 rounded-xl bg-blue-400 hover:bg-blue-500 text-white transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50 font-robotoslab-bold text-lg"
+                className = "cursor-pointer px-4 py-2 rounded-xl bg-blue-400 hover:bg-blue-500 text-white transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50 font-robotoslab-bold text-lg"
               >
                 {isSaving ? translations("saving") : translations("saveChanges")}
               </button>

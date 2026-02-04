@@ -33,7 +33,7 @@ export default function TruncatedTooltip({ children, text }: TruncatedTooltipPro
         ref: elementRef,
       } as any)}
       {isTruncated && (
-        <span className="absolute bottom-full mb-2.5 hidden sm:flex flex-col items-center opacity-0 group-hover:opacity-100 transition-all duration-75 delay-400 ease-out transform translate-y-1 group-hover:translate-y-0 pointer-events-none z-50 left-1/2 -translate-x-1/2">
+        <span className="absolute bottom-full mb-2.5 flex flex-col items-center opacity-0 group-hover:opacity-100 transition-all duration-75 delay-400 ease-out transform translate-y-1 group-hover:translate-y-0 pointer-events-none z-50 left-1/2 -translate-x-1/2">
           <span className="relative z-10 bg-[#1f1f1f] dark:bg-[#e0e0e0] text-[#e0e0e0] dark:text-[#1f1f1f] text-xs font-medium py-1.5 px-3 rounded-lg shadow-xl whitespace-nowrap border border-white/10 dark:border-black/5">
             {text}
           </span>

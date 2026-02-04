@@ -124,7 +124,7 @@ export default async function RootLayout({
     <html lang = {locale} suppressHydrationWarning>
       <body className = {`${fontsToPreload.map(font => font.variable).join(" ")} antialiased cursor-default select-none selection:bg-[#121212] selection:text-[#e3e3e1] bg-[#e3e3e1] text-[#121212] dark:bg-[#121212] dark:text-[#e3e3e1] flex items-center justify-center`}
       >
-        <main className = "flex flex-col items-center justify-start min-h-screen pt-5 pb-20 gap-5 max-[650px]:w-full max-[650px]:max-w-[80%]">
+        <main className = "flex flex-col items-center justify-start min-h-screen pt-5 pb-20 gap-5">
           <NextIntlClientProvider messages = {messages}>
             <ThemeProvider
               attribute = "class"

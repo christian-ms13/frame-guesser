@@ -34,7 +34,7 @@ export default async function Home() {
 
       {isLoggedIn && <ProfileDropdown user = {userProfile} />}
 
-      <div className = "grid grid-cols-2 grid-rows-2 gap-10 max-[850px]:grid-cols-1 max-[850px]:w-full max-[850px]:max-w-[80%] max-[650px]:max-w-full max-[650px]:gap-5">
+      <div className = "grid grid-cols-2 grid-rows-2 gap-10">
         <AnimatedLinkButton
           href = "https://github.com/christian-ms13/frame-guesser"
           target = "_blank"
