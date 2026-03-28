@@ -36,7 +36,7 @@ export default async function Home() {
 
       <div className = "grid grid-cols-2 grid-rows-2 gap-10">
         <AnimatedLinkButton
-          href = "https://github.com/christian-ms13/frame-guesser"
+          href = "https://github.com/chriistianms/frame-guesser"
           target = "_blank"
           icon = {<IconCode className = "w-full h-full" />}
           text = "GitHub"
